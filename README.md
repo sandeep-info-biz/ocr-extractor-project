@@ -36,11 +36,19 @@ Feedback + reinforcement flow:
 2. Take `token_id` from response.
 3. Call `POST /feedback` with:
    - `token_id`
+   - `extracted_data` (optional: paste the original extracted JSON directly)
    - `rating` (1-5)
    - `corrected_data` (optional corrected structured mapping)
    - `retrain_on_submit` (`true`/`false`)
 
-If `corrected_data` is provided, it is added to dataset and model is retrained when `retrain_on_submit=true`.
+Note for feedback payload:
+- `raw_text` is not required.
+- If `raw_text` is sent inside `extracted_data` or `corrected_data`, it is ignored and not used for feedback training.
+
+`token_id` is required so feedback is always linked to the exact `/test` response.
+Training data priority in feedback flow:
+- `corrected_data` (if provided)
+- otherwise `extracted_data`
 
 Feedback-weighted learning:
 - User `rating` now influences training weight (`5` has highest weight).

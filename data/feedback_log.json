@@ -1,0 +1,45 @@
+[
+  {
+    "token_id": "manual-babccd81-8a9d-4f6b-bbcf-5016cc29e9f5",
+    "rating": 4,
+    "feedback_weight": 3,
+    "feedback_accuracy": 0.8,
+    "submitted_at": "2026-02-21T03:58:40.989812+00:00",
+    "extracted_data": {
+      "first_name": "Demo",
+      "last_name": "User",
+      "phone_number": "",
+      "email": "demo@example.com",
+      "date_of_birth": "",
+      "gender": "",
+      "religion": "",
+      "marital_status": "",
+      "nationality_country_name": "",
+      "country_region": "",
+      "city": "",
+      "postal_code": "",
+      "languages": [],
+      "industry_type": "",
+      "designation_or_position": "",
+      "total_experience": null,
+      "gulf_expierence": false,
+      "passport_number": "",
+      "passport_expiry_date": "",
+      "skills": [],
+      "education": [],
+      "education_degree": "",
+      "about_description_summary": "",
+      "linkedin_url": "",
+      "raw_text": ""
+    },
+    "corrected_data": null
+  },
+  {
+    "token_id": "1e5fa7c7-3326-4589-98a4-a175da936196",
+    "rating": 3,
+    "feedback_weight": 2,
+    "feedback_accuracy": 0.6,
+    "submitted_at": "2026-02-21T04:04:37.517161+00:00",
+    "corrected_data": null
+  }
+]
