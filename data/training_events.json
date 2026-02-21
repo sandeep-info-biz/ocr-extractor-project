@@ -1,0 +1,35 @@
+{
+  "feedback_events": [
+    {
+      "timestamp": "2026-02-21T03:58:40.989812+00:00",
+      "token_id": "manual-babccd81-8a9d-4f6b-bbcf-5016cc29e9f5",
+      "rating": 4,
+      "feedback_weight": 3,
+      "feedback_accuracy": 0.8,
+      "has_extracted_data": true,
+      "has_corrected_data": false,
+      "retrained": false,
+      "total_dataset_entries": 22
+    },
+    {
+      "timestamp": "2026-02-21T04:04:37.517161+00:00",
+      "token_id": "1e5fa7c7-3326-4589-98a4-a175da936196",
+      "rating": 3,
+      "feedback_weight": 2,
+      "feedback_accuracy": 0.6,
+      "has_corrected_data": false,
+      "retrained": true,
+      "total_dataset_entries": 22
+    }
+  ],
+  "retrain_events": [
+    {
+      "timestamp": "2026-02-21T04:04:37.517161+00:00",
+      "source": "feedback_endpoint",
+      "added_entries": 0,
+      "total_dataset_entries": 22,
+      "mapping_feature_count": 333,
+      "check_average_overall_score": 0.6
+    }
+  ]
+}

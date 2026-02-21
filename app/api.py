@@ -84,6 +84,14 @@ def _rating_to_feedback_weight(rating: int) -> int:
     return {1: 1, 2: 1, 3: 2, 4: 3, 5: 4}.get(rating, 1)
 
 
+def _strip_raw_text(payload: dict | None) -> dict | None:
+    if payload is None:
+        return None
+    cleaned = dict(payload)
+    cleaned.pop("raw_text", None)
+    return cleaned
+
+
 def _register_session(parsed: dict, mode: str) -> str:
     token_id = str(uuid4())
     sessions = _load_json_list(SESSION_STORE_PATH)
@@ -187,21 +195,28 @@ def feedback_endpoint(payload: FeedbackRequest) -> FeedbackResponse:
         raise HTTPException(status_code=404, detail="token_id not found")
 
     submitted_at = datetime.now(timezone.utc).isoformat()
-    corrected_data = payload.corrected_data.model_dump() if payload.corrected_data else None
+    resolved_token_id = payload.token_id
+    extracted_data = _strip_raw_text(payload.extracted_data.model_dump()) if payload.extracted_data else None
+    corrected_data = _strip_raw_text(payload.corrected_data.model_dump()) if payload.corrected_data else None
     feedback_weight = _rating_to_feedback_weight(payload.rating)
     feedback_accuracy = float(payload.rating) / 5.0
+
+    baseline_pred = extracted_data
+    if baseline_pred is None and isinstance(session.get("extracted_data"), dict):
+        baseline_pred = session.get("extracted_data", {})
+
     if corrected_data is not None:
-        baseline_pred = session.get("extracted_data", {}) if isinstance(session.get("extracted_data"), dict) else {}
-        feedback_accuracy = float(evaluate(baseline_pred, corrected_data).get("overall", 0.0))
+        feedback_accuracy = float(evaluate(baseline_pred or {}, corrected_data).get("overall", 0.0))
 
     feedback_log = _load_json_list(FEEDBACK_LOG_PATH)
     feedback_log.append(
         {
-            "token_id": payload.token_id,
+            "token_id": resolved_token_id,
             "rating": payload.rating,
             "feedback_weight": feedback_weight,
             "feedback_accuracy": round(feedback_accuracy, 4),
             "submitted_at": submitted_at,
+            "extracted_data": extracted_data,
             "corrected_data": corrected_data,
         }
     )
@@ -209,8 +224,10 @@ def feedback_endpoint(payload: FeedbackRequest) -> FeedbackResponse:
 
     dataset = _load_json_list(DATASET_PATH)
     retrained = False
-    if corrected_data is not None:
-        train_row = dict(corrected_data)
+    # Priority for training row: corrected_data > extracted_data.
+    train_source = corrected_data if corrected_data is not None else extracted_data
+    if train_source is not None:
+        train_row = dict(train_source)
         train_row["_feedback_rating"] = payload.rating
         train_row["_feedback_weight"] = feedback_weight
         train_row["_feedback_submitted_at"] = submitted_at
@@ -226,10 +243,11 @@ def feedback_endpoint(payload: FeedbackRequest) -> FeedbackResponse:
     events["feedback_events"].append(
         {
             "timestamp": submitted_at,
-            "token_id": payload.token_id,
+            "token_id": resolved_token_id,
             "rating": payload.rating,
             "feedback_weight": feedback_weight,
             "feedback_accuracy": round(feedback_accuracy, 4),
+            "has_extracted_data": extracted_data is not None,
             "has_corrected_data": corrected_data is not None,
             "retrained": retrained,
             "total_dataset_entries": len(dataset),
@@ -240,7 +258,7 @@ def feedback_endpoint(payload: FeedbackRequest) -> FeedbackResponse:
             {
                 "timestamp": submitted_at,
                 "source": "feedback_endpoint",
-                "added_entries": 1 if corrected_data is not None else 0,
+                "added_entries": 1 if train_source is not None else 0,
                 "total_dataset_entries": len(dataset),
                 "mapping_feature_count": sum(len(v) for v in model.values()),
                 "check_average_overall_score": round(feedback_accuracy, 4),
@@ -249,7 +267,7 @@ def feedback_endpoint(payload: FeedbackRequest) -> FeedbackResponse:
     _save_training_events(events)
 
     return FeedbackResponse(
-        token_id=payload.token_id,
+        token_id=resolved_token_id,
         rating=payload.rating,
         retrained=retrained,
         total_dataset_entries=len(dataset),
