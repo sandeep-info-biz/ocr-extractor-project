@@ -1,0 +1,2 @@
+"""Resume OCR extractor package."""
+
