@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Data files (exclude large/sensitive data)
+data/feedback_sessions.json
+data/feedback_log.json
+data/training_events.json
+outputs/*.pdf
+outputs/*.png
+outputs/*.jpg
+outputs/*.docx
+
+# Models (exclude large trained models)
+models/*.bin
+models/*.pt
+models/*.pth
+models/resume_ner/
+
+# Temp files
+*.tmp
+*.log
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env
+*.key
+*.pem
+ngrok_token.txt
