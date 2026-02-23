@@ -61,7 +61,7 @@ class ExtractionWithTokenResponse(BaseModel):
 class FeedbackRequest(BaseModel):
     token_id: str
     extracted_data: Optional[ResumeExtractedResponse] = None
-    rating: int
+    rating: int = 5
     corrected_data: Optional[ResumeExtractedResponse] = None
     retrain_on_submit: bool = True
 
@@ -74,3 +74,61 @@ class FeedbackResponse(BaseModel):
     mapping_counts: dict
     feedback_weight: int = 1
     feedback_accuracy: float | None = None
+
+
+class ModelCompareReport(BaseModel):
+    ml_mode: str
+    llm_mode: str
+    agreement_ratio: float
+    ml_completeness_ratio: float
+    llm_completeness_ratio: float
+    per_field_agreement: dict
+
+
+class ExtractionCompareResponse(BaseModel):
+    token_id: str
+    ml_output: ResumeExtractedResponse
+    llm_output: ResumeExtractedResponse
+    compare_report: ModelCompareReport
+    ml_legacy_eval: Optional[dict] = None
+    llm_legacy_eval: Optional[dict] = None
+    ml_full_schema_eval: Optional[dict] = None
+    llm_full_schema_eval: Optional[dict] = None
+    ml_error: Optional[str] = None
+    llm_error: Optional[str] = None
+    llm_debug: Optional[List[str]] = None
+    ground_truth_error: Optional[str] = None
+
+
+class AutoTrainLLMResponse(BaseModel):
+    token_id: str
+    trained: bool
+    added_entries: int
+    total_dataset_entries: int
+    dataset_path: str
+    model_path: str
+    mapping_counts: dict
+    llm_output: ResumeExtractedResponse
+    llm_error: Optional[str] = None
+    llm_debug: Optional[List[str]] = None
+
+
+class TestWithLLMResponse(BaseModel):
+    token_id: str
+    extracted_data: ResumeExtractedResponse
+    llm_output: ResumeExtractedResponse
+    llm_error: Optional[str] = None
+    llm_debug: Optional[List[str]] = None
+
+
+class AutoTrainResponse(BaseModel):
+    token_id: str
+    trained: bool
+    added_entries: int
+    total_dataset_entries: int
+    dataset_path: str
+    model_path: str
+    mapping_counts: dict
+    extracted_data: ResumeExtractedResponse
+    parse_error: Optional[str] = None
+    debug: Optional[List[str]] = None
