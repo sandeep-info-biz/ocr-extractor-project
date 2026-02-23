@@ -1,5 +1,6 @@
 {
   "first_names": [
+    "Kashyap",
     "Demo",
     "Neha",
     "Rohit",
@@ -22,6 +23,7 @@
     "Meenal"
   ],
   "last_names": [
+    "Pandya",
     "User",
     "Patel",
     "Kulkarni",
@@ -43,6 +45,7 @@
     "Bansal"
   ],
   "cities": [
+    "“Pitru Krupa”",
     "Ahmedabad",
     "Nagpur",
     "Delhi",
@@ -80,6 +83,7 @@
     "India"
   ],
   "postal_codes": [
+    "360005",
     "201301",
     "395010",
     "682030",
@@ -103,6 +107,7 @@
     "452010"
   ],
   "date_of_births": [
+    "25/04/1986",
     "1997-05-15",
     "1996-02-10",
     "1998-08-22",
@@ -134,14 +139,15 @@
     "Islam"
   ],
   "marital_statuses": [
-    "Single",
-    "Married"
+    "Married",
+    "Single"
   ],
   "languages": [
     "English",
     "Hindi",
-    "Marathi",
     "Gujarati",
+    "Marathi",
+    "Languages English",
     "Malayalam",
     "Bengali",
     "Bhojpuri",
@@ -229,6 +235,7 @@
     "2028-07-07"
   ],
   "education_degrees": [
+    "• B.E. (Computer Engg.) – Completed in July",
     "B.Tech",
     "Bachelor of Technology",
     "MBA",
@@ -252,6 +259,7 @@
     "Chartered Accountant"
   ],
   "summaries": [
+    "• Assembling of Hardware components and Installation of Software. • SAP, Mail Security, Cloud Security, Firewall, NAS Server & Security, CCTV. • MCSA & MCSE – Windows Server 2016. • Establishment of LAN Networks and Network Security.",
     "Software engineer specializing in Java and microservices architecture. Experienced in developing scalable backend services.",
     "HR professional with expertise in recruitment and employee engagement. Proven track record in handling HR operations for IT teams.",
     "DevOps engineer with experience in CI/CD and cloud automation. Skilled in implementing containerized applications and robust pipelines.",
@@ -293,10 +301,15 @@
     "linkedin.com/in/akashpatel"
   ],
   "skills": [
+    "AWS",
+    "Tally",
+    "ERP",
+    "Maintenance",
+    "Firewall",
+    "Network Security",
     "Python",
     "Java",
     "MySQL",
-    "AWS",
     "Docker",
     "SEO",
     "Digital Marketing",
@@ -311,7 +324,6 @@
     "Node.js",
     "MERN Stack",
     "JavaScript",
-    "Tally",
     "GST",
     "Financial Reporting",
     "Accounting",
@@ -335,9 +347,7 @@
     "Data Visualization",
     "Logistics",
     "Inventory Management",
-    "ERP",
     "Supply Chain Management",
-    "Maintenance",
     "Production Planning",
     "Plant Maintenance",
     "Social Media Management",
@@ -349,8 +359,6 @@
     "CCNA",
     "Routing",
     "Switching",
-    "Firewall",
-    "Network Security",
     "Django",
     "REST API",
     "PostgreSQL",

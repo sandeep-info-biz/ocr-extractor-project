@@ -27,6 +27,21 @@ Fast test request modes:
 - `preprocess` = `true|false`
 - `pdf_dpi` (default `220`, lower is faster)
 
+Auto-train endpoint (LLM -> dataset -> mapping retrain):
+- `POST /auto-train-llm`
+- Form fields:
+  - `resume_file` (required)
+  - `preprocess` = `true|false`
+  - `pdf_dpi` (default `220`)
+  - `llm_base_model_id` (default `Qwen/Qwen2.5-3B-Instruct`)
+  - `llm_adapter_path` (default `models/lora_adapter`)
+  - `llm_max_new_tokens` (default `768`)
+- Flow:
+  - OCR extracts raw text
+  - LLM generates structured JSON
+  - result is appended to `data/resume_training_seed.json`
+  - mapping model is retrained and saved to `models/resume_mapping_model.json`
+
 `/test` now returns:
 - `token_id`
 - `extracted_data` (structured resume JSON)

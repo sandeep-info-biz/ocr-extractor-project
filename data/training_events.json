@@ -20,6 +20,17 @@
       "has_corrected_data": false,
       "retrained": true,
       "total_dataset_entries": 22
+    },
+    {
+      "timestamp": "2026-02-23T05:34:59.013030+00:00",
+      "token_id": "ab2957a5-d7fe-48a6-b14b-3a3f7038dd61",
+      "rating": 5,
+      "feedback_weight": 4,
+      "feedback_accuracy": 1.0,
+      "has_extracted_data": true,
+      "has_corrected_data": true,
+      "retrained": true,
+      "total_dataset_entries": 23
     }
   ],
   "retrain_events": [
@@ -30,6 +41,14 @@
       "total_dataset_entries": 22,
       "mapping_feature_count": 333,
       "check_average_overall_score": 0.6
+    },
+    {
+      "timestamp": "2026-02-23T05:34:59.013030+00:00",
+      "source": "feedback_endpoint",
+      "added_entries": 1,
+      "total_dataset_entries": 23,
+      "mapping_feature_count": 341,
+      "check_average_overall_score": 1.0
     }
   ]
 }
