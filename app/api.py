@@ -3,12 +3,20 @@ import json
 import io
 import hashlib
 import re
+import math
+import time
+import os
+import base64
+import hmac
+import mimetypes
+from threading import Lock
 from datetime import datetime, timezone
 from pathlib import Path
 from uuid import uuid4
 
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
-from fastapi.responses import Response
+from fastapi import BackgroundTasks, FastAPI, File, Form, Header, HTTPException, Query, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, Response
 
 from app.evaluation import evaluate
 from app.llm_extractor import empty_llm_schema, run_lora_qlora_extraction
@@ -17,7 +25,6 @@ from app.ocr import extract_raw_text
 from app.parser import parse_resume_text
 from app.pretrained_resume_model import MODEL_REGISTRY
 from app.schemas import (
-    AutoTrainResponse,
     AutoTrainLLMResponse,
     ExtractionWithTokenResponse,
     FeedbackRequest,
@@ -25,13 +32,19 @@ from app.schemas import (
     RetrainMappingRequest,
     RetrainMappingResponse,
     ResumeExtractedResponse,
-    TestWithLLMResponse,
 )
 
 app = FastAPI(
     title="Resume OCR Extractor API",
     version="1.0.0",
     description="FastAPI service for OCR resume extraction.",
+)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 DATASET_PATH = Path("data/resume_training_seed.json")
@@ -40,6 +53,9 @@ SESSION_STORE_PATH = Path("data/feedback_sessions.json")
 FEEDBACK_LOG_PATH = Path("data/feedback_log.json")
 TRAINING_EVENTS_PATH = Path("data/training_events.json")
 FEEDBACK_MEMORY_PATH = Path("data/feedback_memory.json")
+ASYNC_DOCUMENTS_PATH = Path("data/async_documents.json")
+UPLOADS_DIR = Path("data/uploads")
+ASYNC_DOC_LOCK = Lock()
 
 
 def _load_json_list(path: Path) -> list:
@@ -85,6 +101,277 @@ def _load_training_events() -> dict:
 def _save_training_events(payload: dict) -> None:
     TRAINING_EVENTS_PATH.parent.mkdir(parents=True, exist_ok=True)
     TRAINING_EVENTS_PATH.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
+
+
+def _now_iso() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+def _load_async_documents() -> list:
+    return _load_json_list(ASYNC_DOCUMENTS_PATH)
+
+
+def _save_async_documents(rows: list) -> None:
+    _save_json_list(ASYNC_DOCUMENTS_PATH, rows)
+
+
+def _get_page_count(path: Path, suffix: str) -> int:
+    if suffix != ".pdf":
+        return 1
+    try:
+        from pypdf import PdfReader
+
+        return len(PdfReader(str(path)).pages)
+    except Exception:
+        try:
+            import fitz
+
+            with fitz.open(str(path)) as doc:
+                return len(doc)
+        except Exception:
+            return 1
+
+
+def _estimate_cost_inr(page_count: int) -> float:
+    # Keeps behavior close to sample payloads: 2 pages -> 10.44, 24 pages -> 20.88.
+    buckets = max(1, math.ceil(max(1, page_count) / 12))
+    return round(10.44 * buckets, 2)
+
+
+def _convert_skills_for_api(skills: object) -> list:
+    if not isinstance(skills, list):
+        return []
+    out = []
+    for skill in skills:
+        text = str(skill).strip()
+        if text:
+            out.append({"skill_name": text})
+    return out
+
+
+def _normalize_parsed_for_api(parsed: dict) -> dict:
+    row = dict(parsed)
+    row["skills"] = _convert_skills_for_api(row.get("skills", []))
+    row["education"] = row.get("education_degree") or ""
+    row["gulf_experience"] = row.get("gulf_expierence")
+    row.pop("gulf_expierence", None)
+    row.pop("raw_text", None)
+    return row
+
+
+def _validation_errors(parsed_for_api: dict) -> list:
+    value = str(parsed_for_api.get("first_name", "") or "").strip()
+    if value:
+        return []
+    return [
+        {
+            "path": {"key": "first_name", "depth": 1, "index": 0},
+            "rule": "required",
+            "field": "first_name",
+            "value": value,
+            "message": "This field is required",
+            "is_valid": False,
+            "parser_field_id": str(uuid4()),
+        }
+    ]
+
+
+def _find_document(document_id: str) -> dict | None:
+    docs = _load_async_documents()
+    for row in docs:
+        if str(row.get("document_id", "")) == document_id:
+            return row
+    return None
+
+
+def _upsert_document(updated: dict) -> None:
+    with ASYNC_DOC_LOCK:
+        docs = _load_async_documents()
+        found = False
+        for idx, row in enumerate(docs):
+            if str(row.get("document_id", "")) == str(updated.get("document_id", "")):
+                docs[idx] = updated
+                found = True
+                break
+        if not found:
+            docs.append(updated)
+        _save_async_documents(docs)
+
+
+def _process_async_document(
+    document_id: str,
+    parser_id: str,
+    environment: str,
+    source_path: str,
+    public_url_path: str,
+    suffix: str,
+    content_type: str,
+    file_size: int,
+    page_count: int,
+    file_hash: str,
+) -> None:
+    started = time.perf_counter()
+    created_at = _now_iso()
+    try:
+        path = Path(source_path)
+        raw_text = extract_raw_text(path, preprocess=True, fast=True, pdf_dpi=150 if page_count >= 12 else 180)
+        parsed = parse_resume_text(raw_text, mode="balanced")
+        token_id = _register_session(parsed, mode=f"async:{parser_id}")
+        parsed_api = _normalize_parsed_for_api(parsed)
+        errors = _validation_errors(parsed_api)
+        is_valid = len(errors) == 0
+
+        # Dedup check by file hash.
+        dedup_entry = None
+        docs = _load_async_documents()
+        for row in docs:
+            if str(row.get("file_hash", "")) != file_hash:
+                continue
+            for entry in row.get("entries", []) if isinstance(row.get("entries"), list) else []:
+                if str(entry.get("status", "")) == "completed" and isinstance(entry.get("parsed_data"), dict):
+                    dedup_entry = entry
+                    break
+            if dedup_entry:
+                break
+
+        # Keep dedup flag/cost tracking, but always return fresh parsed output
+        # from current parser rules (important after extractor improvements).
+
+        processing_time = round(max(0.01, time.perf_counter() - started), 2)
+        entry = {
+            "id": str(uuid4()),
+            "token_id": token_id,
+            "status": "completed",
+            "cost": _estimate_cost_inr(page_count),
+            "cost_currency": "INR",
+            "processing_time_seconds": processing_time,
+            "created_at": created_at,
+            "updated_at": _now_iso(),
+            "is_deduplicated": dedup_entry is not None,
+            "is_valid": is_valid,
+            "parsed_data": parsed_api,
+            "feedback_data": parsed,
+            "validation_errors": errors,
+        }
+        doc = {
+            "document_id": document_id,
+            "job_id": str(uuid4()),
+            "parser_id": parser_id,
+            "environment": environment,
+            "status": "completed",
+            "url": public_url_path,
+            "file_hash": file_hash,
+            "metadata": {
+                "etag": None,
+                "filename": path.name,
+                "page_count": page_count,
+                "size_bytes": file_size,
+                "content_type": content_type,
+            },
+            "entries": [entry],
+            "created_at": created_at,
+            "updated_at": _now_iso(),
+        }
+        _upsert_document(doc)
+    except Exception as exc:
+        doc = _find_document(document_id)
+        if doc is None:
+            return
+        failed_entry = {
+            "id": str(uuid4()),
+            "status": "failed",
+            "cost": 0.0,
+            "cost_currency": "INR",
+            "processing_time_seconds": round(max(0.01, time.perf_counter() - started), 2),
+            "created_at": created_at,
+            "updated_at": _now_iso(),
+            "is_deduplicated": False,
+            "is_valid": False,
+            "parsed_data": {},
+            "validation_errors": [],
+            "error_message": str(exc),
+        }
+        doc["status"] = "failed"
+        doc["entries"] = [failed_entry]
+        doc["updated_at"] = _now_iso()
+        _upsert_document(doc)
+
+
+def _validate_auth_token(authorization: str | None) -> None:
+    configured = (Path("data/.api_token").read_text(encoding="utf-8").strip() if Path("data/.api_token").exists() else "")
+    env_token = configured or str(os.environ.get("SIMPLYPARSE_API_TOKEN", "")).strip()
+    if not env_token:
+        return
+    incoming = str(authorization or "").strip()
+    if incoming.startswith("Token "):
+        incoming = incoming[6:].strip()
+    if incoming != env_token:
+        raise HTTPException(status_code=401, detail="Invalid Authorization token")
+
+
+def _b64url_encode(raw: bytes) -> str:
+    return base64.urlsafe_b64encode(raw).decode("utf-8").rstrip("=")
+
+
+def _b64url_decode(text: str) -> bytes:
+    padding = "=" * ((4 - len(text) % 4) % 4)
+    return base64.urlsafe_b64decode((text + padding).encode("utf-8"))
+
+
+def _auth_secret() -> str:
+    return str(os.environ.get("API_AUTH_SECRET", "change-me-secret")).strip()
+
+
+def _token_ttl_seconds() -> int:
+    try:
+        return max(300, int(os.environ.get("API_AUTH_TTL_SECONDS", "86400")))
+    except Exception:
+        return 86400
+
+
+def _login_user() -> str:
+    return str(os.environ.get("API_LOGIN_USER", "admin")).strip()
+
+
+def _login_password() -> str:
+    return str(os.environ.get("API_LOGIN_PASSWORD", "admin123")).strip()
+
+
+def _create_access_token(username: str) -> str:
+    now = int(time.time())
+    payload = {"sub": username, "iat": now, "exp": now + _token_ttl_seconds()}
+    payload_bytes = json.dumps(payload, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+    payload_part = _b64url_encode(payload_bytes)
+    sig = hmac.new(_auth_secret().encode("utf-8"), payload_part.encode("utf-8"), hashlib.sha256).digest()
+    return f"{payload_part}.{_b64url_encode(sig)}"
+
+
+def _verify_access_token(token: str) -> dict:
+    try:
+        parts = token.split(".")
+        if len(parts) != 2:
+            raise ValueError("invalid token")
+        payload_part, sig_part = parts
+        expected = hmac.new(_auth_secret().encode("utf-8"), payload_part.encode("utf-8"), hashlib.sha256).digest()
+        got = _b64url_decode(sig_part)
+        if not hmac.compare_digest(expected, got):
+            raise ValueError("invalid signature")
+        payload = json.loads(_b64url_decode(payload_part).decode("utf-8"))
+        exp = int(payload.get("exp", 0))
+        if int(time.time()) >= exp:
+            raise ValueError("token expired")
+        return payload if isinstance(payload, dict) else {}
+    except Exception as exc:
+        raise HTTPException(status_code=401, detail=f"Invalid bearer token: {exc}") from exc
+
+
+def _validate_authorization(authorization: str | None) -> dict | None:
+    incoming = str(authorization or "").strip()
+    if incoming.startswith("Bearer "):
+        token = incoming[7:].strip()
+        return _verify_access_token(token)
+    _validate_auth_token(authorization)
+    return None
 
 
 def _normalize_text_for_fingerprint(text: str) -> str:
@@ -197,6 +484,255 @@ def list_models() -> dict:
         "supported_modes": ["fast", "balanced", "resume_bert"],
         "pretrained_models": MODEL_REGISTRY,
         "default_mode": "balanced",
+    }
+
+
+@app.post("/auth/login")
+def auth_login(username: str = Form(...), password: str = Form(...)) -> dict:
+    if username != _login_user() or password != _login_password():
+        raise HTTPException(status_code=401, detail="Invalid username or password")
+    token = _create_access_token(username)
+    return {
+        "status": "success",
+        "message": "Login successful",
+        "access_token": token,
+        "token_type": "bearer",
+        "expires_in": _token_ttl_seconds(),
+    }
+
+
+@app.get("/dapi/v1/document-file/{document_id}")
+def get_document_file(
+    document_id: str,
+    authorization: str | None = Header(default=None),
+    auth: str | None = Query(default=None),
+):
+    if auth:
+        _verify_access_token(auth)
+    else:
+        _validate_authorization(authorization)
+    doc = _find_document(document_id)
+    if doc is None:
+        raise HTTPException(status_code=404, detail="document_id not found")
+    meta_name = str(doc.get("metadata", {}).get("filename", "") or "")
+    path = UPLOADS_DIR / f"{document_id}{Path(meta_name).suffix or '.pdf'}"
+    if not path.exists():
+        raise HTTPException(status_code=404, detail="document file not found")
+    media_type = str(doc.get("metadata", {}).get("content_type", "") or "").strip().lower()
+    guessed = (mimetypes.guess_type(path.name)[0] or "").lower()
+    # Browsers may disable inline PDF rendering when content-type is octet-stream.
+    if media_type in {"", "application/octet-stream", "binary/octet-stream"}:
+        media_type = guessed or "application/octet-stream"
+    if media_type == "application/octet-stream":
+        ext = path.suffix.lower()
+        if ext == ".pdf":
+            media_type = "application/pdf"
+        elif ext in {".png"}:
+            media_type = "image/png"
+        elif ext in {".jpg", ".jpeg"}:
+            media_type = "image/jpeg"
+        elif ext in {".bmp"}:
+            media_type = "image/bmp"
+        elif ext in {".tif", ".tiff"}:
+            media_type = "image/tiff"
+    # Force inline rendering so UI preview does not trigger downloads.
+    return FileResponse(
+        path=str(path),
+        media_type=media_type,
+        headers={"Content-Disposition": "inline", "Cache-Control": "no-store"},
+    )
+
+
+@app.post("/dapi/v1/parser/{parser_id}/parse/async")
+async def parse_async_endpoint(
+    parser_id: str,
+    background_tasks: BackgroundTasks,
+    file: UploadFile = File(...),
+    environment: str = Form("dev"),
+    authorization: str | None = Header(default=None),
+) -> dict:
+    _validate_authorization(authorization)
+    suffix = Path(file.filename or "").suffix.lower()
+    if suffix not in {".pdf", ".png", ".jpg", ".jpeg", ".tiff", ".bmp", ".docx", ".txt"}:
+        raise HTTPException(status_code=400, detail=f"Unsupported file type: {suffix}")
+
+    raw = await file.read()
+    if not raw:
+        raise HTTPException(status_code=400, detail="Uploaded file is empty")
+
+    document_id = str(uuid4())
+    job_id = str(uuid4())
+    file_hash = hashlib.sha256(raw).hexdigest()
+    UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
+    stored_path = UPLOADS_DIR / f"{document_id}{suffix}"
+    stored_path.write_bytes(raw)
+    page_count = _get_page_count(stored_path, suffix)
+    public_url_path = f"/dapi/v1/document-file/{document_id}"
+
+    doc = {
+        "document_id": document_id,
+        "job_id": job_id,
+        "parser_id": parser_id,
+        "environment": environment,
+        "status": "processing",
+        "url": public_url_path,
+        "file_hash": file_hash,
+        "metadata": {
+            "etag": None,
+            "filename": file.filename or stored_path.name,
+            "page_count": page_count,
+            "size_bytes": len(raw),
+            "content_type": file.content_type or "application/octet-stream",
+        },
+        "entries": [],
+        "created_at": _now_iso(),
+        "updated_at": _now_iso(),
+    }
+    _upsert_document(doc)
+
+    background_tasks.add_task(
+        _process_async_document,
+        document_id=document_id,
+        parser_id=parser_id,
+        environment=environment,
+        source_path=str(stored_path),
+        public_url_path=public_url_path,
+        suffix=suffix,
+        content_type=file.content_type or "application/octet-stream",
+        file_size=len(raw),
+        page_count=page_count,
+        file_hash=file_hash,
+    )
+    return {
+        "status": "success",
+        "code": "document_queued",
+        "message": "Document queued for processing",
+        "data": {"document_id": document_id, "job_id": job_id},
+    }
+
+
+@app.post("/dapi/v1/parser/{parser_id}/parse/async/batch")
+async def parse_async_batch_endpoint(
+    parser_id: str,
+    background_tasks: BackgroundTasks,
+    files: list[UploadFile] = File(...),
+    environment: str = Form("dev"),
+    authorization: str | None = Header(default=None),
+) -> dict:
+    _validate_authorization(authorization)
+    if not files:
+        raise HTTPException(status_code=400, detail="At least one file is required")
+
+    queued = []
+    for file in files:
+        suffix = Path(file.filename or "").suffix.lower()
+        if suffix not in {".pdf", ".png", ".jpg", ".jpeg", ".tiff", ".bmp", ".docx", ".txt"}:
+            continue
+        raw = await file.read()
+        if not raw:
+            continue
+        document_id = str(uuid4())
+        job_id = str(uuid4())
+        file_hash = hashlib.sha256(raw).hexdigest()
+        UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
+        stored_path = UPLOADS_DIR / f"{document_id}{suffix}"
+        stored_path.write_bytes(raw)
+        page_count = _get_page_count(stored_path, suffix)
+        public_url_path = f"/dapi/v1/document-file/{document_id}"
+        doc = {
+            "document_id": document_id,
+            "job_id": job_id,
+            "parser_id": parser_id,
+            "environment": environment,
+            "status": "processing",
+            "url": public_url_path,
+            "file_hash": file_hash,
+            "metadata": {
+                "etag": None,
+                "filename": file.filename or stored_path.name,
+                "page_count": page_count,
+                "size_bytes": len(raw),
+                "content_type": file.content_type or "application/octet-stream",
+            },
+            "entries": [],
+            "created_at": _now_iso(),
+            "updated_at": _now_iso(),
+        }
+        _upsert_document(doc)
+        background_tasks.add_task(
+            _process_async_document,
+            document_id=document_id,
+            parser_id=parser_id,
+            environment=environment,
+            source_path=str(stored_path),
+            public_url_path=public_url_path,
+            suffix=suffix,
+            content_type=file.content_type or "application/octet-stream",
+            file_size=len(raw),
+            page_count=page_count,
+            file_hash=file_hash,
+        )
+        queued.append({"document_id": document_id, "job_id": job_id, "filename": file.filename})
+
+    return {
+        "status": "success",
+        "code": "documents_queued",
+        "message": "Documents queued for processing",
+        "data": {"parser_id": parser_id, "count": len(queued), "items": queued},
+    }
+
+
+@app.get("/dapi/v1/parser/{parser_id}/document/{document_id}")
+def get_document_endpoint(
+    parser_id: str,
+    document_id: str,
+    authorization: str | None = Header(default=None),
+) -> dict:
+    _validate_authorization(authorization)
+    doc = _find_document(document_id)
+    if doc is None or str(doc.get("parser_id", "")) != parser_id:
+        raise HTTPException(status_code=404, detail="document_id not found")
+
+    entries = doc.get("entries", []) if isinstance(doc.get("entries"), list) else []
+    status = str(doc.get("status", "processing") or "processing")
+    if status == "failed":
+        return {
+            "status": "success",
+            "code": "document_failed",
+            "message": "Document processing failed",
+            "data": {
+                "document_id": doc.get("document_id", document_id),
+                "status": status,
+                "url": doc.get("url", ""),
+                "metadata": doc.get("metadata", {}),
+                "entries": entries,
+            },
+        }
+    if status != "completed" or not entries:
+        return {
+            "status": "success",
+            "code": "no_parsed_data",
+            "message": "No parsed data found for the document",
+            "data": {
+                "document_id": doc.get("document_id", document_id),
+                "status": status,
+                "url": doc.get("url", ""),
+                "metadata": doc.get("metadata", {}),
+                "entries": [],
+            },
+        }
+
+    return {
+        "status": "success",
+        "code": "document_retrieved",
+        "message": "Document retrieved successfully",
+        "data": {
+            "document_id": doc.get("document_id", document_id),
+            "status": doc.get("status", "completed"),
+            "url": doc.get("url", ""),
+            "metadata": doc.get("metadata", {}),
+            "entries": entries,
+        },
     }
 
 
@@ -516,18 +1052,20 @@ async def test_endpoint(
     return ExtractionWithTokenResponse(token_id=token_id, extracted_data=response_obj)
 
 
-@app.post("/test-with-llm", response_model=TestWithLLMResponse)
-async def test_with_llm_endpoint(
+@app.post("/auto-test-llm-colab", response_model=AutoTrainLLMResponse)
+async def auto_test_llm_colab_endpoint(
     resume_file: UploadFile = File(...),
     preprocess: bool = Form(True),
-    mode: str = Form("balanced"),
     pdf_dpi: int = Form(220),
+    mode: str = Form("balanced"),
     llm_base_model_id: str = Form("Qwen/Qwen2.5-3B-Instruct"),
     llm_adapter_path: str = Form("models/lora_adapter"),
     llm_max_new_tokens: int = Form(768),
-) -> TestWithLLMResponse:
+    auto_train: bool = Form(True),
+) -> AutoTrainLLMResponse:
     suffix = Path(resume_file.filename or "").suffix.lower()
-    if suffix not in {".pdf", ".png", ".jpg", ".jpeg", ".tiff", ".bmp", ".docx", ".txt"}:
+    supported_types = {".pdf", ".png", ".jpg", ".jpeg", ".tiff", ".bmp", ".docx", ".txt"}
+    if suffix not in supported_types:
         raise HTTPException(status_code=400, detail=f"Unsupported file type: {suffix}")
     if mode not in {"fast", "balanced", "resume_bert"}:
         raise HTTPException(status_code=400, detail=f"Unsupported mode: {mode}")
@@ -545,11 +1083,9 @@ async def test_with_llm_endpoint(
         f"llm_adapter_path={llm_adapter_path}",
         f"llm_max_new_tokens={llm_max_new_tokens}",
     ]
-    print("[test-with-llm] started")
-    print(f"[test-with-llm] suffix={suffix}, mode={mode}")
+    llm_parsed = empty_llm_schema(raw_text="")
 
     try:
-        print("[test-with-llm] extracting OCR text")
         raw_text = extract_raw_text(
             tmp_path,
             preprocess=preprocess,
@@ -557,23 +1093,7 @@ async def test_with_llm_endpoint(
             pdf_dpi=pdf_dpi,
         )
         llm_debug.append(f"raw_text_len={len(raw_text)}")
-        print(f"[test-with-llm] raw_text_len={len(raw_text)}")
-
-        print("[test-with-llm] running ML parse")
-        parsed = parse_resume_text(raw_text, mode=mode)
-        parsed = _apply_feedback_memory(parsed, raw_text)
-    except Exception as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
-    finally:
-        try:
-            tmp_path.unlink(missing_ok=True)
-        except Exception:
-            pass
-
-    llm_parsed = empty_llm_schema(raw_text=raw_text)
-    if raw_text:
-        try:
-            print("[test-with-llm] running LLM parse")
+        if raw_text:
             llm_parsed = run_lora_qlora_extraction(
                 raw_text=raw_text,
                 adapter_path=llm_adapter_path,
@@ -581,86 +1101,28 @@ async def test_with_llm_endpoint(
                 max_new_tokens=llm_max_new_tokens,
                 debug_events=llm_debug,
             )
-            print("[test-with-llm] LLM parse success")
-        except Exception as exc:
-            llm_error = str(exc)
-            llm_debug.append(f"llm_exception={exc!r}")
-            print(f"[test-with-llm] LLM parse failed: {exc!r}")
-    else:
-        llm_error = "OCR returned empty text; skipped LLM extraction."
-        llm_debug.append("skipped_llm_call_because_raw_text_is_empty")
-        print("[test-with-llm] skipped LLM parse because raw_text is empty")
-
-    ml_output = ResumeExtractedResponse(**parsed)
-    llm_output = ResumeExtractedResponse(**llm_parsed)
-    token_id = _register_session(ml_output.model_dump(), mode=f"{mode}+llm")
-    print(f"[test-with-llm] finished token_id={token_id}")
-    return TestWithLLMResponse(
-        token_id=token_id,
-        extracted_data=ml_output,
-        llm_output=llm_output,
-        llm_error=llm_error,
-        llm_debug=llm_debug,
-    )
-
-
-@app.post("/auto-train", response_model=AutoTrainResponse)
-@app.post("/auto-train-llm", response_model=AutoTrainResponse)
-async def auto_train_endpoint(
-    resume_file: UploadFile = File(...),
-    preprocess: bool = Form(True),
-    pdf_dpi: int = Form(220),
-    mode: str = Form("balanced"),
-) -> AutoTrainResponse:
-    suffix = Path(resume_file.filename or "").suffix.lower()
-    supported_types = {".pdf", ".png", ".jpg", ".jpeg", ".tiff", ".bmp", ".docx", ".txt"}
-    if suffix not in supported_types:
-        raise HTTPException(status_code=400, detail=f"Unsupported file type: {suffix}")
-    if mode not in {"fast", "balanced", "resume_bert"}:
-        raise HTTPException(status_code=400, detail=f"Unsupported mode: {mode}")
-
-    with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
-        tmp.write(await resume_file.read())
-        tmp_path = Path(tmp.name)
-
-    raw_text = ""
-    parse_error: str | None = None
-    debug: list[str] = [
-        f"input_suffix={suffix}",
-        f"mode={mode}",
-    ]
-    parsed = {"raw_text": ""}
-
-    try:
-        raw_text = extract_raw_text(
-            tmp_path,
-            preprocess=preprocess,
-            fast=(mode != "resume_bert"),
-            pdf_dpi=pdf_dpi,
-        )
-        debug.append(f"raw_text_len={len(raw_text)}")
-        parsed = parse_resume_text(raw_text, mode=mode)
-        parsed = _apply_feedback_memory(parsed, raw_text)
+        else:
+            llm_error = "OCR returned empty text; skipped LLM extraction."
+            llm_debug.append("skipped_llm_call_because_raw_text_is_empty")
     except Exception as exc:
-        parse_error = str(exc)
-        debug.append(f"parse_exception={exc!r}")
-        parsed = {"raw_text": raw_text}
+        llm_error = str(exc)
+        llm_debug.append(f"llm_exception={exc!r}")
     finally:
         try:
             tmp_path.unlink(missing_ok=True)
         except Exception:
             pass
 
-    extracted_data = ResumeExtractedResponse(**parsed)
+    llm_output = ResumeExtractedResponse(**llm_parsed)
     dataset = _load_json_list(DATASET_PATH)
     added_entries = 0
     trained = False
     model = train_mapping_model_from_dataset(dataset) if dataset else {}
 
-    if parse_error is None:
-        train_row = extracted_data.model_dump()
+    if llm_error is None and raw_text and auto_train:
+        train_row = llm_output.model_dump()
         train_row["_feedback_weight"] = 1
-        train_row["_auto_label_source"] = "auto_train_endpoint"
+        train_row["_auto_label_source"] = "auto_test_llm_colab_endpoint"
         train_row["_auto_label_created_at"] = datetime.now(timezone.utc).isoformat()
         dataset.append(train_row)
         _save_json_list(DATASET_PATH, dataset)
@@ -674,7 +1136,7 @@ async def auto_train_endpoint(
         events["retrain_events"].append(
             {
                 "timestamp": datetime.now(timezone.utc).isoformat(),
-                "source": "auto_train_endpoint",
+                "source": "auto_test_llm_colab_endpoint",
                 "added_entries": 1,
                 "total_dataset_entries": len(dataset),
                 "mapping_feature_count": sum(len(v) for v in model.values()),
@@ -683,8 +1145,8 @@ async def auto_train_endpoint(
         )
         _save_training_events(events)
 
-    token_id = _register_session(extracted_data.model_dump(), mode=f"auto-train:{mode}")
-    return AutoTrainResponse(
+    token_id = _register_session(llm_output.model_dump(), mode=f"auto-test-llm-colab:{mode}")
+    return AutoTrainLLMResponse(
         token_id=token_id,
         trained=trained,
         added_entries=added_entries,
@@ -692,7 +1154,11 @@ async def auto_train_endpoint(
         dataset_path=str(DATASET_PATH),
         model_path=str(MODEL_PATH),
         mapping_counts={k: len(v) for k, v in model.items()},
-        extracted_data=extracted_data,
-        parse_error=parse_error,
-        debug=debug,
+        llm_output=llm_output,
+        extracted_data=llm_output,
+        rating=5,
+        corrected_data=llm_output,
+        retrain_on_submit=auto_train,
+        llm_error=llm_error,
+        llm_debug=llm_debug,
     )

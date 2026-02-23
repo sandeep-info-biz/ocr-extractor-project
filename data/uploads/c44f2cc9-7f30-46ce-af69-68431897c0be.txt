@@ -1,0 +1,5 @@
+John Doe
+Email john@example.com
+DOB 15 June 1989
+Skills Python FastAPI
+Experience 5 years

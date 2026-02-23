@@ -109,14 +109,10 @@ class AutoTrainLLMResponse(BaseModel):
     model_path: str
     mapping_counts: dict
     llm_output: ResumeExtractedResponse
-    llm_error: Optional[str] = None
-    llm_debug: Optional[List[str]] = None
-
-
-class TestWithLLMResponse(BaseModel):
-    token_id: str
-    extracted_data: ResumeExtractedResponse
-    llm_output: ResumeExtractedResponse
+    extracted_data: Optional[ResumeExtractedResponse] = None
+    rating: int = 5
+    corrected_data: Optional[ResumeExtractedResponse] = None
+    retrain_on_submit: bool = True
     llm_error: Optional[str] = None
     llm_debug: Optional[List[str]] = None
 

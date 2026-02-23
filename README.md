@@ -27,20 +27,22 @@ Fast test request modes:
 - `preprocess` = `true|false`
 - `pdf_dpi` (default `220`, lower is faster)
 
-Auto-train endpoint (LLM -> dataset -> mapping retrain):
-- `POST /auto-train-llm`
+Single LLM endpoint for Colab (OCR -> LLM -> optional mapping retrain):
+- `POST /auto-test-llm-colab`
 - Form fields:
   - `resume_file` (required)
   - `preprocess` = `true|false`
   - `pdf_dpi` (default `220`)
+  - `mode` = `fast|balanced|resume_bert`
   - `llm_base_model_id` (default `Qwen/Qwen2.5-3B-Instruct`)
   - `llm_adapter_path` (default `models/lora_adapter`)
   - `llm_max_new_tokens` (default `768`)
+  - `auto_train` = `true|false` (default `true`)
 - Flow:
   - OCR extracts raw text
   - LLM generates structured JSON
-  - result is appended to `data/resume_training_seed.json`
-  - mapping model is retrained and saved to `models/resume_mapping_model.json`
+  - if `auto_train=true`, result is appended to `data/resume_training_seed.json`
+  - if `auto_train=true`, mapping model is retrained and saved to `models/resume_mapping_model.json`
 
 `/test` now returns:
 - `token_id`

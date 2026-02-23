@@ -1,10 +1,39 @@
 import re
+from datetime import date
 from functools import lru_cache
 from typing import Dict, List, Optional, Tuple
 
 from app.constants import DEFAULT_SKILLS, DEGREE_HINTS, EMAIL_RE, PHONE_RE, SECTION_HEADERS, URL_RE
 from app.mapping_model import apply_mapping_model, load_mapping_model
 from app.pretrained_resume_model import MODEL_REGISTRY, extract_entities
+
+
+MONTH_MAP = {
+    "jan": 1,
+    "january": 1,
+    "feb": 2,
+    "february": 2,
+    "mar": 3,
+    "march": 3,
+    "apr": 4,
+    "april": 4,
+    "may": 5,
+    "jun": 6,
+    "june": 6,
+    "jul": 7,
+    "july": 7,
+    "aug": 8,
+    "august": 8,
+    "sep": 9,
+    "sept": 9,
+    "september": 9,
+    "oct": 10,
+    "october": 10,
+    "nov": 11,
+    "november": 11,
+    "dec": 12,
+    "december": 12,
+}
 
 
 @lru_cache(maxsize=4)
@@ -58,9 +87,179 @@ def load_spacy_pipeline(prefer_fast: bool = True):
 
 
 def normalize_spaces(text: str) -> str:
+    text = str(text or "").replace("\x00", " ")
+    # Keep page separator token intact while cleaning OCR noise.
     lines = [re.sub(r"\s+", " ", ln).strip() for ln in text.splitlines()]
     lines = [ln for ln in lines if ln]
     return "\n".join(lines)
+
+
+def _collapse_spaced_month_names(text: str) -> str:
+    out = str(text or "")
+    for month in sorted(set(MONTH_MAP.keys()), key=len, reverse=True):
+        letters = r"\s*".join(list(month))
+        out = re.sub(rf"\b{letters}\b", month, out, flags=re.IGNORECASE)
+    return out
+
+
+def _normalize_date_text(text: str) -> str:
+    out = str(text or "")
+    out = _collapse_spaced_month_names(out)
+    out = re.sub(r"(\d{1,2})\s*(st|nd|rd|th)\b", r"\1", out, flags=re.IGNORECASE)
+    out = re.sub(r"(\d)\s+(?=[/-])", r"\1", out)
+    out = re.sub(r"(?<=[/-])\s+(\d)", r"\1", out)
+    out = re.sub(r"\s+", " ", out).strip()
+    return out
+
+
+def _coerce_two_digit_year(year: int) -> int:
+    if year >= 100:
+        return year
+    # Assume adult resume candidates; 00-29 -> 2000+, else 1900+.
+    return 2000 + year if year <= 29 else 1900 + year
+
+
+def _is_reasonable_dob(y: int, m: int, d: int) -> bool:
+    try:
+        dob = date(y, m, d)
+    except Exception:
+        return False
+    today = date.today()
+    age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+    return 14 <= age <= 80
+
+
+def _to_iso_dob(y: int, m: int, d: int) -> str:
+    return f"{y:04d}-{m:02d}-{d:02d}"
+
+
+def _extract_date_candidates(text: str) -> List[Tuple[int, int, int]]:
+    src = _normalize_date_text(text)
+    out: List[Tuple[int, int, int]] = []
+
+    # YYYY-MM-DD / YYYY/MM/DD / YYYY.MM.DD
+    for y, m, d in re.findall(r"\b((?:19|20)\d{2})[./-](\d{1,2})[./-](\d{1,2})\b", src):
+        out.append((int(y), int(m), int(d)))
+
+    # DD-MM-YYYY / MM-DD-YYYY / DD/MM/YY (resolved later)
+    for a, b, y in re.findall(r"\b(\d{1,2})[./-](\d{1,2})[./-](\d{2,4})\b", src):
+        aa, bb, yy = int(a), int(b), _coerce_two_digit_year(int(y))
+        # Try DD-MM first (common in resumes), then MM-DD.
+        out.append((yy, bb, aa))
+        out.append((yy, aa, bb))
+
+    # DD Month YYYY
+    for d, mon, y in re.findall(
+        r"\b(\d{1,2})\s*[-,]?\s*(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t|tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\s*[-,]?\s*(\d{2,4})\b",
+        src,
+        flags=re.IGNORECASE,
+    ):
+        mm = MONTH_MAP.get(mon.lower(), 0)
+        yy = _coerce_two_digit_year(int(y))
+        out.append((yy, mm, int(d)))
+
+    # Month DD YYYY
+    for mon, d, y in re.findall(
+        r"\b(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t|tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\s*[-,]?\s*(\d{1,2})\s*[-,]?\s*(\d{2,4})\b",
+        src,
+        flags=re.IGNORECASE,
+    ):
+        mm = MONTH_MAP.get(mon.lower(), 0)
+        yy = _coerce_two_digit_year(int(y))
+        out.append((yy, mm, int(d)))
+
+    # De-duplicate preserving order
+    uniq: List[Tuple[int, int, int]] = []
+    seen = set()
+    for item in out:
+        if item in seen:
+            continue
+        seen.add(item)
+        uniq.append(item)
+    return uniq
+
+
+def extract_date_of_birth(text: str) -> str:
+    src = _normalize_date_text(text)
+
+    # Prefer dates found near DOB keywords.
+    context_patterns = [
+        r"(?:date\s*of\s*birth|dob|d\.?\s*o\.?\s*b\.?)\s*[:\-]?\s*([^\n]{0,80})",
+        r"(?:birth\s*date|born\s*on)\s*[:\-]?\s*([^\n]{0,80})",
+    ]
+    for pat in context_patterns:
+        for snippet in re.findall(pat, src, flags=re.IGNORECASE):
+            for y, m, d in _extract_date_candidates(snippet):
+                if _is_reasonable_dob(y, m, d):
+                    return _to_iso_dob(y, m, d)
+
+    # Fallback global scan with light filtering (skip expiry-like contexts).
+    for match in re.finditer(r".{0,20}", src):
+        _ = match  # keeps lint happy in minimal environments
+        break
+    for y, m, d in _extract_date_candidates(src):
+        if not _is_reasonable_dob(y, m, d):
+            continue
+        candidate = _to_iso_dob(y, m, d)
+        near = re.search(rf".{{0,20}}{re.escape(candidate)}.{{0,20}}", src, flags=re.IGNORECASE)
+        if near and re.search(r"(expiry|passport|valid|issue)", near.group(0), flags=re.IGNORECASE):
+            continue
+        return candidate
+    return ""
+
+
+def _split_pages(text: str) -> List[str]:
+    parts = [p.strip() for p in re.split(r"\[\[PAGE_BREAK\]\]", str(text or ""), flags=re.IGNORECASE) if p.strip()]
+    return parts if parts else [str(text or "")]
+
+
+def _page_resume_score(text: str) -> int:
+    keywords = [
+        "resume",
+        "experience",
+        "education",
+        "skills",
+        "project",
+        "linkedin",
+        "objective",
+        "summary",
+        "work history",
+        "certification",
+    ]
+    low = text.lower()
+    return sum(1 for key in keywords if key in low)
+
+
+def _page_vaccination_score(text: str) -> int:
+    keywords = [
+        "certificate for covid",
+        "vaccination",
+        "covid-19",
+        "covin",
+        "covishield",
+        "dose",
+        "beneficiary",
+        "batch no",
+    ]
+    low = text.lower()
+    return sum(1 for key in keywords if key in low)
+
+
+def _select_resume_pages(text: str) -> str:
+    pages = _split_pages(text)
+    if len(pages) <= 1:
+        return text
+
+    selected: List[str] = []
+    for page in pages:
+        resume_score = _page_resume_score(page)
+        vaccination_score = _page_vaccination_score(page)
+        # Keep clear resume pages, and keep uncertain pages as context.
+        if resume_score >= vaccination_score or (resume_score == 0 and vaccination_score == 0):
+            selected.append(page)
+
+    # If all pages looked non-resume, keep original text to avoid empty parsing.
+    return "\n".join(selected) if selected else text
 
 
 def extract_contacts(text: str) -> Dict[str, Optional[str]]:
@@ -365,7 +564,7 @@ def _merge_pretrained_entities(parsed: Dict[str, object], entities: List[Dict[st
 
 
 def parse_resume_text(raw_text: str, mode: str = "balanced") -> Dict[str, object]:
-    text = normalize_spaces(raw_text)
+    text = normalize_spaces(_select_resume_pages(raw_text))
     if mode not in {"fast", "balanced", "resume_bert"}:
         mode = "balanced"
 
@@ -390,7 +589,7 @@ def parse_resume_text(raw_text: str, mode: str = "balanced") -> Dict[str, object
         "last_name": last_name,
         "phone_number": contacts.get("phone") or "",
         "email": contacts.get("email") or "",
-        "date_of_birth": "",
+        "date_of_birth": extract_date_of_birth(text),
         "gender": "",
         "religion": "",
         "marital_status": "",

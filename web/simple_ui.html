@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SimplyParse UI</title>
+  <style>
+    :root {
+      --bg: #f4f6f8;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --brand: #0f766e;
+      --danger: #b91c1c;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: "Segoe UI", system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    input, button, select { padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; font-size: 14px; }
+    button { background: var(--brand); color: #fff; border-color: var(--brand); cursor: pointer; }
+    button[disabled] { opacity: .6; cursor: not-allowed; }
+    .muted { color: var(--muted); font-size: 13px; }
+    .err { color: var(--danger); font-size: 13px; }
+    .grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; }
+    .grid > div { min-width: 0; }
+    .json { background: #0b1020; color: #d1e3ff; padding: 10px; border-radius: 8px; overflow: auto; max-height: 420px; font-size: 12px; white-space: pre-wrap; word-break: break-word; }
+    textarea.json-edit { width: 100%; min-height: 220px; background: #0b1020; color: #d1e3ff; border: 1px solid #334155; border-radius: 8px; padding: 10px; font-size: 12px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .doc { border: 1px solid var(--line); border-radius: 10px; padding: 10px; margin-top: 12px; background: #fff; }
+    .pill { display: inline-block; font-size: 12px; padding: 4px 8px; border-radius: 999px; background: #eef2ff; }
+    iframe { width: 100%; min-height: 420px; border: 1px solid var(--line); border-radius: 8px; }
+    .pdf-box { width: 100%; min-height: 420px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h2 style="margin:0 0 10px 0;">Parser Console</h2>
+      <div class="row">
+        <input id="apiBase" placeholder="api base url" />
+        <input id="username" placeholder="username" value="admin" />
+        <input id="password" placeholder="password" type="password" value="admin123" />
+        <button id="btnLogin">Login</button>
+        <span id="loginState" class="muted">Not logged in</span>
+      </div>
+      <div id="loginErr" class="err"></div>
+    </div>
+
+    <div class="card">
+      <div class="row">
+        <input id="parserId" placeholder="parser id" value="f92700" />
+        <select id="environment">
+          <option value="dev">dev</option>
+          <option value="prod">prod</option>
+        </select>
+        <input id="files" type="file" accept=".pdf,.png,.jpg,.jpeg,.tiff,.bmp,.docx,.txt" multiple />
+        <button id="btnBatch">Upload Batch</button>
+      </div>
+      <div class="muted">Flow: login -> batch upload -> automatic polling -> view parsed data when done.</div>
+      <div id="batchErr" class="err"></div>
+    </div>
+
+    <div id="docs"></div>
+  </div>
+
+  <script>
+    let token = "";
+    const docsMap = new Map();
+    const $ = (id) => document.getElementById(id);
+    $("apiBase").value = "http://127.0.0.1:8000";
+
+    function normalizeApiBase(raw) {
+      const value = String(raw || "").trim();
+      if (!value) return "http://127.0.0.1:8000";
+      try {
+        const u = new URL(value, window.location.origin);
+        return u.origin;
+      } catch (_) {
+        return "http://127.0.0.1:8000";
+      }
+    }
+
+    function apiUrl(path) {
+      const base = normalizeApiBase($("apiBase").value).replace(/\/+$/, "");
+      $("apiBase").value = base;
+      return `${base}${path}`;
+    }
+
+    function authHeaders() {
+      if (!token) return {};
+      return { "Authorization": "Bearer " + token };
+    }
+
+    function setErr(id, msg) {
+      $(id).textContent = msg || "";
+    }
+
+    function pretty(obj) {
+      return JSON.stringify(obj, null, 2);
+    }
+
+    function previewHtml(doc) {
+      const url = doc.url || "";
+      const filename = String(doc.metadata?.filename || "").toLowerCase();
+      const contentType = String(doc.metadata?.content_type || "").toLowerCase();
+      const isImage = contentType.startsWith("image/") || /\.(png|jpe?g|bmp|tiff?)$/.test(filename);
+      const isPdf = contentType === "application/pdf" || filename.endsWith(".pdf");
+
+      if (isImage) {
+        return `<img src="${url}" alt="document preview" style="width:100%; max-height:520px; object-fit:contain; border:1px solid var(--line); border-radius:8px; background:#fff;" />`;
+      }
+      if (isPdf) {
+        return `
+          <object class="pdf-box" data="${url}#toolbar=1&navpanes=0&scrollbar=1" type="application/pdf">
+            <iframe src="${url}" title="pdf preview"></iframe>
+          </object>
+          <div class="muted" style="margin-top:6px;">
+            If PDF preview is blocked by browser policy:
+            <a href="${url}" target="_blank" rel="noopener">Open PDF</a>
+          </div>
+        `;
+      }
+      return `<iframe src="${url}" title="file preview"></iframe>
+              <div class="muted" style="margin-top:6px;">If preview is not supported for this file type, open directly:
+                <a href="${url}" target="_blank" rel="noopener">Open file</a>
+              </div>`;
+    }
+
+    function renderDocs() {
+      const root = $("docs");
+      root.innerHTML = "";
+      for (const doc of docsMap.values()) {
+        const el = document.createElement("div");
+        el.className = "card doc";
+        const status = doc.status || "processing";
+        const entry = (doc.entries && doc.entries[0]) || null;
+        const parsed = entry && entry.parsed_data ? entry.parsed_data : {};
+        const feedbackData = entry && entry.feedback_data ? entry.feedback_data : parsed;
+        const tokenId = entry && entry.token_id ? entry.token_id : "";
+        const errorMessage = entry && entry.error_message ? String(entry.error_message) : "";
+        const safeUrl = doc.url || "";
+        el.innerHTML = `
+          <div class="row" style="justify-content:space-between;">
+            <strong>${doc.metadata?.filename || doc.document_id}</strong>
+            <span class="pill">${status}</span>
+          </div>
+          <div class="muted">document_id: ${doc.document_id}</div>
+          ${errorMessage ? `<div class="err" style="margin-top:6px;">Error: ${errorMessage}</div>` : ""}
+          <div class="grid" style="margin-top:10px;">
+            <div>
+              ${previewHtml(doc)}
+            </div>
+            <div>
+              <div class="muted">Parsed Data (Read Only)</div>
+              <pre class="json">${pretty(parsed)}</pre>
+              <div class="muted" style="margin-top:8px;">Edit JSON and submit feedback to improve model</div>
+              <textarea id="fb-${doc.document_id}" class="json-edit">${pretty(feedbackData)}</textarea>
+              <div class="row" style="margin-top:8px;">
+                <button class="btnFeedback" data-doc="${doc.document_id}" data-token="${tokenId}" ${tokenId ? "" : "disabled"}>Send Feedback + Retrain</button>
+                <span id="fb-state-${doc.document_id}" class="muted"></span>
+              </div>
+            </div>
+          </div>
+        `;
+        root.appendChild(el);
+      }
+    }
+
+    async function pollDocument(parserId, documentId) {
+      const url = `/dapi/v1/parser/${encodeURIComponent(parserId)}/document/${encodeURIComponent(documentId)}`;
+      while (true) {
+        const res = await fetch(apiUrl(url), { headers: authHeaders() });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || "poll failed");
+        const payload = data.data || {};
+        if (payload.url) {
+          const preview = payload.url.startsWith("http") ? payload.url : apiUrl(payload.url);
+          payload.url = preview + (preview.includes("?") ? "&" : "?") + "auth=" + encodeURIComponent(token);
+        }
+        docsMap.set(documentId, payload);
+        renderDocs();
+        if (payload.status === "completed" || payload.status === "failed") break;
+        await new Promise(r => setTimeout(r, 2500));
+      }
+    }
+
+    $("btnLogin").addEventListener("click", async () => {
+      setErr("loginErr", "");
+      try {
+        const fd = new FormData();
+        fd.append("username", $("username").value.trim());
+        fd.append("password", $("password").value);
+        const res = await fetch(apiUrl("/auth/login"), { method: "POST", body: fd });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || "login failed");
+        token = data.access_token || "";
+        $("loginState").textContent = token ? "Logged in" : "Not logged in";
+      } catch (e) {
+        setErr("loginErr", e.message || String(e));
+      }
+    });
+
+    $("btnBatch").addEventListener("click", async () => {
+      setErr("batchErr", "");
+      try {
+        if (!token) throw new Error("Login first");
+        const files = $("files").files;
+        if (!files || files.length === 0) throw new Error("Choose at least one file");
+        const parserId = $("parserId").value.trim() || "f92700";
+        const env = $("environment").value;
+        const fd = new FormData();
+        fd.append("environment", env);
+        for (const f of files) fd.append("files", f, f.name);
+        const res = await fetch(apiUrl(`/dapi/v1/parser/${encodeURIComponent(parserId)}/parse/async/batch`), {
+          method: "POST",
+          headers: authHeaders(),
+          body: fd
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || "batch upload failed");
+        const items = data.data?.items || [];
+        for (const item of items) {
+          const docId = item.document_id;
+          docsMap.set(docId, {
+            document_id: docId,
+            status: "processing",
+            metadata: { filename: item.filename },
+            entries: []
+          });
+          renderDocs();
+          pollDocument(parserId, docId).catch(err => setErr("batchErr", err.message || String(err)));
+        }
+      } catch (e) {
+        setErr("batchErr", e.message || String(e));
+      }
+    });
+
+    document.addEventListener("click", async (ev) => {
+      const btn = ev.target.closest(".btnFeedback");
+      if (!btn) return;
+      const documentId = btn.getAttribute("data-doc");
+      const tokenId = btn.getAttribute("data-token");
+      const stateEl = $(`fb-state-${documentId}`);
+      try {
+        setErr("batchErr", "");
+        if (!tokenId) throw new Error("token_id missing for this document");
+        const area = $(`fb-${documentId}`);
+        if (!area) throw new Error("feedback editor not found");
+        const edited = JSON.parse(area.value);
+        const res = await fetch(apiUrl("/feedback"), {
+          method: "POST",
+          headers: { ...authHeaders(), "Content-Type": "application/json" },
+          body: JSON.stringify({
+            token_id: tokenId,
+            extracted_data: edited,
+            rating: 5,
+            retrain_on_submit: true
+          })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || "feedback submit failed");
+        stateEl.textContent = `Feedback saved. Dataset: ${data.total_dataset_entries}, retrained: ${data.retrained}`;
+      } catch (e) {
+        if (stateEl) stateEl.textContent = "";
+        setErr("batchErr", e.message || String(e));
+      }
+    });
+  </script>
+</body>
+</html>
