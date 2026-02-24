@@ -60,6 +60,7 @@ class ExtractionWithTokenResponse(BaseModel):
 
 class FeedbackRequest(BaseModel):
     token_id: str
+    user_id: Optional[str] = None
     extracted_data: Optional[ResumeExtractedResponse] = None
     rating: int = 5
     corrected_data: Optional[ResumeExtractedResponse] = None

@@ -1,273 +1,1082 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SimplyParse UI</title>
+  <title>SimplyParse · modern UI</title>
   <style>
-    :root {
-      --bg: #f4f6f8;
-      --card: #ffffff;
-      --text: #111827;
-      --muted: #6b7280;
-      --line: #e5e7eb;
-      --brand: #0f766e;
-      --danger: #b91c1c;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-    * { box-sizing: border-box; }
-    body { margin: 0; font-family: "Segoe UI", system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); }
-    .wrap { max-width: 1200px; margin: 0 auto; padding: 20px; }
-    .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
-    .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-    input, button, select { padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; font-size: 14px; }
-    button { background: var(--brand); color: #fff; border-color: var(--brand); cursor: pointer; }
-    button[disabled] { opacity: .6; cursor: not-allowed; }
-    .muted { color: var(--muted); font-size: 13px; }
-    .err { color: var(--danger); font-size: 13px; }
-    .grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; }
-    .grid > div { min-width: 0; }
-    .json { background: #0b1020; color: #d1e3ff; padding: 10px; border-radius: 8px; overflow: auto; max-height: 420px; font-size: 12px; white-space: pre-wrap; word-break: break-word; }
-    textarea.json-edit { width: 100%; min-height: 220px; background: #0b1020; color: #d1e3ff; border: 1px solid #334155; border-radius: 8px; padding: 10px; font-size: 12px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
-    .doc { border: 1px solid var(--line); border-radius: 10px; padding: 10px; margin-top: 12px; background: #fff; }
-    .pill { display: inline-block; font-size: 12px; padding: 4px 8px; border-radius: 999px; background: #eef2ff; }
-    iframe { width: 100%; min-height: 420px; border: 1px solid var(--line); border-radius: 8px; }
-    .pdf-box { width: 100%; min-height: 420px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
-    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+
+    :root {
+      --bg-gradient: linear-gradient(145deg, #f9fafc 0%, #f1f4f8 100%);
+      --card-bg: rgba(255, 255, 255, 0.8);
+      --card-border: rgba(0, 0, 0, 0.05);
+      --card-shadow: 0 20px 35px -10px rgba(0, 20, 20, 0.15), 0 1px 3px rgba(0, 0, 0, 0.02);
+      --text-primary: #0b1c2a;
+      --text-secondary: #2c3e50;
+      --text-muted: #5e6f88;
+      --accent: #0f766e;
+      --accent-soft: #14b8a6;
+      --danger: #d43f4f;
+      --danger-bg: #fee9eb;
+      --line-light: #dde3ea;
+      --input-bg: #ffffff;
+      --json-bg: #1e2638;
+      --json-text: #e3e9ff;
+      --json-border: #334155;
+      --pill-bg: #e2f0f2;
+      --pill-text: #0f5c56;
+      --focus-ring: 0 0 0 3px rgba(20, 184, 166, 0.25);
+      --transition: all 0.2s ease;
+    }
+
+    [data-theme="dark"] {
+      --bg-gradient: linear-gradient(145deg, #0e1a24 0%, #0b141c 100%);
+      --card-bg: rgba(23, 33, 43, 0.9);
+      --card-border: rgba(255, 255, 255, 0.05);
+      --card-shadow: 0 25px 40px -10px #00000055, 0 1px 2px #00000080;
+      --text-primary: #edf2f9;
+      --text-secondary: #b9cdff;
+      --text-muted: #98a9c3;
+      --accent: #20b2aa;
+      --accent-soft: #56cfc7;
+      --danger: #f28b82;
+      --danger-bg: #341c1f;
+      --line-light: #2a384b;
+      --input-bg: #1d2a38;
+      --json-bg: #0f172a;
+      --json-text: #cbd5ff;
+      --json-border: #334155;
+      --pill-bg: #1a3a3a;
+      --pill-text: #b0ece6;
+      --focus-ring: 0 0 0 3px #20b2aa55;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-primary);
+      min-height: 100vh;
+      transition: background 0.2s, color 0.2s;
+      line-height: 1.5;
+      padding: 2rem 1rem;
+    }
+
+    .wrap {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 28px;
+      box-shadow: 0 10px 20px -12px rgba(0, 20, 20, 0.2);
+      padding: 1.5rem 1.8rem;
+      margin-bottom: 2rem;
+      transition: var(--transition);
+    }
+
+    .row {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    input,
+    button,
+    select,
+    textarea {
+      font-family: inherit;
+      font-size: 0.95rem;
+      padding: 0.7rem 1.2rem;
+      border-radius: 60px;
+      border: 1px solid var(--line-light);
+      background: var(--input-bg);
+      color: var(--text-primary);
+      transition: var(--transition);
+      outline: none;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--accent-soft);
+      box-shadow: var(--focus-ring);
+    }
+
+    button {
+      background: var(--accent);
+      color: white;
+      border: none;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      padding: 0.7rem 1.8rem;
+      box-shadow: 0 8px 18px -8px var(--accent);
+      cursor: pointer;
+      transition: 0.15s;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    button:hover {
+      background: var(--accent-soft);
+      transform: scale(1.02);
+      box-shadow: 0 10px 20px -6px var(--accent-soft);
+    }
+
+    button[disabled] {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .muted {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 400;
+    }
+
+    .err {
+      color: var(--danger);
+      background: var(--danger-bg);
+      border-radius: 40px;
+      padding: 0.4rem 1.2rem;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+      display: inline-block;
+    }
+
+    input[type="file"] {
+      padding: 0.5rem 0.8rem;
+      border-radius: 40px;
+      max-width: 280px;
+      background: var(--input-bg);
+    }
+
+    select {
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="%235e6f88" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      appearance: none;
+      padding-right: 2.5rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 1.5rem;
+      margin-top: 1.2rem;
+    }
+
+    .grid > div {
+      min-width: 0;
+      width: 100%;
+    }
+
+    .doc-grid {
+      align-items: stretch;
+    }
+
+    .preview-col,
+    .data-col {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .preview-frame {
+      min-height: 380px;
+      height: 100%;
+      width: 100%;
+    }
+
+    .preview-frame iframe,
+    .preview-frame .pdf-box,
+    .preview-frame object,
+    .preview-frame img {
+      height: 100%;
+      max-height: none;
+    }
+
+    @media (max-width: 800px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .json {
+      background: var(--json-bg);
+      color: var(--json-text);
+      padding: 1rem 1.2rem;
+      border-radius: 20px;
+      overflow: auto;
+      max-height: 380px;
+      font-size: 0.8rem;
+      font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
+      border: 1px solid var(--json-border);
+      box-shadow: inset 0 4px 10px #00000020;
+    }
+
+    textarea.json-edit {
+      background: var(--json-bg);
+      color: var(--json-text);
+      border: 1px solid var(--json-border);
+      border-radius: 20px;
+      padding: 1rem;
+      min-height: 220px;
+      width: 100%;
+      font-family: 'JetBrains Mono', 'SF Mono', monospace;
+      font-size: 0.8rem;
+      resize: vertical;
+      box-shadow: inset 0 2px 8px #00000030;
+    }
+
+    .doc {
+      margin-bottom: 2rem;
+      border-radius: 30px;
+      background: var(--card-bg);
+      padding: 1.5rem;
+      box-shadow: 0 8px 16px -14px rgba(0, 20, 20, 0.25);
+    }
+
+    .pill {
+      background: var(--pill-bg);
+      color: var(--pill-text);
+      border-radius: 60px;
+      padding: 0.25rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    iframe,
+    .pdf-box,
+    object {
+      width: 100%;
+      min-height: 380px;
+      border-radius: 20px;
+      border: 1px solid var(--line-light);
+      background: var(--input-bg);
+    }
+
+    img {
+      width: 100%;
+      max-height: 420px;
+      object-fit: contain;
+      border-radius: 20px;
+      background: #171e2b;
+    }
+
+    a {
+      color: var(--accent-soft);
+      text-decoration: none;
+    }
+
+    .header-flex {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .theme-switch {
+      display: flex;
+      gap: 0.5rem;
+      background: var(--card-bg);
+      padding: 0.3rem;
+      border-radius: 80px;
+      border: 1px solid var(--line-light);
+    }
+
+    .theme-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      box-shadow: none;
+      padding: 0.3rem 1rem;
+      font-size: 0.9rem;
+      border-radius: 40px;
+      transition: 0.2s;
+      border: 1px solid transparent;
+    }
+
+    .theme-btn.active {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 4px 10px var(--accent);
+    }
+
+    .theme-btn:hover {
+      background: var(--accent-soft);
+      color: white;
+      transform: none;
+    }
+
+    .graph-wrap {
+      border: 1px solid var(--line-light);
+      border-radius: 18px;
+      background: var(--input-bg);
+      padding: 0.8rem;
+      margin-top: 0.7rem;
+    }
+
+    .graph-metrics {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 0.6rem;
+    }
+
+    .metric {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      border: 1px solid var(--line-light);
+      border-radius: 12px;
+      padding: 0.3rem 0.6rem;
+      background: var(--card-bg);
+    }
+
+    .history-list {
+      display: grid;
+      gap: 0.9rem;
+      margin-top: 0.9rem;
+    }
+
+    .history-item {
+      border: 1px solid var(--line-light);
+      border-radius: 14px;
+      padding: 0.8rem;
+      background: var(--input-bg);
+    }
+
+    .history-head {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.45rem;
+    }
+
+    .history-meta {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .history-empty {
+      margin-top: 0.8rem;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    h2 {
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.75rem;
+    }
+
   </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&family=JetBrains+Mono&display=swap" rel="stylesheet" />
 </head>
 <body>
   <div class="wrap">
+    <div class="card" style="padding: 1rem 1.8rem;">
+      <div class="header-flex">
+        <h2 style="margin:0; display:flex; gap:6px; align-items:center;">SimplyParse · intelligent document console</h2>
+        <div class="header-actions">
+          <button id="btnTopHistory" type="button">History</button>
+          <div class="theme-switch">
+            <button class="theme-btn active" id="themeLight" type="button">Light</button>
+            <button class="theme-btn" id="themeDark" type="button">Dark</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="card">
-      <h2 style="margin:0 0 10px 0;">Parser Console</h2>
+      <div style="margin-bottom:1.2rem;"><span class="pill">authentication</span></div>
       <div class="row">
-        <input id="apiBase" placeholder="api base url" />
+        <input id="apiBase" placeholder="https://api.example.com" value="http://127.0.0.1:8000" />
         <input id="username" placeholder="username" value="admin" />
         <input id="password" placeholder="password" type="password" value="admin123" />
-        <button id="btnLogin">Login</button>
+        <button id="btnLogin" type="button">Login</button>
         <span id="loginState" class="muted">Not logged in</span>
       </div>
       <div id="loginErr" class="err"></div>
     </div>
 
     <div class="card">
+      <div style="margin-bottom:1.2rem;"><span class="pill">batch parser</span></div>
       <div class="row">
-        <input id="parserId" placeholder="parser id" value="f92700" />
+        <input id="parserId" placeholder="parser id (e.g. f92700)" value="f92700" />
         <select id="environment">
           <option value="dev">dev</option>
           <option value="prod">prod</option>
         </select>
-        <input id="files" type="file" accept=".pdf,.png,.jpg,.jpeg,.tiff,.bmp,.docx,.txt" multiple />
-        <button id="btnBatch">Upload Batch</button>
+        <input id="files" type="file" accept=".pdf,.png,.jpg,.jpeg,.tiff,.tif,.bmp,.webp,.gif,.docx,.txt" multiple />
+        <button id="btnBatch" type="button">Upload & process</button>
       </div>
-      <div class="muted">Flow: login -> batch upload -> automatic polling -> view parsed data when done.</div>
+      <div class="muted">manual fetch mode · feedback fine-tuning · live preview</div>
       <div id="batchErr" class="err"></div>
     </div>
 
     <div id="docs"></div>
+
+    <div class="card">
+      <div style="margin-bottom:0.5rem;"><span class="pill">learning graph</span></div>
+      <div class="muted">Tracks dataset size growth after each successful feedback submission.</div>
+      <div class="graph-wrap">
+        <svg id="learningGraph" viewBox="0 0 700 220" width="100%" height="220" role="img" aria-label="Learning graph"></svg>
+      </div>
+      <div class="graph-metrics">
+        <span class="metric" id="metricPoints">Points: 0</span>
+        <span class="metric" id="metricLatest">Latest dataset: -</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="row" style="justify-content:space-between;">
+        <div>
+          <div style="margin-bottom:0.5rem;"><span class="pill">ml training accuracy</span></div>
+          <div class="muted">Live accuracy trend from backend feedback analytics.</div>
+        </div>
+        <button id="btnRefreshAccuracy" type="button">Refresh accuracy</button>
+      </div>
+      <div class="graph-wrap">
+        <svg id="accuracyGraph" viewBox="0 0 700 220" width="100%" height="220" role="img" aria-label="ML accuracy graph"></svg>
+      </div>
+      <div class="graph-metrics">
+        <span class="metric" id="metricAccPoints">Points: 0</span>
+        <span class="metric" id="metricAccLatest">Latest accuracy: -</span>
+        <span class="metric" id="metricAccDelta">Delta: -</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div id="historySectionAnchor" style="height:1px;"></div>
+      <div class="row" style="justify-content:space-between;">
+        <div>
+          <div style="margin-bottom:0.5rem;"><span class="pill">feedback history</span></div>
+          <div class="muted">Shows submitted feedback and JSON payload.</div>
+        </div>
+        <button id="btnClearHistory" type="button">Clear history</button>
+      </div>
+      <div id="feedbackHistory" class="history-list"></div>
+      <div id="feedbackHistoryEmpty" class="muted history-empty">No feedback submitted yet.</div>
+    </div>
   </div>
 
   <script>
-    let token = "";
-    const docsMap = new Map();
-    const $ = (id) => document.getElementById(id);
-    $("apiBase").value = "http://127.0.0.1:8000";
+    (function() {
+      let token = "";
+      let currentUserId = "guest";
+      const docsMap = new Map();
+      const docElements = new Map();
+      const learningHistory = [];
+      const accuracyHistory = [];
+      const feedbackHistory = [];
+      const $ = (id) => document.getElementById(id);
 
-    function normalizeApiBase(raw) {
-      const value = String(raw || "").trim();
-      if (!value) return "http://127.0.0.1:8000";
-      try {
-        const u = new URL(value, window.location.origin);
-        return u.origin;
-      } catch (_) {
-        return "http://127.0.0.1:8000";
+      const htmlEl = document.documentElement;
+      const lightBtn = $("themeLight");
+      const darkBtn = $("themeDark");
+
+      function setTheme(theme) {
+        htmlEl.setAttribute("data-theme", theme);
+        localStorage.setItem("simplyparse-theme", theme);
+        lightBtn.classList.toggle("active", theme === "light");
+        darkBtn.classList.toggle("active", theme === "dark");
       }
-    }
 
-    function apiUrl(path) {
-      const base = normalizeApiBase($("apiBase").value).replace(/\/+$/, "");
-      $("apiBase").value = base;
-      return `${base}${path}`;
-    }
+      setTheme(localStorage.getItem("simplyparse-theme") || "light");
+      lightBtn.addEventListener("click", () => setTheme("light"));
+      darkBtn.addEventListener("click", () => setTheme("dark"));
 
-    function authHeaders() {
-      if (!token) return {};
-      return { "Authorization": "Bearer " + token };
-    }
-
-    function setErr(id, msg) {
-      $(id).textContent = msg || "";
-    }
-
-    function pretty(obj) {
-      return JSON.stringify(obj, null, 2);
-    }
-
-    function previewHtml(doc) {
-      const url = doc.url || "";
-      const filename = String(doc.metadata?.filename || "").toLowerCase();
-      const contentType = String(doc.metadata?.content_type || "").toLowerCase();
-      const isImage = contentType.startsWith("image/") || /\.(png|jpe?g|bmp|tiff?)$/.test(filename);
-      const isPdf = contentType === "application/pdf" || filename.endsWith(".pdf");
-
-      if (isImage) {
-        return `<img src="${url}" alt="document preview" style="width:100%; max-height:520px; object-fit:contain; border:1px solid var(--line); border-radius:8px; background:#fff;" />`;
+      function normalizeApiBase(raw) {
+        const value = String(raw || "").trim();
+        if (!value) return "http://127.0.0.1:8000";
+        try {
+          const u = new URL(value, window.location.origin);
+          return u.origin;
+        } catch (_) {
+          return "http://127.0.0.1:8000";
+        }
       }
-      if (isPdf) {
-        return `
-          <object class="pdf-box" data="${url}#toolbar=1&navpanes=0&scrollbar=1" type="application/pdf">
-            <iframe src="${url}" title="pdf preview"></iframe>
-          </object>
-          <div class="muted" style="margin-top:6px;">
-            If PDF preview is blocked by browser policy:
-            <a href="${url}" target="_blank" rel="noopener">Open PDF</a>
-          </div>
+
+      function apiUrl(path) {
+        const base = normalizeApiBase($("apiBase").value).replace(/\/+$/, "");
+        $("apiBase").value = base;
+        return `${base}${path}`;
+      }
+
+      function authHeaders() {
+        return token ? { "Authorization": "Bearer " + token } : {};
+      }
+
+      function setErr(id, msg) {
+        $(id).textContent = msg || "";
+      }
+
+      function feedbackHistoryStorageKey() {
+        return `simplyparse-feedback-history-v1:${currentUserId}`;
+      }
+
+      function pretty(obj) {
+        return JSON.stringify(obj, null, 2);
+      }
+
+      function toLocalTime(iso) {
+        const d = new Date(String(iso || ""));
+        if (Number.isNaN(d.getTime())) return String(iso || "");
+        return d.toLocaleString();
+      }
+
+      function saveFeedbackHistory() {
+        try {
+          localStorage.setItem(feedbackHistoryStorageKey(), JSON.stringify(feedbackHistory.slice(0, 100)));
+        } catch (_) {}
+      }
+
+      function loadFeedbackHistory() {
+        try {
+          feedbackHistory.length = 0;
+          const raw = localStorage.getItem(feedbackHistoryStorageKey());
+          if (!raw) return;
+          const parsed = JSON.parse(raw);
+          if (!Array.isArray(parsed)) return;
+          for (const item of parsed) feedbackHistory.push(item);
+        } catch (_) {}
+      }
+
+      function renderFeedbackHistory() {
+        const root = $("feedbackHistory");
+        const empty = $("feedbackHistoryEmpty");
+        root.innerHTML = "";
+        if (!feedbackHistory.length) {
+          empty.style.display = "block";
+          return;
+        }
+        empty.style.display = "none";
+        for (const item of feedbackHistory) {
+          const card = document.createElement("div");
+          card.className = "history-item";
+
+          const head = document.createElement("div");
+          head.className = "history-head";
+          const left = document.createElement("strong");
+          left.textContent = item.filename || item.document_id || "Unknown document";
+          const right = document.createElement("span");
+          right.className = "muted";
+          right.textContent = toLocalTime(item.timestamp);
+          head.appendChild(left);
+          head.appendChild(right);
+
+          const meta = document.createElement("div");
+          meta.className = "history-meta";
+          const r = document.createElement("span");
+          r.className = "metric";
+          r.textContent = `Rating: ${item.rating}`;
+          const d = document.createElement("span");
+          d.className = "metric";
+          d.textContent = `Doc: ${item.document_id || "-"}`;
+          meta.appendChild(r);
+          meta.appendChild(d);
+
+          const label = document.createElement("div");
+          label.className = "muted";
+          label.style.marginTop = "0.6rem";
+          label.textContent = "Submitted JSON";
+
+          const pre = document.createElement("pre");
+          pre.className = "json";
+          pre.style.marginTop = "0.35rem";
+          pre.textContent = pretty(item.json || {});
+
+          card.appendChild(head);
+          card.appendChild(meta);
+          card.appendChild(label);
+          card.appendChild(pre);
+          root.appendChild(card);
+        }
+      }
+
+      function formatDdMmYyyy(day, month, year) {
+        const d = String(day).padStart(2, "0");
+        const m = String(month).padStart(2, "0");
+        const y = String(year);
+        return `${d}/${m}/${y}`;
+      }
+
+      function parseDobString(input) {
+        const value = String(input || "").trim();
+        if (!value) return null;
+
+        const clean = value.replace(/,/g, " ").replace(/\s+/g, " ").trim();
+
+        let m = clean.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{2,4})$/);
+        if (m) {
+          let day = Number(m[1]);
+          let month = Number(m[2]);
+          let year = Number(m[3]);
+          if (year < 100) year += year > 30 ? 1900 : 2000;
+          if (day >= 1 && day <= 31 && month >= 1 && month <= 12) {
+            return formatDdMmYyyy(day, month, year);
+          }
+        }
+
+        m = clean.match(/^(\d{4})[\/.-](\d{1,2})[\/.-](\d{1,2})$/);
+        if (m) {
+          const year = Number(m[1]);
+          const month = Number(m[2]);
+          const day = Number(m[3]);
+          if (day >= 1 && day <= 31 && month >= 1 && month <= 12) {
+            return formatDdMmYyyy(day, month, year);
+          }
+        }
+
+        const parsed = new Date(clean);
+        if (!Number.isNaN(parsed.getTime())) {
+          return formatDdMmYyyy(parsed.getDate(), parsed.getMonth() + 1, parsed.getFullYear());
+        }
+
+        return null;
+      }
+
+      function normalizeDobInPayload(value, keyHint) {
+        if (Array.isArray(value)) {
+          return value.map((item) => normalizeDobInPayload(item, keyHint));
+        }
+        if (value && typeof value === "object") {
+          const out = {};
+          for (const [k, v] of Object.entries(value)) {
+            out[k] = normalizeDobInPayload(v, k);
+          }
+          return out;
+        }
+        if (typeof value === "string" && /(dob|date\s*of\s*birth|date_of_birth|birth\s*date|birth_date)/i.test(String(keyHint || ""))) {
+          return parseDobString(value) || value;
+        }
+        return value;
+      }
+
+      function renderLearningGraph() {
+        const svg = $("learningGraph");
+        const w = 700;
+        const h = 220;
+        const padX = 40;
+        const padY = 20;
+
+        if (learningHistory.length === 0) {
+          svg.innerHTML = `<rect x="0" y="0" width="${w}" height="${h}" fill="transparent"></rect>
+            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="currentColor" opacity="0.55" font-size="14">No learning data yet. Submit feedback to build the graph.</text>`;
+          $("metricPoints").textContent = "Points: 0";
+          $("metricLatest").textContent = "Latest dataset: -";
+          return;
+        }
+
+        const values = learningHistory.map((p) => p.dataset);
+        const minV = Math.min(...values);
+        const maxV = Math.max(...values);
+        const span = Math.max(1, maxV - minV);
+
+        const stepX = learningHistory.length === 1 ? 0 : (w - padX * 2) / (learningHistory.length - 1);
+        const points = learningHistory.map((p, idx) => {
+          const x = padX + idx * stepX;
+          const y = h - padY - ((p.dataset - minV) / span) * (h - padY * 2);
+          return { ...p, x, y };
+        });
+
+        const polyline = points.map((p) => `${p.x},${p.y}`).join(" ");
+        const circles = points.map((p) => `<circle cx="${p.x}" cy="${p.y}" r="4" fill="var(--accent)"><title>#${p.index}: ${p.dataset}</title></circle>`).join("");
+
+        svg.innerHTML = `
+          <line x1="${padX}" y1="${h - padY}" x2="${w - padX}" y2="${h - padY}" stroke="var(--line-light)" />
+          <line x1="${padX}" y1="${padY}" x2="${padX}" y2="${h - padY}" stroke="var(--line-light)" />
+          <polyline fill="none" stroke="var(--accent)" stroke-width="3" points="${polyline}" />
+          ${circles}
+          <text x="${padX}" y="${padY + 12}" fill="currentColor" opacity="0.7" font-size="12">max ${maxV}</text>
+          <text x="${padX}" y="${h - padY - 6}" fill="currentColor" opacity="0.7" font-size="12">min ${minV}</text>
         `;
-      }
-      return `<iframe src="${url}" title="file preview"></iframe>
-              <div class="muted" style="margin-top:6px;">If preview is not supported for this file type, open directly:
-                <a href="${url}" target="_blank" rel="noopener">Open file</a>
-              </div>`;
-    }
 
-    function renderDocs() {
-      const root = $("docs");
-      root.innerHTML = "";
-      for (const doc of docsMap.values()) {
-        const el = document.createElement("div");
-        el.className = "card doc";
+        const latest = learningHistory[learningHistory.length - 1]?.dataset;
+        $("metricPoints").textContent = `Points: ${learningHistory.length}`;
+        $("metricLatest").textContent = `Latest dataset: ${latest}`;
+      }
+
+      function addLearningPoint(datasetSize) {
+        const numeric = Number(datasetSize);
+        if (!Number.isFinite(numeric)) return;
+        learningHistory.push({
+          index: learningHistory.length + 1,
+          dataset: numeric,
+          ts: Date.now()
+        });
+        renderLearningGraph();
+      }
+
+      function renderAccuracyGraph() {
+        const svg = $("accuracyGraph");
+        const w = 700;
+        const h = 220;
+        const padX = 40;
+        const padY = 20;
+
+        if (!accuracyHistory.length) {
+          svg.innerHTML = `<rect x="0" y="0" width="${w}" height="${h}" fill="transparent"></rect>
+            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="currentColor" opacity="0.55" font-size="14">No accuracy data yet. Submit feedback and refresh.</text>`;
+          $("metricAccPoints").textContent = "Points: 0";
+          $("metricAccLatest").textContent = "Latest accuracy: -";
+          $("metricAccDelta").textContent = "Delta: -";
+          return;
+        }
+
+        const values = accuracyHistory.map((p) => Number(p.y) || 0);
+        const minV = Math.min(...values);
+        const maxV = Math.max(...values);
+        const span = Math.max(0.01, maxV - minV);
+        const stepX = accuracyHistory.length === 1 ? 0 : (w - padX * 2) / (accuracyHistory.length - 1);
+        const points = accuracyHistory.map((p, idx) => {
+          const x = padX + idx * stepX;
+          const y = h - padY - (((Number(p.y) || 0) - minV) / span) * (h - padY * 2);
+          return { x, y, value: Number(p.y) || 0 };
+        });
+
+        const polyline = points.map((p) => `${p.x},${p.y}`).join(" ");
+        const circles = points
+          .map((p) => `<circle cx="${p.x}" cy="${p.y}" r="4" fill="var(--accent)"><title>${p.value.toFixed(4)}</title></circle>`)
+          .join("");
+
+        svg.innerHTML = `
+          <line x1="${padX}" y1="${h - padY}" x2="${w - padX}" y2="${h - padY}" stroke="var(--line-light)" />
+          <line x1="${padX}" y1="${padY}" x2="${padX}" y2="${h - padY}" stroke="var(--line-light)" />
+          <polyline fill="none" stroke="var(--accent)" stroke-width="3" points="${polyline}" />
+          ${circles}
+          <text x="${padX}" y="${padY + 12}" fill="currentColor" opacity="0.7" font-size="12">max ${maxV.toFixed(4)}</text>
+          <text x="${padX}" y="${h - padY - 6}" fill="currentColor" opacity="0.7" font-size="12">min ${minV.toFixed(4)}</text>
+        `;
+
+        const latest = values[values.length - 1];
+        const initial = values[0];
+        const delta = latest - initial;
+        $("metricAccPoints").textContent = `Points: ${values.length}`;
+        $("metricAccLatest").textContent = `Latest accuracy: ${latest.toFixed(4)}`;
+        $("metricAccDelta").textContent = `Delta: ${delta >= 0 ? "+" : ""}${delta.toFixed(4)}`;
+      }
+
+      async function refreshAccuracyGraph() {
+        try {
+          const res = await fetch(apiUrl("/analytics/training-feedback"), {
+            headers: authHeaders()
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.detail || "accuracy analytics fetch failed");
+          const trend = data?.graphs?.accuracy_trend;
+          accuracyHistory.length = 0;
+          if (Array.isArray(trend)) {
+            for (const item of trend) {
+              accuracyHistory.push({
+                x: item?.x || "",
+                y: Number(item?.y || 0)
+              });
+            }
+          }
+          renderAccuracyGraph();
+        } catch (err) {
+          setErr("batchErr", err.message || String(err));
+        }
+      }
+
+      function addFeedbackHistoryItem(item) {
+        feedbackHistory.unshift(item);
+        if (feedbackHistory.length > 100) feedbackHistory.length = 100;
+        saveFeedbackHistory();
+        renderFeedbackHistory();
+      }
+
+      function previewHtml(doc) {
+        const url = doc.url || "";
+        const filename = String(doc.metadata?.filename || "").toLowerCase();
+        const contentType = String(doc.metadata?.content_type || "").toLowerCase();
+        const isImage = contentType.startsWith("image/") || /\.(png|jpe?g|bmp|tiff?)$/.test(filename);
+        const isPdf = contentType === "application/pdf" || filename.endsWith(".pdf");
+
+        if (!url) {
+          return `<div class="muted" style="padding:16px; border:1px dashed var(--line-light); border-radius:12px;">
+                    No preview URL yet. Click <strong>Fetch response</strong> to load the document preview.
+                  </div>`;
+        }
+
+        if (isImage) {
+          return `<img src="${url}" alt="document preview" />`;
+        }
+        if (isPdf) {
+          return `
+            <object class="pdf-box" data="${url}#toolbar=1&navpanes=0&scrollbar=1" type="application/pdf">
+              <iframe src="${url}" title="pdf preview"></iframe>
+            </object>
+            <div class="muted" style="margin-top:8px;">
+              <a href="${url}" target="_blank" rel="noopener">Open PDF in new tab</a>
+            </div>
+          `;
+        }
+        return `<iframe src="${url}" title="file preview"></iframe>
+                <div class="muted" style="margin-top:8px;"><a href="${url}" target="_blank" rel="noopener">Open file</a></div>`;
+      }
+
+      async function fetchDocumentOnce(parserId, documentId) {
+        const url = `/dapi/v1/parser/${encodeURIComponent(parserId)}/document/${encodeURIComponent(documentId)}`;
+        const res = await fetch(apiUrl(url), { headers: authHeaders() });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || "fetch failed");
+        const payload = data.data || {};
+        if (payload.url) {
+          const preview = payload.url.startsWith("http") ? payload.url : apiUrl(payload.url);
+          payload.url = preview + (preview.includes("?") ? "&" : "?") + "auth=" + encodeURIComponent(token);
+        }
+        payload.parser_id = payload.parser_id || parserId;
+        payload.poll_stopped = false;
+        docsMap.set(documentId, payload);
+        upsertDoc(payload);
+        return payload;
+      }
+
+      function renderDocCardHtml(doc) {
         const status = doc.status || "processing";
         const entry = (doc.entries && doc.entries[0]) || null;
         const parsed = entry && entry.parsed_data ? entry.parsed_data : {};
         const feedbackData = entry && entry.feedback_data ? entry.feedback_data : parsed;
         const tokenId = entry && entry.token_id ? entry.token_id : "";
         const errorMessage = entry && entry.error_message ? String(entry.error_message) : "";
-        const safeUrl = doc.url || "";
-        el.innerHTML = `
-          <div class="row" style="justify-content:space-between;">
-            <strong>${doc.metadata?.filename || doc.document_id}</strong>
+        const docId = doc.document_id || "unknown";
+        const parserId = doc.parser_id || "";
+        const canManualFetch = Boolean(parserId);
+        return `
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+            <strong style="font-size:1.1rem;">${doc.metadata?.filename || docId}</strong>
             <span class="pill">${status}</span>
           </div>
-          <div class="muted">document_id: ${doc.document_id}</div>
-          ${errorMessage ? `<div class="err" style="margin-top:6px;">Error: ${errorMessage}</div>` : ""}
-          <div class="grid" style="margin-top:10px;">
-            <div>
-              ${previewHtml(doc)}
+          <div class="muted" style="margin-top:5px;">document_id: ${docId}</div>
+          ${errorMessage ? `<div class="err" style="margin-top:8px;">Error: ${errorMessage}</div>` : ""}
+          <div class="grid doc-grid">
+            <div class="preview-col">
+              <div class="muted" style="margin-bottom:5px;">Preview</div>
+              <div class="preview-frame">${previewHtml(doc)}</div>
             </div>
-            <div>
-              <div class="muted">Parsed Data (Read Only)</div>
+            <div class="data-col">
+              <div class="muted" style="margin-bottom:5px;">Parsed (read-only)</div>
               <pre class="json">${pretty(parsed)}</pre>
-              <div class="muted" style="margin-top:8px;">Edit JSON and submit feedback to improve model</div>
-              <textarea id="fb-${doc.document_id}" class="json-edit">${pretty(feedbackData)}</textarea>
-              <div class="row" style="margin-top:8px;">
-                <button class="btnFeedback" data-doc="${doc.document_id}" data-token="${tokenId}" ${tokenId ? "" : "disabled"}>Send Feedback + Retrain</button>
-                <span id="fb-state-${doc.document_id}" class="muted"></span>
+              <div class="muted" style="margin: 10px 0 5px;">Edit JSON and send feedback (DOB is auto-normalized to dd/mm/yyyy)</div>
+              <textarea id="fb-${docId}" class="json-edit" placeholder="{ ... }">${pretty(feedbackData)}</textarea>
+              <div style="display:flex; gap:1rem; align-items:center; margin-top:12px;">
+                <label class="muted" for="fb-rating-${docId}" style="margin:0;">Rating</label>
+                <select id="fb-rating-${docId}" aria-label="Feedback rating">
+                  <option value="5" selected>5</option>
+                  <option value="4">4</option>
+                  <option value="3">3</option>
+                  <option value="2">2</option>
+                  <option value="1">1</option>
+                </select>
+                <button class="btnFeedback" data-doc="${docId}" data-token="${tokenId}" ${tokenId ? "" : "disabled"}>Send feedback + retrain</button>
+                <button class="btnManualFetch" data-doc="${docId}" data-parser="${parserId}" ${canManualFetch ? "" : "disabled"}>Fetch response</button>
+                <span id="fb-state-${docId}" class="muted"></span>
               </div>
             </div>
           </div>
         `;
-        root.appendChild(el);
       }
-    }
 
-    async function pollDocument(parserId, documentId) {
-      const url = `/dapi/v1/parser/${encodeURIComponent(parserId)}/document/${encodeURIComponent(documentId)}`;
-      while (true) {
-        const res = await fetch(apiUrl(url), { headers: authHeaders() });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.detail || "poll failed");
-        const payload = data.data || {};
-        if (payload.url) {
-          const preview = payload.url.startsWith("http") ? payload.url : apiUrl(payload.url);
-          payload.url = preview + (preview.includes("?") ? "&" : "?") + "auth=" + encodeURIComponent(token);
+      function syncDocPreviewHeight(rootEl) {
+        if (!rootEl) return;
+        const frame = rootEl.querySelector(".preview-frame");
+        const dataCol = rootEl.querySelector(".data-col");
+        if (!frame || !dataCol) return;
+        const target = Math.max(380, dataCol.offsetHeight);
+        frame.style.height = `${target}px`;
+      }
+
+      function upsertDoc(doc) {
+        const docId = doc.document_id || "unknown";
+        let el = docElements.get(docId);
+        if (!el) {
+          el = document.createElement("div");
+          el.className = "card doc";
+          docElements.set(docId, el);
+          $("docs").appendChild(el);
         }
-        docsMap.set(documentId, payload);
-        renderDocs();
-        if (payload.status === "completed" || payload.status === "failed") break;
-        await new Promise(r => setTimeout(r, 2500));
+        el.innerHTML = renderDocCardHtml(doc);
+        requestAnimationFrame(() => syncDocPreviewHeight(el));
       }
-    }
 
-    $("btnLogin").addEventListener("click", async () => {
-      setErr("loginErr", "");
-      try {
-        const fd = new FormData();
-        fd.append("username", $("username").value.trim());
-        fd.append("password", $("password").value);
-        const res = await fetch(apiUrl("/auth/login"), { method: "POST", body: fd });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.detail || "login failed");
-        token = data.access_token || "";
-        $("loginState").textContent = token ? "Logged in" : "Not logged in";
-      } catch (e) {
-        setErr("loginErr", e.message || String(e));
-      }
-    });
+      window.addEventListener("resize", () => {
+        for (const el of docElements.values()) syncDocPreviewHeight(el);
+      });
 
-    $("btnBatch").addEventListener("click", async () => {
-      setErr("batchErr", "");
-      try {
-        if (!token) throw new Error("Login first");
-        const files = $("files").files;
-        if (!files || files.length === 0) throw new Error("Choose at least one file");
-        const parserId = $("parserId").value.trim() || "f92700";
-        const env = $("environment").value;
-        const fd = new FormData();
-        fd.append("environment", env);
-        for (const f of files) fd.append("files", f, f.name);
-        const res = await fetch(apiUrl(`/dapi/v1/parser/${encodeURIComponent(parserId)}/parse/async/batch`), {
-          method: "POST",
-          headers: authHeaders(),
-          body: fd
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.detail || "batch upload failed");
-        const items = data.data?.items || [];
-        for (const item of items) {
-          const docId = item.document_id;
-          docsMap.set(docId, {
-            document_id: docId,
-            status: "processing",
-            metadata: { filename: item.filename },
-            entries: []
-          });
-          renderDocs();
-          pollDocument(parserId, docId).catch(err => setErr("batchErr", err.message || String(err)));
+      $("btnLogin").addEventListener("click", async () => {
+        setErr("loginErr", "");
+        try {
+          const fd = new FormData();
+          fd.append("username", $("username").value.trim());
+          fd.append("password", $("password").value);
+          const res = await fetch(apiUrl("/auth/login"), { method: "POST", body: fd });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.detail || "login failed");
+          token = data.access_token || "";
+          currentUserId = $("username").value.trim() || "guest";
+          $("loginState").textContent = token ? "Logged in" : "Not logged in";
+          loadFeedbackHistory();
+          renderFeedbackHistory();
+          refreshAccuracyGraph().catch(() => {});
+        } catch (e) {
+          setErr("loginErr", e.message || String(e));
         }
-      } catch (e) {
-        setErr("batchErr", e.message || String(e));
-      }
-    });
+      });
 
-    document.addEventListener("click", async (ev) => {
-      const btn = ev.target.closest(".btnFeedback");
-      if (!btn) return;
-      const documentId = btn.getAttribute("data-doc");
-      const tokenId = btn.getAttribute("data-token");
-      const stateEl = $(`fb-state-${documentId}`);
-      try {
+      $("btnBatch").addEventListener("click", async () => {
         setErr("batchErr", "");
-        if (!tokenId) throw new Error("token_id missing for this document");
-        const area = $(`fb-${documentId}`);
-        if (!area) throw new Error("feedback editor not found");
-        const edited = JSON.parse(area.value);
-        const res = await fetch(apiUrl("/feedback"), {
-          method: "POST",
-          headers: { ...authHeaders(), "Content-Type": "application/json" },
-          body: JSON.stringify({
-            token_id: tokenId,
-            extracted_data: edited,
-            rating: 5,
-            retrain_on_submit: true
-          })
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.detail || "feedback submit failed");
-        stateEl.textContent = `Feedback saved. Dataset: ${data.total_dataset_entries}, retrained: ${data.retrained}`;
-      } catch (e) {
-        if (stateEl) stateEl.textContent = "";
-        setErr("batchErr", e.message || String(e));
-      }
-    });
+        try {
+          if (!token) throw new Error("Login first");
+          const files = $("files").files;
+          if (!files || files.length === 0) throw new Error("Choose at least one file");
+          const parserId = $("parserId").value.trim() || "f92700";
+          const env = $("environment").value;
+          for (const f of files) {
+            const fd = new FormData();
+            fd.append("environment", env);
+            fd.append("file", f, f.name);
+            const res = await fetch(apiUrl(`/dapi/v1/parser/${encodeURIComponent(parserId)}/parse/async`), {
+              method: "POST",
+              headers: authHeaders(),
+              body: fd
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.detail || `upload failed for ${f.name}`);
+            const docId = data.data?.document_id;
+            if (!docId) throw new Error(`document_id missing for ${f.name}`);
+            docsMap.set(docId, {
+              document_id: docId,
+              parser_id: parserId,
+              status: "processing",
+              metadata: { filename: f.name },
+              entries: []
+            });
+            upsertDoc(docsMap.get(docId));
+          }
+        } catch (e) {
+          setErr("batchErr", e.message || String(e));
+        }
+      });
+
+      document.addEventListener("click", async (ev) => {
+        const fetchBtn = ev.target.closest(".btnManualFetch");
+        if (fetchBtn) {
+          const documentId = fetchBtn.getAttribute("data-doc");
+          const parserId = fetchBtn.getAttribute("data-parser") || $("parserId").value.trim() || "f92700";
+          const stateEl = $(`fb-state-${documentId}`);
+          try {
+            setErr("batchErr", "");
+            if (!documentId) throw new Error("document_id missing");
+            fetchBtn.disabled = true;
+            if (stateEl) stateEl.textContent = "Fetching latest...";
+            const payload = await fetchDocumentOnce(parserId, documentId);
+            if (stateEl) {
+              stateEl.textContent = payload.status === "completed"
+                ? "Completed"
+                : payload.status === "failed"
+                  ? "Failed"
+                  : "processing";
+            }
+          } catch (e) {
+            if (stateEl) stateEl.textContent = "";
+            setErr("batchErr", e.message || String(e));
+          } finally {
+            fetchBtn.disabled = false;
+          }
+          return;
+        }
+
+        const btn = ev.target.closest(".btnFeedback");
+        if (!btn) return;
+        const documentId = btn.getAttribute("data-doc");
+        const tokenId = btn.getAttribute("data-token");
+        const stateEl = $(`fb-state-${documentId}`);
+        try {
+          setErr("batchErr", "");
+          if (!tokenId) throw new Error("token_id missing for this document");
+          const area = $(`fb-${documentId}`);
+          if (!area) throw new Error("feedback editor not found");
+          const edited = JSON.parse(area.value);
+          const normalized = normalizeDobInPayload(edited, "");
+          const ratingEl = $(`fb-rating-${documentId}`);
+          const rating = Number(ratingEl ? ratingEl.value : 5);
+          if (!Number.isFinite(rating) || rating < 1 || rating > 5) {
+            throw new Error("rating must be between 1 and 5");
+          }
+          area.value = pretty(normalized);
+
+          const res = await fetch(apiUrl("/feedback"), {
+            method: "POST",
+            headers: { ...authHeaders(), "Content-Type": "application/json" },
+            body: JSON.stringify({
+              token_id: tokenId,
+              extracted_data: normalized,
+              rating: rating,
+              retrain_on_submit: true
+            })
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.detail || "feedback submit failed");
+          addLearningPoint(data.total_dataset_entries);
+          refreshAccuracyGraph().catch(() => {});
+          const doc = docsMap.get(documentId) || {};
+          addFeedbackHistoryItem({
+            user_id: currentUserId,
+            document_id: documentId,
+            filename: doc.metadata?.filename || documentId,
+            rating: rating,
+            timestamp: new Date().toISOString(),
+            json: normalized
+          });
+          stateEl.textContent = `Feedback saved. Dataset: ${data.total_dataset_entries}, retrained: ${data.retrained}`;
+        } catch (e) {
+          if (stateEl) stateEl.textContent = "";
+          setErr("batchErr", e.message || String(e));
+        }
+      });
+
+      $("btnClearHistory").addEventListener("click", () => {
+        feedbackHistory.length = 0;
+        saveFeedbackHistory();
+        renderFeedbackHistory();
+      });
+
+      $("btnTopHistory").addEventListener("click", () => {
+        const anchor = $("historySectionAnchor");
+        if (anchor) anchor.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+      $("btnRefreshAccuracy").addEventListener("click", () => {
+        refreshAccuracyGraph().catch(() => {});
+      });
+
+      loadFeedbackHistory();
+      renderFeedbackHistory();
+      renderLearningGraph();
+      renderAccuracyGraph();
+    })();
   </script>
 </body>
 </html>

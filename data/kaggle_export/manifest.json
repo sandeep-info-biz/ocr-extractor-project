@@ -1,0 +1,23 @@
+{
+  "source": {
+    "feedback_log": "data/feedback_log.json",
+    "feedback_sessions": "data/feedback_sessions.json",
+    "async_documents": "data/async_documents.json"
+  },
+  "filters": {
+    "min_rating": 4,
+    "deduplicated": true
+  },
+  "split": {
+    "train_pct": 80,
+    "val_pct": 10,
+    "test_pct": 10
+  },
+  "counts": {
+    "total_candidates_before_dedup": 4,
+    "total_final": 3,
+    "train": 3,
+    "val": 0,
+    "test": 0
+  }
+}

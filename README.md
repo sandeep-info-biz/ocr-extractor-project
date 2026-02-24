@@ -146,6 +146,35 @@ Example request body:
 }
 ```
 
+## Kaggle Export From Feedback Logs
+
+Generate a Kaggle-ready JSONL dataset from feedback history:
+
+```bash
+python scripts/export_kaggle_dataset.py --out-dir data/kaggle_export --min-rating 4
+```
+
+This exporter:
+- Uses `data/feedback_log.json` as the primary source.
+- Backfills `raw_text` from `data/feedback_sessions.json` when needed.
+- Backfills `document_id` from `data/async_documents.json` when needed.
+- Keeps only entries with `corrected_data`.
+- Filters by `rating` (`--min-rating`).
+- Deduplicates by normalized `raw_text` fingerprint (keeps latest correction).
+- Creates deterministic splits by fingerprint hash.
+
+Output files:
+- `data/kaggle_export/kaggle_all.jsonl`
+- `data/kaggle_export/kaggle_train.jsonl`
+- `data/kaggle_export/kaggle_val.jsonl`
+- `data/kaggle_export/kaggle_test.jsonl`
+- `data/kaggle_export/manifest.json`
+
+Useful options:
+- `--min-rating 5`
+- `--train-pct 85 --val-pct 10`
+- `--no-dedup`
+
 ## Run on Colab with ngrok
 
 Use these commands in Google Colab:

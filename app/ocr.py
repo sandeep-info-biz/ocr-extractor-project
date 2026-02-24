@@ -2,6 +2,10 @@ from pathlib import Path
 import re
 import os
 from functools import lru_cache
+from typing import Callable
+
+
+ProgressCallback = Callable[[int, int], None]
 
 
 def _read_text_file(path: Path) -> str:
@@ -43,6 +47,41 @@ def _preprocess_image(image, fast: bool = True):
             denoised, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 31, 11
         )
     return Image.fromarray(thresh)
+
+
+def _image_resize_limits() -> tuple[int, int]:
+    try:
+        max_side = max(1200, int(os.getenv("OCR_MAX_SIDE_LIMIT", "2800")))
+    except Exception:
+        max_side = 2800
+    try:
+        max_pixels = max(2_000_000, int(os.getenv("OCR_MAX_PIXELS", "6000000")))
+    except Exception:
+        max_pixels = 6_000_000
+    return max_side, max_pixels
+
+
+def _resize_for_ocr(image):
+    try:
+        from PIL import Image
+    except ImportError:
+        return image
+
+    max_side, max_pixels = _image_resize_limits()
+    width, height = image.size
+    if width <= 0 or height <= 0:
+        return image
+
+    scale_side = min(1.0, max_side / max(width, height))
+    scale_pixels = min(1.0, (max_pixels / float(width * height)) ** 0.5)
+    scale = min(scale_side, scale_pixels)
+    if scale >= 0.999:
+        return image
+
+    new_w = max(1, int(width * scale))
+    new_h = max(1, int(height * scale))
+    resampling = getattr(getattr(Image, "Resampling", Image), "LANCZOS", getattr(Image, "LANCZOS", 1))
+    return image.resize((new_w, new_h), resampling)
 
 
 @lru_cache(maxsize=1)
@@ -153,6 +192,7 @@ def _ocr_image(path: Path, preprocess: bool = True, fast: bool = True) -> str:
         raise RuntimeError("pillow is required for OCR.") from exc
 
     image = Image.open(path)
+    image = _resize_for_ocr(image)
     if preprocess:
         image = _preprocess_image(image, fast=fast)
 
@@ -168,32 +208,55 @@ def _ocr_image(path: Path, preprocess: bool = True, fast: bool = True) -> str:
     return _tesseract_image_to_text(image)
 
 
-def _ocr_pdf(path: Path, preprocess: bool = True, fast: bool = True, dpi: int = 220) -> str:
+def _ocr_pdf(
+    path: Path,
+    preprocess: bool = True,
+    fast: bool = True,
+    dpi: int = 220,
+    progress_callback: ProgressCallback | None = None,
+) -> str:
     try:
         from pdf2image import convert_from_path
     except ImportError as exc:
         raise RuntimeError("pdf2image is required for PDF OCR.") from exc
 
-    pages = convert_from_path(str(path), dpi=dpi, thread_count=2 if fast else 1)
+    thread_count = 1
+    if fast:
+        try:
+            configured = int(os.getenv("OCR_PDF2IMAGE_THREADS", "1"))
+        except Exception:
+            configured = 1
+        thread_count = max(1, min(2, configured))
+    pages = convert_from_path(str(path), dpi=dpi, thread_count=thread_count)
+    total_pages = len(pages)
+
     chunks = []
     engine = _ocr_engine()
     use_preprocess = preprocess and engine == "tesseract"
-    for page in pages:
-        img = _preprocess_image(page, fast=fast) if use_preprocess else page
+    processed = 0
+
+    def _ocr_single_page(page_img) -> str:
+        base_img = _resize_for_ocr(page_img)
+        img = _preprocess_image(base_img, fast=fast) if use_preprocess else base_img
         if engine in {"auto", "paddle"}:
             try:
                 text = _paddle_image_to_text(img)
                 if text.strip():
-                    chunks.append(text)
-                    continue
+                    return text
             except Exception:
                 if engine == "paddle":
                     raise
-        chunks.append(_tesseract_image_to_text(img))
+        return _tesseract_image_to_text(img)
+
+    for page in pages:
+        chunks.append(_ocr_single_page(page))
+        processed += 1
+        if progress_callback:
+            progress_callback(processed, max(1, total_pages))
     return "\n\n[[PAGE_BREAK]]\n\n".join(chunks)
 
 
-def _extract_pdf_text_native(path: Path) -> str:
+def _extract_pdf_text_native(path: Path, progress_callback: ProgressCallback | None = None) -> str:
     try:
         from pypdf import PdfReader
     except ImportError as exc:
@@ -201,12 +264,15 @@ def _extract_pdf_text_native(path: Path) -> str:
 
     reader = PdfReader(str(path))
     chunks = []
-    for page in reader.pages:
+    total = len(reader.pages)
+    for idx, page in enumerate(reader.pages, start=1):
         chunks.append(page.extract_text() or "")
+        if progress_callback:
+            progress_callback(idx, max(1, total))
     return "\n".join(chunks).strip()
 
 
-def _extract_pdf_text_pymupdf(path: Path) -> str:
+def _extract_pdf_text_pymupdf(path: Path, progress_callback: ProgressCallback | None = None) -> str:
     try:
         import fitz
     except ImportError as exc:
@@ -214,8 +280,11 @@ def _extract_pdf_text_pymupdf(path: Path) -> str:
 
     chunks = []
     with fitz.open(str(path)) as doc:
-        for page in doc:
+        total = len(doc)
+        for idx, page in enumerate(doc, start=1):
             chunks.append(page.get_text("text") or "")
+            if progress_callback:
+                progress_callback(idx, max(1, total))
     return "\n".join(chunks).strip()
 
 
@@ -237,7 +306,47 @@ def _is_meaningful_pdf_text(text: str) -> bool:
     return True
 
 
-def _ocr_pdf_pymupdf(path: Path, preprocess: bool = True, fast: bool = True, dpi: int = 220) -> str:
+def _detect_pdf_kind(path: Path) -> str:
+    # Fast, sample-based gate to avoid unnecessary OCR without full-document scans.
+    sample_pages = max(1, min(3, int(os.getenv("PDF_KIND_SAMPLE_PAGES", "2"))))
+    try:
+        from pypdf import PdfReader
+
+        reader = PdfReader(str(path))
+        chunks = []
+        for idx, page in enumerate(reader.pages):
+            if idx >= sample_pages:
+                break
+            chunks.append(page.extract_text() or "")
+        text = "\n".join(chunks).strip()
+        if _is_meaningful_pdf_text(text):
+            return "text"
+    except Exception:
+        pass
+    try:
+        import fitz
+
+        chunks = []
+        with fitz.open(str(path)) as doc:
+            for idx, page in enumerate(doc):
+                if idx >= sample_pages:
+                    break
+                chunks.append(page.get_text("text") or "")
+        text = "\n".join(chunks).strip()
+        if _is_meaningful_pdf_text(text):
+            return "text"
+    except Exception:
+        pass
+    return "image"
+
+
+def _ocr_pdf_pymupdf(
+    path: Path,
+    preprocess: bool = True,
+    fast: bool = True,
+    dpi: int = 220,
+    progress_callback: ProgressCallback | None = None,
+) -> str:
     try:
         import fitz
         from PIL import Image
@@ -248,18 +357,20 @@ def _ocr_pdf_pymupdf(path: Path, preprocess: bool = True, fast: bool = True, dpi
     with fitz.open(str(path)) as doc:
         page_count = len(doc)
     effective_dpi = max(dpi, 72)
-    if page_count >= 25:
-        effective_dpi = min(effective_dpi, 130)
+    if page_count >= 20:
+        effective_dpi = min(effective_dpi, 110)
     elif page_count >= 12:
-        effective_dpi = min(effective_dpi, 150)
+        effective_dpi = min(effective_dpi, 130)
     scale = effective_dpi / 72.0
     chunks = []
     engine = _ocr_engine()
     use_preprocess = preprocess and engine == "tesseract"
+    processed = 0
     with fitz.open(str(path)) as doc:
         for page in doc:
             pix = page.get_pixmap(matrix=fitz.Matrix(scale, scale), alpha=False)
             img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+            img = _resize_for_ocr(img)
             if use_preprocess:
                 img = _preprocess_image(img, fast=fast)
             if engine in {"auto", "paddle"}:
@@ -272,39 +383,61 @@ def _ocr_pdf_pymupdf(path: Path, preprocess: bool = True, fast: bool = True, dpi
                     if engine == "paddle":
                         raise
             chunks.append(_tesseract_image_to_text(img))
+            processed += 1
+            if progress_callback:
+                progress_callback(processed, max(1, page_count))
     return "\n\n[[PAGE_BREAK]]\n\n".join(chunks)
 
 
-def _extract_pdf_with_fallback(path: Path, preprocess: bool = True, fast: bool = True, dpi: int = 220) -> str:
+def _extract_pdf_with_fallback(
+    path: Path,
+    preprocess: bool = True,
+    fast: bool = True,
+    dpi: int = 220,
+    progress_callback: ProgressCallback | None = None,
+) -> str:
     errors = []
+    kind = _detect_pdf_kind(path)
+
+    if kind == "text":
+        try:
+            text = _extract_pdf_text_native(path, progress_callback=progress_callback)
+            if _is_meaningful_pdf_text(text):
+                return text
+            if text:
+                errors.append("pypdf_text: low_quality_text_fallback_to_ocr")
+        except Exception as exc:
+            errors.append(f"pypdf_text: {exc}")
+        try:
+            text = _extract_pdf_text_pymupdf(path, progress_callback=progress_callback)
+            if _is_meaningful_pdf_text(text):
+                return text
+            if text:
+                errors.append("pymupdf_text: low_quality_text_fallback_to_ocr")
+        except Exception as exc:
+            errors.append(f"pymupdf_text: {exc}")
 
     try:
-        text = _extract_pdf_text_native(path)
-        if _is_meaningful_pdf_text(text):
-            return text
-        if text:
-            errors.append("pypdf_text: low_quality_text_fallback_to_ocr")
-    except Exception as exc:
-        errors.append(f"pypdf_text: {exc}")
-
-    try:
-        text = _extract_pdf_text_pymupdf(path)
-        if _is_meaningful_pdf_text(text):
-            return text
-        if text:
-            errors.append("pymupdf_text: low_quality_text_fallback_to_ocr")
-    except Exception as exc:
-        errors.append(f"pymupdf_text: {exc}")
-
-    try:
-        text = _ocr_pdf_pymupdf(path, preprocess=preprocess, fast=fast, dpi=dpi)
+        text = _ocr_pdf_pymupdf(
+            path,
+            preprocess=preprocess,
+            fast=fast,
+            dpi=dpi,
+            progress_callback=progress_callback,
+        )
         if text.strip():
             return text
     except Exception as exc:
         errors.append(f"pymupdf_ocr: {exc}")
 
     try:
-        text = _ocr_pdf(path, preprocess=preprocess, fast=fast, dpi=dpi)
+        text = _ocr_pdf(
+            path,
+            preprocess=preprocess,
+            fast=fast,
+            dpi=dpi,
+            progress_callback=progress_callback,
+        )
         if text.strip():
             return text
     except Exception as exc:
@@ -319,14 +452,26 @@ def _extract_pdf_with_fallback(path: Path, preprocess: bool = True, fast: bool =
     )
 
 
-def extract_raw_text(path: Path, preprocess: bool = True, fast: bool = True, pdf_dpi: int = 220) -> str:
+def extract_raw_text(
+    path: Path,
+    preprocess: bool = True,
+    fast: bool = True,
+    pdf_dpi: int = 220,
+    progress_callback: ProgressCallback | None = None,
+) -> str:
     ext = path.suffix.lower()
     if ext == ".txt":
         return _read_text_file(path)
     if ext == ".docx":
         return _read_docx(path)
-    if ext in {".png", ".jpg", ".jpeg", ".tiff", ".bmp"}:
+    if ext in {".png", ".jpg", ".jpeg", ".tiff", ".tif", ".bmp", ".webp", ".gif"}:
         return _ocr_image(path, preprocess=preprocess, fast=fast)
     if ext == ".pdf":
-        return _extract_pdf_with_fallback(path, preprocess=preprocess, fast=fast, dpi=pdf_dpi)
+        return _extract_pdf_with_fallback(
+            path,
+            preprocess=preprocess,
+            fast=fast,
+            dpi=pdf_dpi,
+            progress_callback=progress_callback,
+        )
     raise ValueError(f"Unsupported file type: {ext}")

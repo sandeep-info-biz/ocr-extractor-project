@@ -42,6 +42,50 @@
       "has_corrected_data": true,
       "retrained": true,
       "total_dataset_entries": 24
+    },
+    {
+      "timestamp": "2026-02-24T06:08:58.844630+00:00",
+      "token_id": "83bb7ba6-6a09-4548-848c-67bbd05f8466",
+      "rating": 5,
+      "feedback_weight": 4,
+      "feedback_accuracy": 0.8,
+      "has_extracted_data": true,
+      "has_corrected_data": true,
+      "retrained": true,
+      "total_dataset_entries": 25
+    },
+    {
+      "timestamp": "2026-02-24T06:16:48.801776+00:00",
+      "token_id": "c321cbd1-07fa-41dd-a46a-27e0d1516b77",
+      "rating": 5,
+      "feedback_weight": 4,
+      "feedback_accuracy": 1.0,
+      "has_extracted_data": true,
+      "has_corrected_data": true,
+      "retrained": true,
+      "total_dataset_entries": 26
+    },
+    {
+      "timestamp": "2026-02-24T06:32:45.232305+00:00",
+      "token_id": "7ea33961-3bad-41c3-a6a8-cce9b43b85b1",
+      "rating": 5,
+      "feedback_weight": 4,
+      "feedback_accuracy": 1.0,
+      "has_extracted_data": true,
+      "has_corrected_data": true,
+      "retrained": true,
+      "total_dataset_entries": 27
+    },
+    {
+      "timestamp": "2026-02-24T06:37:50.195346+00:00",
+      "token_id": "fa4d0c08-3026-4531-9c82-95141531e360",
+      "rating": 5,
+      "feedback_weight": 4,
+      "feedback_accuracy": 1.0,
+      "has_extracted_data": true,
+      "has_corrected_data": true,
+      "retrained": true,
+      "total_dataset_entries": 28
     }
   ],
   "retrain_events": [
@@ -67,6 +111,38 @@
       "added_entries": 1,
       "total_dataset_entries": 24,
       "mapping_feature_count": 353,
+      "check_average_overall_score": 1.0
+    },
+    {
+      "timestamp": "2026-02-24T06:08:58.844630+00:00",
+      "source": "feedback_endpoint",
+      "added_entries": 1,
+      "total_dataset_entries": 25,
+      "mapping_feature_count": 365,
+      "check_average_overall_score": 0.8
+    },
+    {
+      "timestamp": "2026-02-24T06:16:48.801776+00:00",
+      "source": "feedback_endpoint",
+      "added_entries": 1,
+      "total_dataset_entries": 26,
+      "mapping_feature_count": 366,
+      "check_average_overall_score": 1.0
+    },
+    {
+      "timestamp": "2026-02-24T06:32:45.232305+00:00",
+      "source": "feedback_endpoint",
+      "added_entries": 1,
+      "total_dataset_entries": 27,
+      "mapping_feature_count": 366,
+      "check_average_overall_score": 1.0
+    },
+    {
+      "timestamp": "2026-02-24T06:37:50.195346+00:00",
+      "source": "feedback_endpoint",
+      "added_entries": 1,
+      "total_dataset_entries": 28,
+      "mapping_feature_count": 366,
       "check_average_overall_score": 1.0
     }
   ]

@@ -1176,5 +1176,2681 @@
     ],
     "created_at": "2026-02-23T10:58:57.538648+00:00",
     "updated_at": "2026-02-23T10:58:57.637269+00:00"
+  },
+  {
+    "document_id": "a41658a9-0bcd-47da-9298-5b459b1f997b",
+    "job_id": "da19bfe8-141d-45f0-b0e2-be05cba1aca6",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "completed",
+    "url": "/dapi/v1/document-file/a41658a9-0bcd-47da-9298-5b459b1f997b",
+    "file_hash": "2244f16d3da15ad0e33b2ff0bb343441811ffaf9e25bccc0d3c47fee84ca8d89",
+    "metadata": {
+      "etag": null,
+      "filename": "a41658a9-0bcd-47da-9298-5b459b1f997b.pdf",
+      "page_count": 3,
+      "size_bytes": 118171,
+      "content_type": "application/pdf"
+    },
+    "entries": [
+      {
+        "id": "89e172e4-0200-4281-a9fd-70cc14b3c878",
+        "token_id": "a4e2e349-5b8c-4eb5-b811-7d5753bc7d86",
+        "status": "completed",
+        "cost": 10.44,
+        "cost_currency": "INR",
+        "processing_time_seconds": 2.19,
+        "created_at": "2026-02-24T05:20:31.623708+00:00",
+        "updated_at": "2026-02-24T05:20:33.814303+00:00",
+        "is_deduplicated": true,
+        "is_valid": true,
+        "parsed_data": {
+          "first_name": "CURRICULUM",
+          "last_name": "VITAE",
+          "phone_number": "+91 8424076743",
+          "email": "faiyaz47@yahoo.com",
+          "date_of_birth": "1986-12-27",
+          "gender": "Male",
+          "religion": "",
+          "marital_status": "Single",
+          "nationality_country_name": "India",
+          "country_region": "Via DMCH",
+          "city": "Vill +Post NARSARA",
+          "postal_code": "846003",
+          "languages": [
+            "Hindi",
+            "English Urdu",
+            "English",
+            "Urdu"
+          ],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": 3,
+          "passport_number": "N8385470",
+          "passport_expiry_date": "",
+          "skills": [
+            {
+              "skill_name": "excel"
+            },
+            {
+              "skill_name": "maintenance"
+            }
+          ],
+          "education": "3 Years Diploma Electronics & Communication Engineer.",
+          "education_degree": "3 Years Diploma Electronics & Communication Engineer.",
+          "about_description_summary": "3 Years Diploma Electronics & Communication Engineer. Work Experience 1) 2 years working with Shetty infraservices Pvt Ltd as an BMS (Building Management System) BMS Operator in Parinee Devlopers BKC Site.Mumbai.",
+          "linkedin_url": "",
+          "gulf_experience": true
+        },
+        "feedback_data": {
+          "first_name": "CURRICULUM",
+          "last_name": "VITAE",
+          "phone_number": "+91 8424076743",
+          "email": "faiyaz47@yahoo.com",
+          "date_of_birth": "1986-12-27",
+          "gender": "Male",
+          "religion": "",
+          "marital_status": "Single",
+          "nationality_country_name": "India",
+          "country_region": "Via DMCH",
+          "city": "Vill +Post NARSARA",
+          "postal_code": "846003",
+          "languages": [
+            "Hindi",
+            "English Urdu",
+            "English",
+            "Urdu"
+          ],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": 3,
+          "gulf_expierence": true,
+          "passport_number": "N8385470",
+          "passport_expiry_date": "",
+          "skills": [
+            "excel",
+            "maintenance"
+          ],
+          "education": [
+            {
+              "degree": "3 Years Diploma Electronics & Communication Engineer.",
+              "field_of_study": "",
+              "institution": "",
+              "graduation_year": null
+            },
+            {
+              "degree": "Operator in Parinee Devlopers BKC Site.Mumbai.",
+              "field_of_study": "",
+              "institution": "",
+              "graduation_year": null
+            },
+            {
+              "degree": "Course : Diploma Electronics & Communication Engineer.",
+              "field_of_study": "",
+              "institution": "",
+              "graduation_year": null
+            }
+          ],
+          "education_degree": "3 Years Diploma Electronics & Communication Engineer.",
+          "about_description_summary": "3 Years Diploma Electronics & Communication Engineer. Work Experience 1) 2 years working with Shetty infraservices Pvt Ltd as an BMS (Building Management System) BMS Operator in Parinee Devlopers BKC Site.Mumbai.",
+          "linkedin_url": "",
+          "raw_text": "CURRICULUM VITAE\nMD FAIYAZ AHMAD\nVill +Post NARSARA ,Via DMCH ,Dist.Darbhanga ,Bihar, India\nEmail:faiyaz47@yahoo.com,\nMobile no:- +91 9798650755. ,,,, +91 8424076743\nSummary\n3 Years Diploma Electronics & Communication Engineer.\nWork Experience\n1) 2 years working with Shetty infraservices Pvt Ltd as an BMS (Building Management System) BMS\nOperator in Parinee Devlopers BKC Site.Mumbai.\n2) 3 years working with Honeywell Automation India Ltd.BMS Operator for Electronic Security System\nAt Tata Consultancy Services (TCS) Site. ACS, FAS,CCTV Camera.TAC VISTA System. Version 4.1.1\n3) One and half years (18th Month) working gulf Experience of Allied Maintenance Company BMS\nOperator Project of EMAAR Jeddah Gate KSA.\nJob Description\n Worked on EBI R4 10.1 Access Control System and Programming of Cards Access Doors &\nReports Installation of Controller Panel Readers (BT843,BT900)etc. Mentanance of System\nIncluding Checking of Readers and Access Doors Integrating with Fire Alarm System to release\nAccess Doors in Fire Condition.\n Working of FAS (Fire Alarm System) of XLS 1000,XLS 200,XLS 60.\n Working of CCTV (Close Circuit Television) Virson of DVM 202 System.(Digital Video\nManager) & Taking Backup of CCTV Camera.\n Working of LTS (Laptop Tracking System) Vesda System,Water Leakage System, Checkig and\nMentanance of Novec Gas.\n Supervise key Personnel’s in doing Preventive and Corrective Maintenance Safely and adherence\nwith the local Company Safety Codes.\n Perform other tasks and Directly Report to the Admin.\n Downloading of Controller.\nBMS Service.\n Conduct Monthly wise fire drill and bomb threat drill.\n Attending Fault from System –Fire alarm system (Addressable,Conventional system).\n Conduct monthly wise CCTV drill.\n Installation and maintenance of CCTV Cameras-Analogue and Digital-Johnson Control,\nHoneywell.\n Maintenance and Services of Access Control System Honeywell and Schneider.\n Participate in Emergency Response Team as per protocols.\n Interfacing fire modules with Access control system, PA and AHU for tripping in case of fire.\n Service & maintenance IBMS & BMS system.\n Coordinating with Clients, Consultants, Contractors, Vendors. and TPC.\nProfile and Skills\nA Committed, Versatile, Articulate and personable individual with a broad array of skills and experiences,\nhighly motivated, with the ability to work under pressure and with minimum supervision With vast\nknowledge in CCTV,BMS,FAS & Access Control System emergency response team that conduct\nelevator rescue, attend any fire alarm and other emergency concerns to ensure safety of the guests and\nproperty.\nTechnical Skill\n Basic C Programming.\n Microprocessor.\n Microcontroller.\n Basic Networking LAN, WAN, MAN.\nIndustrial Operation and Control of DDC & MCC.\n Water level System.\n FAHU,AHU,FCU.\n Exhaust fans.\n Emergency fans.\n(Parking Jet fan, Parking Supply fan, Parking Extract fan, Lift lobby & Stairwell Pressurization\nfan, Smoke Management Exhaust fan).\n Submersible pump Irrigation pump.\n Lighting Control Panel.\nKey components\nBrand-Siemens & Schneider\nDDC Controller and its Modules, Modbus, Control Relays, Control Transformer etc.\nComputer literacy\nMS Office (Excel, Power point).\nBasic knowledge:\nSemiconductor , Device , Electronic Device , Digital Electronics & PLC.\nHighest Education.\nCollegiate : Sri Krishna Polytechnic Bangalore.\nCourse : Diploma Electronics & Communication Engineer.\nBangalore. (90)\nPersonal Information:\nDate of Birth : 27/12/1986\nGender : Male.\nNationality : Indian.\nMarital Status : Single.\nLanguage : Hindi,English.Urdu.\nPermanent Address:\nVill+Post : Narsara\nVia : DMCH\nDist : Darbhanga\nPS : Bishanpur\nPin no. : 846003\nBihar\nPassport no. : # N8385470\nDeclaration:\nI hereby declare that all the statement made by me are true and complete to the best\nof my knowledge and belief."
+        },
+        "validation_errors": []
+      }
+    ],
+    "created_at": "2026-02-24T05:20:31.623708+00:00",
+    "updated_at": "2026-02-24T05:20:33.814325+00:00"
+  },
+  {
+    "document_id": "ef33d166-7e00-484f-9ecd-d1d4cf4ee5bf",
+    "job_id": "051def49-8a6b-45ae-9313-a19b7fb6b73a",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "completed",
+    "url": "/dapi/v1/document-file/ef33d166-7e00-484f-9ecd-d1d4cf4ee5bf",
+    "file_hash": "a890bfb5a694a934406823a4e608470e165943cd17cdb286ca4596ae4003bf83",
+    "metadata": {
+      "etag": null,
+      "filename": "ef33d166-7e00-484f-9ecd-d1d4cf4ee5bf.pdf",
+      "page_count": 3,
+      "size_bytes": 69038,
+      "content_type": "application/pdf"
+    },
+    "entries": [
+      {
+        "id": "4ad529a6-5450-4465-a747-b73bcb07ff5c",
+        "token_id": "f07af09c-b222-43e6-bd20-eff865203c01",
+        "status": "completed",
+        "cost": 10.44,
+        "cost_currency": "INR",
+        "processing_time_seconds": 0.15,
+        "created_at": "2026-02-24T05:27:22.426759+00:00",
+        "updated_at": "2026-02-24T05:27:22.575977+00:00",
+        "is_deduplicated": true,
+        "is_valid": true,
+        "parsed_data": {
+          "first_name": "ACADEMIC",
+          "last_name": "QUALIFICATION",
+          "phone_number": "+91-7639056833",
+          "email": "kart.kart.2008@gmail.com",
+          "date_of_birth": "1981-11-12",
+          "gender": "Male",
+          "religion": "",
+          "marital_status": "Married",
+          "nationality_country_name": "India",
+          "country_region": "affiliated to Madras University",
+          "city": "Aarupadai Veedu Institute of Technology",
+          "postal_code": "600116",
+          "languages": [
+            "Languages Known",
+            "English",
+            "Hindi",
+            "Tamil",
+            "And Kannada"
+          ],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": 10,
+          "passport_number": "Z4935373",
+          "passport_expiry_date": "",
+          "skills": [
+            {
+              "skill_name": "autocad"
+            },
+            {
+              "skill_name": "ccna"
+            },
+            {
+              "skill_name": "excel"
+            },
+            {
+              "skill_name": "maintenance"
+            }
+          ],
+          "education": "Bachelor of Electronics and Communication Engineering from",
+          "education_degree": "Bachelor of Electronics and Communication Engineering from",
+          "about_description_summary": "Toworkinacompetitiveandchallengingworkenvironmentandtocontributethebestofmyabilitytowardsthe growth and development of the progressive company and to pursue a challenging career. ACADEMIC QUALIFICATION Bachelor of Electronics and Communication Engineering from Aarupadai Veedu Institute of Technology ,affiliated to Madras University, Chennai,India",
+          "linkedin_url": "",
+          "gulf_experience": true
+        },
+        "feedback_data": {
+          "first_name": "ACADEMIC",
+          "last_name": "QUALIFICATION",
+          "phone_number": "+91-7639056833",
+          "email": "kart.kart.2008@gmail.com",
+          "date_of_birth": "1981-11-12",
+          "gender": "Male",
+          "religion": "",
+          "marital_status": "Married",
+          "nationality_country_name": "India",
+          "country_region": "affiliated to Madras University",
+          "city": "Aarupadai Veedu Institute of Technology",
+          "postal_code": "600116",
+          "languages": [
+            "Languages Known",
+            "English",
+            "Hindi",
+            "Tamil",
+            "And Kannada"
+          ],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": 10,
+          "gulf_expierence": true,
+          "passport_number": "Z4935373",
+          "passport_expiry_date": "",
+          "skills": [
+            "autocad",
+            "ccna",
+            "excel",
+            "maintenance"
+          ],
+          "education": [
+            {
+              "degree": "Bachelor of Electronics and Communication Engineering from",
+              "field_of_study": "",
+              "institution": "",
+              "graduation_year": null
+            },
+            {
+              "degree": "Higher Degree : Bachelor of Electronicsand Communication Engineering",
+              "field_of_study": "",
+              "institution": "",
+              "graduation_year": null
+            }
+          ],
+          "education_degree": "Bachelor of Electronics and Communication Engineering from",
+          "about_description_summary": "Toworkinacompetitiveandchallengingworkenvironmentandtocontributethebestofmyabilitytowardsthe growth and development of the progressive company and to pursue a challenging career. ACADEMIC QUALIFICATION Bachelor of Electronics and Communication Engineering from Aarupadai Veedu Institute of Technology ,affiliated to Madras University, Chennai,India",
+          "linkedin_url": "",
+          "raw_text": "RESUME\nKARTHIKEYAN LAKSHMANANMob.No: +91-7639056833E-Mail: kart.kart.2008@gmail.com\nOBJECTIVE\nToworkinacompetitiveandchallengingworkenvironmentandtocontributethebestofmyabilitytowardsthe growth and development of the progressive company and to pursue a challenging career.\nACADEMIC QUALIFICATION\nBachelor of Electronics and Communication Engineering from\nAarupadai Veedu Institute of Technology ,affiliated to Madras University, Chennai,India\nKEY SKILLS\n❖ 10 Years of Experience in ELV Systems(4 Years of Gulf Experience and 6Years of India Experience)❖ Implementation and commissioning of ELV Systems.❖ CCTV Installation, Maintenance , Troubleshooting (Bosch , CP Plus, Dahua , Hikvision)❖ Access Controls Installation, Maintenance, Troubleshooting (Fingertec , ZKTeco, Rossalare , Garrisons)❖ Fire Alarm System Installation, Maintenance, Troubleshooting (Bosch, Tyco Fire Alarm Panels).❖ Networking Concepts- CCNA Certified Course.❖ Well convergent with Electronic, Telecom & automation Equipment’s maintenance activities for officeautomation Equipments like Telephones, IP phones, Fax machines.❖ Installation & Maintenance of Biometric Attendance System and attendance management software.❖ Perform plan preventive maintenance of Different electronics system.❖ Desktop Computer Hardware and Software Installation and trouble shooting.❖ AUTOCAD Basic. MS Office (Word, Excel, PowerPoint).\nPROFESSIONAL EXPERIENCE\n● May 2017 to Till date with Yercaud Electronics Pvt Ltd –Chennai asTeam Lead–Security Division.● May 2016 to February 2017 with Dhonaadhi Hitech Innovations- Chennai asTechnical Engineer.● February2011to2015withOmanShapoorjiCoLLC asELVEngineer- Muscat-SultanateofOman(Gulf Experience)\nWORK EXPERIENCE\n1.Yercaud Electronics Pvt Ltd as Team Lead –Security DivisionMay 2017 to till date-\nChennai, India.\nRESPONSIBILITY\n❖ Installation, Commissioning & Maintenance of CCTV Cameras.\n❖ Installation, Commissioning & Maintenance of Biometric Door and Card Access Control Systems\n❖ Installation & Maintenance of Biometric Attendance System and attendance management software.\n❖ Familiar with Essl Biometric Door and Card Access Control System and software\n❖ Installation & Maintenance of Boom Barrier and Flap Barrier.\n❖ Familiar with Dahua , Hik Vision ,Samsung - CCTV Systems with mobile configuration\n❖ Implementing and commissioning of ELV Systems.\n❖ Managing service engineers\n2. Dhonaadhi Hitech Innovations Pvt Ltd as TechnicalengineerfromMay 2016 to feb 2017-\nChennai, India.\nRESPONSIBILITY\n❖ Installation, Commissioning & Maintenance of CCTV Cameras.\n❖ Familiar with CP Plus, Vision and Bosch - CCTV Systems\n❖ Installation, Commissioning & Maintenance of Biometric Attendance System.\n❖ Familiar with Fingertec Biometric Attendance system and software\n❖ Installation, Commissioning & Maintenance of Biometric Door and Card Access Control Systems\n❖ Familiar with Fingertec Biometric Door and Card Access Control System and software\n❖ Installation and commissioning of Walk through Metal Detector (WTMD)\n3. OMAN SHAPOORJI CO LLC as\nELV Engineerfrom 2011to 2015 in Muscat palace(Qasar Al Alam)\nProject & Maintenance division, Ghala, Oman.(GulfExperience)\nRESPONSIBILITY\n❖ Installation, Commissioning & Maintenance of CCTV Cameras, Security System, UPS.\n❖ Familiar with Bosch, IMG Vision, CP Plus - CCTV Systems, Rossalare, Garrisons, Suprema -Security systems.\n❖ Installation, Commissioning, Programming & Maintenance of Lighting Dimmer System.\n❖ Familiar with Polaron, Lutron, Quantron Dimming system.\n❖ Installation, Maintenance of Fire Alarm System. (Bosch, Tyco Fire Alarm Panels).\n❖ Implementation and commissioning of ELV / AV Systems.\n❖ Perform plan preventive maintenance of Different electronics system.\n❖ Well convergent with Electronic, Telecom & automation Equipments maintenance activities foroffice automation Equipments like Telephones, IP phones, Fax machines.\n❖ Having experience of trouble shooting the patch panel Fault clearance.\n❖ Have good communication, supervising and planning skills.\n❖ Generation of various types of reports (Maintenance and Planning)\nPERSONAL DETAILS\nName : L.Karthikeyan\nFather Name : R.Lakshmanan\nDate of Birth : 12\nth\nNovember 1981\nGender : Male\nMarital Status : Married\nNationality : Indian\nLanguages Known : English, Hindi, Tamil,and Kannada.\nHigher Degree : Bachelor of Electronicsand Communication Engineering\nPassport Number : Z4935373\nSKYPE ID : live:kart.kart.2008\nDate of Expiry : 31/10/2029\nPresent Address : Plot No: 10, A3 ApexApartment, Ramamurthy Avenue\nShakthi Nagar, Porur\nChennai, Tamil Nadu, India Pin-600116\nDECLARATION\nI hereby declare that all the information’s furnished above are true to the best of my knowledge and belief.\nThanking You,\nPlace: Yours Truly,\nDate : ( L. Karthikeyan)"
+        },
+        "validation_errors": []
+      }
+    ],
+    "created_at": "2026-02-24T05:27:22.426759+00:00",
+    "updated_at": "2026-02-24T05:27:22.576028+00:00"
+  },
+  {
+    "document_id": "b22113f2-e36a-48fe-b69f-044dc82483eb",
+    "job_id": "1a6e60db-5051-41e6-a319-c5212252af73",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "completed",
+    "url": "/dapi/v1/document-file/b22113f2-e36a-48fe-b69f-044dc82483eb",
+    "file_hash": "a890bfb5a694a934406823a4e608470e165943cd17cdb286ca4596ae4003bf83",
+    "metadata": {
+      "etag": null,
+      "filename": "b22113f2-e36a-48fe-b69f-044dc82483eb.pdf",
+      "page_count": 3,
+      "size_bytes": 69038,
+      "content_type": "application/pdf"
+    },
+    "entries": [
+      {
+        "id": "b3eee5d3-23a3-4fc4-b6cb-7e22c608f3a0",
+        "token_id": "4999118c-7254-4775-b1d0-d69563382343",
+        "status": "completed",
+        "cost": 10.44,
+        "cost_currency": "INR",
+        "processing_time_seconds": 0.13,
+        "created_at": "2026-02-24T05:33:01.020926+00:00",
+        "updated_at": "2026-02-24T05:33:01.147551+00:00",
+        "is_deduplicated": true,
+        "is_valid": true,
+        "parsed_data": {
+          "first_name": "ACADEMIC",
+          "last_name": "QUALIFICATION",
+          "phone_number": "+91-7639056833",
+          "email": "kart.kart.2008@gmail.com",
+          "date_of_birth": "1981-11-12",
+          "gender": "Male",
+          "religion": "",
+          "marital_status": "Married",
+          "nationality_country_name": "India",
+          "country_region": "affiliated to Madras University",
+          "city": "Aarupadai Veedu Institute of Technology",
+          "postal_code": "600116",
+          "languages": [
+            "Languages Known",
+            "English",
+            "Hindi",
+            "Tamil",
+            "And Kannada"
+          ],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": 10,
+          "passport_number": "Z4935373",
+          "passport_expiry_date": "",
+          "skills": [
+            {
+              "skill_name": "autocad"
+            },
+            {
+              "skill_name": "ccna"
+            },
+            {
+              "skill_name": "excel"
+            },
+            {
+              "skill_name": "maintenance"
+            }
+          ],
+          "education": "Bachelor of Electronics and Communication Engineering from",
+          "education_degree": "Bachelor of Electronics and Communication Engineering from",
+          "about_description_summary": "Toworkinacompetitiveandchallengingworkenvironmentandtocontributethebestofmyabilitytowardsthe growth and development of the progressive company and to pursue a challenging career. ACADEMIC QUALIFICATION Bachelor of Electronics and Communication Engineering from Aarupadai Veedu Institute of Technology ,affiliated to Madras University, Chennai,India",
+          "linkedin_url": "",
+          "gulf_experience": true
+        },
+        "feedback_data": {
+          "first_name": "ACADEMIC",
+          "last_name": "QUALIFICATION",
+          "phone_number": "+91-7639056833",
+          "email": "kart.kart.2008@gmail.com",
+          "date_of_birth": "1981-11-12",
+          "gender": "Male",
+          "religion": "",
+          "marital_status": "Married",
+          "nationality_country_name": "India",
+          "country_region": "affiliated to Madras University",
+          "city": "Aarupadai Veedu Institute of Technology",
+          "postal_code": "600116",
+          "languages": [
+            "Languages Known",
+            "English",
+            "Hindi",
+            "Tamil",
+            "And Kannada"
+          ],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": 10,
+          "gulf_expierence": true,
+          "passport_number": "Z4935373",
+          "passport_expiry_date": "",
+          "skills": [
+            "autocad",
+            "ccna",
+            "excel",
+            "maintenance"
+          ],
+          "education": [
+            {
+              "degree": "Bachelor of Electronics and Communication Engineering from",
+              "field_of_study": "",
+              "institution": "",
+              "graduation_year": null
+            },
+            {
+              "degree": "Higher Degree : Bachelor of Electronicsand Communication Engineering",
+              "field_of_study": "",
+              "institution": "",
+              "graduation_year": null
+            }
+          ],
+          "education_degree": "Bachelor of Electronics and Communication Engineering from",
+          "about_description_summary": "Toworkinacompetitiveandchallengingworkenvironmentandtocontributethebestofmyabilitytowardsthe growth and development of the progressive company and to pursue a challenging career. ACADEMIC QUALIFICATION Bachelor of Electronics and Communication Engineering from Aarupadai Veedu Institute of Technology ,affiliated to Madras University, Chennai,India",
+          "linkedin_url": "",
+          "raw_text": "RESUME\nKARTHIKEYAN LAKSHMANANMob.No: +91-7639056833E-Mail: kart.kart.2008@gmail.com\nOBJECTIVE\nToworkinacompetitiveandchallengingworkenvironmentandtocontributethebestofmyabilitytowardsthe growth and development of the progressive company and to pursue a challenging career.\nACADEMIC QUALIFICATION\nBachelor of Electronics and Communication Engineering from\nAarupadai Veedu Institute of Technology ,affiliated to Madras University, Chennai,India\nKEY SKILLS\n❖ 10 Years of Experience in ELV Systems(4 Years of Gulf Experience and 6Years of India Experience)❖ Implementation and commissioning of ELV Systems.❖ CCTV Installation, Maintenance , Troubleshooting (Bosch , CP Plus, Dahua , Hikvision)❖ Access Controls Installation, Maintenance, Troubleshooting (Fingertec , ZKTeco, Rossalare , Garrisons)❖ Fire Alarm System Installation, Maintenance, Troubleshooting (Bosch, Tyco Fire Alarm Panels).❖ Networking Concepts- CCNA Certified Course.❖ Well convergent with Electronic, Telecom & automation Equipment’s maintenance activities for officeautomation Equipments like Telephones, IP phones, Fax machines.❖ Installation & Maintenance of Biometric Attendance System and attendance management software.❖ Perform plan preventive maintenance of Different electronics system.❖ Desktop Computer Hardware and Software Installation and trouble shooting.❖ AUTOCAD Basic. MS Office (Word, Excel, PowerPoint).\nPROFESSIONAL EXPERIENCE\n● May 2017 to Till date with Yercaud Electronics Pvt Ltd –Chennai asTeam Lead–Security Division.● May 2016 to February 2017 with Dhonaadhi Hitech Innovations- Chennai asTechnical Engineer.● February2011to2015withOmanShapoorjiCoLLC asELVEngineer- Muscat-SultanateofOman(Gulf Experience)\nWORK EXPERIENCE\n1.Yercaud Electronics Pvt Ltd as Team Lead –Security DivisionMay 2017 to till date-\nChennai, India.\nRESPONSIBILITY\n❖ Installation, Commissioning & Maintenance of CCTV Cameras.\n❖ Installation, Commissioning & Maintenance of Biometric Door and Card Access Control Systems\n❖ Installation & Maintenance of Biometric Attendance System and attendance management software.\n❖ Familiar with Essl Biometric Door and Card Access Control System and software\n❖ Installation & Maintenance of Boom Barrier and Flap Barrier.\n❖ Familiar with Dahua , Hik Vision ,Samsung - CCTV Systems with mobile configuration\n❖ Implementing and commissioning of ELV Systems.\n❖ Managing service engineers\n2. Dhonaadhi Hitech Innovations Pvt Ltd as TechnicalengineerfromMay 2016 to feb 2017-\nChennai, India.\nRESPONSIBILITY\n❖ Installation, Commissioning & Maintenance of CCTV Cameras.\n❖ Familiar with CP Plus, Vision and Bosch - CCTV Systems\n❖ Installation, Commissioning & Maintenance of Biometric Attendance System.\n❖ Familiar with Fingertec Biometric Attendance system and software\n❖ Installation, Commissioning & Maintenance of Biometric Door and Card Access Control Systems\n❖ Familiar with Fingertec Biometric Door and Card Access Control System and software\n❖ Installation and commissioning of Walk through Metal Detector (WTMD)\n3. OMAN SHAPOORJI CO LLC as\nELV Engineerfrom 2011to 2015 in Muscat palace(Qasar Al Alam)\nProject & Maintenance division, Ghala, Oman.(GulfExperience)\nRESPONSIBILITY\n❖ Installation, Commissioning & Maintenance of CCTV Cameras, Security System, UPS.\n❖ Familiar with Bosch, IMG Vision, CP Plus - CCTV Systems, Rossalare, Garrisons, Suprema -Security systems.\n❖ Installation, Commissioning, Programming & Maintenance of Lighting Dimmer System.\n❖ Familiar with Polaron, Lutron, Quantron Dimming system.\n❖ Installation, Maintenance of Fire Alarm System. (Bosch, Tyco Fire Alarm Panels).\n❖ Implementation and commissioning of ELV / AV Systems.\n❖ Perform plan preventive maintenance of Different electronics system.\n❖ Well convergent with Electronic, Telecom & automation Equipments maintenance activities foroffice automation Equipments like Telephones, IP phones, Fax machines.\n❖ Having experience of trouble shooting the patch panel Fault clearance.\n❖ Have good communication, supervising and planning skills.\n❖ Generation of various types of reports (Maintenance and Planning)\nPERSONAL DETAILS\nName : L.Karthikeyan\nFather Name : R.Lakshmanan\nDate of Birth : 12\nth\nNovember 1981\nGender : Male\nMarital Status : Married\nNationality : Indian\nLanguages Known : English, Hindi, Tamil,and Kannada.\nHigher Degree : Bachelor of Electronicsand Communication Engineering\nPassport Number : Z4935373\nSKYPE ID : live:kart.kart.2008\nDate of Expiry : 31/10/2029\nPresent Address : Plot No: 10, A3 ApexApartment, Ramamurthy Avenue\nShakthi Nagar, Porur\nChennai, Tamil Nadu, India Pin-600116\nDECLARATION\nI hereby declare that all the information’s furnished above are true to the best of my knowledge and belief.\nThanking You,\nPlace: Yours Truly,\nDate : ( L. Karthikeyan)"
+        },
+        "validation_errors": []
+      }
+    ],
+    "created_at": "2026-02-24T05:33:01.020926+00:00",
+    "updated_at": "2026-02-24T05:33:01.147578+00:00"
+  },
+  {
+    "document_id": "28d49bb3-03a6-4d95-b75a-5aaa1ab2f46d",
+    "job_id": "33f35b5c-be2e-4836-aaf8-9dda543b3adb",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "processing",
+    "url": "/dapi/v1/document-file/28d49bb3-03a6-4d95-b75a-5aaa1ab2f46d",
+    "file_hash": "7139ba447c4127258fda3b8c98f6f9a309540a5701ba8291be859361ce55f801",
+    "metadata": {
+      "etag": null,
+      "filename": "Sheikabdullah resume.pdf",
+      "page_count": 24,
+      "size_bytes": 12890274,
+      "content_type": "application/pdf"
+    },
+    "entries": [],
+    "created_at": "2026-02-24T05:39:54.300961+00:00",
+    "updated_at": "2026-02-24T05:39:54.300975+00:00"
+  },
+  {
+    "document_id": "90cf2190-0957-42b2-9e92-ba38fd98abcb",
+    "job_id": "9c9825c9-58a7-407f-a7de-5d0498973467",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "completed",
+    "url": "/dapi/v1/document-file/90cf2190-0957-42b2-9e92-ba38fd98abcb",
+    "file_hash": "a890bfb5a694a934406823a4e608470e165943cd17cdb286ca4596ae4003bf83",
+    "metadata": {
+      "etag": null,
+      "filename": "90cf2190-0957-42b2-9e92-ba38fd98abcb.pdf",
+      "page_count": 3,
+      "size_bytes": 69038,
+      "content_type": "application/pdf"
+    },
+    "entries": [
+      {
+        "id": "351d241b-2d89-4c13-9ba6-7990c3649134",
+        "token_id": "9c3d624b-ffc3-4d59-8d08-7d2dd03fe140",
+        "status": "completed",
+        "cost": 10.44,
+        "cost_currency": "INR",
+        "processing_time_seconds": 1.49,
+        "created_at": "2026-02-24T05:53:23.482164+00:00",
+        "updated_at": "2026-02-24T05:53:24.976324+00:00",
+        "is_deduplicated": true,
+        "is_valid": true,
+        "parsed_data": {
+          "first_name": "ACADEMIC",
+          "last_name": "QUALIFICATION",
+          "phone_number": "+91-7639056833",
+          "email": "kart.kart.2008@gmail.com",
+          "date_of_birth": "1981-11-12",
+          "gender": "Male",
+          "religion": "",
+          "marital_status": "Married",
+          "nationality_country_name": "India",
+          "country_region": "affiliated to Madras University",
+          "city": "Aarupadai Veedu Institute of Technology",
+          "postal_code": "600116",
+          "languages": [
+            "Languages Known",
+            "English",
+            "Hindi",
+            "Tamil",
+            "And Kannada"
+          ],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": 10,
+          "passport_number": "Z4935373",
+          "passport_expiry_date": "",
+          "skills": [
+            {
+              "skill_name": "autocad"
+            },
+            {
+              "skill_name": "ccna"
+            },
+            {
+              "skill_name": "excel"
+            },
+            {
+              "skill_name": "maintenance"
+            }
+          ],
+          "education": "Bachelor of Electronics and Communication Engineering from",
+          "education_degree": "Bachelor of Electronics and Communication Engineering from",
+          "about_description_summary": "Toworkinacompetitiveandchallengingworkenvironmentandtocontributethebestofmyabilitytowardsthe growth and development of the progressive company and to pursue a challenging career. ACADEMIC QUALIFICATION Bachelor of Electronics and Communication Engineering from Aarupadai Veedu Institute of Technology ,affiliated to Madras University, Chennai,India",
+          "linkedin_url": "",
+          "gulf_experience": true
+        },
+        "feedback_data": {
+          "first_name": "ACADEMIC",
+          "last_name": "QUALIFICATION",
+          "phone_number": "+91-7639056833",
+          "email": "kart.kart.2008@gmail.com",
+          "date_of_birth": "1981-11-12",
+          "gender": "Male",
+          "religion": "",
+          "marital_status": "Married",
+          "nationality_country_name": "India",
+          "country_region": "affiliated to Madras University",
+          "city": "Aarupadai Veedu Institute of Technology",
+          "postal_code": "600116",
+          "languages": [
+            "Languages Known",
+            "English",
+            "Hindi",
+            "Tamil",
+            "And Kannada"
+          ],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": 10,
+          "gulf_expierence": true,
+          "passport_number": "Z4935373",
+          "passport_expiry_date": "",
+          "skills": [
+            "autocad",
+            "ccna",
+            "excel",
+            "maintenance"
+          ],
+          "education": [
+            {
+              "degree": "Bachelor of Electronics and Communication Engineering from",
+              "field_of_study": "",
+              "institution": "",
+              "graduation_year": null
+            },
+            {
+              "degree": "Higher Degree : Bachelor of Electronicsand Communication Engineering",
+              "field_of_study": "",
+              "institution": "",
+              "graduation_year": null
+            }
+          ],
+          "education_degree": "Bachelor of Electronics and Communication Engineering from",
+          "about_description_summary": "Toworkinacompetitiveandchallengingworkenvironmentandtocontributethebestofmyabilitytowardsthe growth and development of the progressive company and to pursue a challenging career. ACADEMIC QUALIFICATION Bachelor of Electronics and Communication Engineering from Aarupadai Veedu Institute of Technology ,affiliated to Madras University, Chennai,India",
+          "linkedin_url": "",
+          "raw_text": "RESUME\nKARTHIKEYAN LAKSHMANANMob.No: +91-7639056833E-Mail: kart.kart.2008@gmail.com\nOBJECTIVE\nToworkinacompetitiveandchallengingworkenvironmentandtocontributethebestofmyabilitytowardsthe growth and development of the progressive company and to pursue a challenging career.\nACADEMIC QUALIFICATION\nBachelor of Electronics and Communication Engineering from\nAarupadai Veedu Institute of Technology ,affiliated to Madras University, Chennai,India\nKEY SKILLS\n❖ 10 Years of Experience in ELV Systems(4 Years of Gulf Experience and 6Years of India Experience)❖ Implementation and commissioning of ELV Systems.❖ CCTV Installation, Maintenance , Troubleshooting (Bosch , CP Plus, Dahua , Hikvision)❖ Access Controls Installation, Maintenance, Troubleshooting (Fingertec , ZKTeco, Rossalare , Garrisons)❖ Fire Alarm System Installation, Maintenance, Troubleshooting (Bosch, Tyco Fire Alarm Panels).❖ Networking Concepts- CCNA Certified Course.❖ Well convergent with Electronic, Telecom & automation Equipment’s maintenance activities for officeautomation Equipments like Telephones, IP phones, Fax machines.❖ Installation & Maintenance of Biometric Attendance System and attendance management software.❖ Perform plan preventive maintenance of Different electronics system.❖ Desktop Computer Hardware and Software Installation and trouble shooting.❖ AUTOCAD Basic. MS Office (Word, Excel, PowerPoint).\nPROFESSIONAL EXPERIENCE\n● May 2017 to Till date with Yercaud Electronics Pvt Ltd –Chennai asTeam Lead–Security Division.● May 2016 to February 2017 with Dhonaadhi Hitech Innovations- Chennai asTechnical Engineer.● February2011to2015withOmanShapoorjiCoLLC asELVEngineer- Muscat-SultanateofOman(Gulf Experience)\nWORK EXPERIENCE\n1.Yercaud Electronics Pvt Ltd as Team Lead –Security DivisionMay 2017 to till date-\nChennai, India.\nRESPONSIBILITY\n❖ Installation, Commissioning & Maintenance of CCTV Cameras.\n❖ Installation, Commissioning & Maintenance of Biometric Door and Card Access Control Systems\n❖ Installation & Maintenance of Biometric Attendance System and attendance management software.\n❖ Familiar with Essl Biometric Door and Card Access Control System and software\n❖ Installation & Maintenance of Boom Barrier and Flap Barrier.\n❖ Familiar with Dahua , Hik Vision ,Samsung - CCTV Systems with mobile configuration\n❖ Implementing and commissioning of ELV Systems.\n❖ Managing service engineers\n2. Dhonaadhi Hitech Innovations Pvt Ltd as TechnicalengineerfromMay 2016 to feb 2017-\nChennai, India.\nRESPONSIBILITY\n❖ Installation, Commissioning & Maintenance of CCTV Cameras.\n❖ Familiar with CP Plus, Vision and Bosch - CCTV Systems\n❖ Installation, Commissioning & Maintenance of Biometric Attendance System.\n❖ Familiar with Fingertec Biometric Attendance system and software\n❖ Installation, Commissioning & Maintenance of Biometric Door and Card Access Control Systems\n❖ Familiar with Fingertec Biometric Door and Card Access Control System and software\n❖ Installation and commissioning of Walk through Metal Detector (WTMD)\n3. OMAN SHAPOORJI CO LLC as\nELV Engineerfrom 2011to 2015 in Muscat palace(Qasar Al Alam)\nProject & Maintenance division, Ghala, Oman.(GulfExperience)\nRESPONSIBILITY\n❖ Installation, Commissioning & Maintenance of CCTV Cameras, Security System, UPS.\n❖ Familiar with Bosch, IMG Vision, CP Plus - CCTV Systems, Rossalare, Garrisons, Suprema -Security systems.\n❖ Installation, Commissioning, Programming & Maintenance of Lighting Dimmer System.\n❖ Familiar with Polaron, Lutron, Quantron Dimming system.\n❖ Installation, Maintenance of Fire Alarm System. (Bosch, Tyco Fire Alarm Panels).\n❖ Implementation and commissioning of ELV / AV Systems.\n❖ Perform plan preventive maintenance of Different electronics system.\n❖ Well convergent with Electronic, Telecom & automation Equipments maintenance activities foroffice automation Equipments like Telephones, IP phones, Fax machines.\n❖ Having experience of trouble shooting the patch panel Fault clearance.\n❖ Have good communication, supervising and planning skills.\n❖ Generation of various types of reports (Maintenance and Planning)\nPERSONAL DETAILS\nName : L.Karthikeyan\nFather Name : R.Lakshmanan\nDate of Birth : 12\nth\nNovember 1981\nGender : Male\nMarital Status : Married\nNationality : Indian\nLanguages Known : English, Hindi, Tamil,and Kannada.\nHigher Degree : Bachelor of Electronicsand Communication Engineering\nPassport Number : Z4935373\nSKYPE ID : live:kart.kart.2008\nDate of Expiry : 31/10/2029\nPresent Address : Plot No: 10, A3 ApexApartment, Ramamurthy Avenue\nShakthi Nagar, Porur\nChennai, Tamil Nadu, India Pin-600116\nDECLARATION\nI hereby declare that all the information’s furnished above are true to the best of my knowledge and belief.\nThanking You,\nPlace: Yours Truly,\nDate : ( L. Karthikeyan)"
+        },
+        "validation_errors": []
+      }
+    ],
+    "created_at": "2026-02-24T05:53:23.482164+00:00",
+    "updated_at": "2026-02-24T05:53:24.976347+00:00"
+  },
+  {
+    "document_id": "92a65a42-d8fd-44e5-9b65-df1ce002d80a",
+    "job_id": "30c93b49-1862-4d49-ba5d-007c646a8e7d",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "completed",
+    "url": "/dapi/v1/document-file/92a65a42-d8fd-44e5-9b65-df1ce002d80a",
+    "file_hash": "2244f16d3da15ad0e33b2ff0bb343441811ffaf9e25bccc0d3c47fee84ca8d89",
+    "metadata": {
+      "etag": null,
+      "filename": "92a65a42-d8fd-44e5-9b65-df1ce002d80a.pdf",
+      "page_count": 3,
+      "size_bytes": 118171,
+      "content_type": "application/pdf"
+    },
+    "entries": [
+      {
+        "id": "1baff597-498b-45ce-b883-13ac63894fb1",
+        "token_id": "5690804b-b03b-4e01-86e7-847a38f62fbb",
+        "status": "completed",
+        "cost": 10.44,
+        "cost_currency": "INR",
+        "processing_time_seconds": 0.18,
+        "created_at": "2026-02-24T05:54:07.899605+00:00",
+        "updated_at": "2026-02-24T05:54:08.079570+00:00",
+        "is_deduplicated": true,
+        "is_valid": true,
+        "parsed_data": {
+          "first_name": "CURRICULUM",
+          "last_name": "VITAE",
+          "phone_number": "+91 8424076743",
+          "email": "faiyaz47@yahoo.com",
+          "date_of_birth": "1986-12-27",
+          "gender": "Male",
+          "religion": "",
+          "marital_status": "Single",
+          "nationality_country_name": "India",
+          "country_region": "Via DMCH",
+          "city": "Vill +Post NARSARA",
+          "postal_code": "846003",
+          "languages": [
+            "Hindi",
+            "English Urdu",
+            "English",
+            "Urdu"
+          ],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": 3,
+          "passport_number": "N8385470",
+          "passport_expiry_date": "",
+          "skills": [
+            {
+              "skill_name": "excel"
+            },
+            {
+              "skill_name": "maintenance"
+            }
+          ],
+          "education": "3 Years Diploma Electronics & Communication Engineer.",
+          "education_degree": "3 Years Diploma Electronics & Communication Engineer.",
+          "about_description_summary": "3 Years Diploma Electronics & Communication Engineer. Work Experience 1) 2 years working with Shetty infraservices Pvt Ltd as an BMS (Building Management System) BMS Operator in Parinee Devlopers BKC Site.Mumbai.",
+          "linkedin_url": "",
+          "gulf_experience": true
+        },
+        "feedback_data": {
+          "first_name": "CURRICULUM",
+          "last_name": "VITAE",
+          "phone_number": "+91 8424076743",
+          "email": "faiyaz47@yahoo.com",
+          "date_of_birth": "1986-12-27",
+          "gender": "Male",
+          "religion": "",
+          "marital_status": "Single",
+          "nationality_country_name": "India",
+          "country_region": "Via DMCH",
+          "city": "Vill +Post NARSARA",
+          "postal_code": "846003",
+          "languages": [
+            "Hindi",
+            "English Urdu",
+            "English",
+            "Urdu"
+          ],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": 3,
+          "gulf_expierence": true,
+          "passport_number": "N8385470",
+          "passport_expiry_date": "",
+          "skills": [
+            "excel",
+            "maintenance"
+          ],
+          "education": [
+            {
+              "degree": "3 Years Diploma Electronics & Communication Engineer.",
+              "field_of_study": "",
+              "institution": "",
+              "graduation_year": null
+            },
+            {
+              "degree": "Operator in Parinee Devlopers BKC Site.Mumbai.",
+              "field_of_study": "",
+              "institution": "",
+              "graduation_year": null
+            },
+            {
+              "degree": "Course : Diploma Electronics & Communication Engineer.",
+              "field_of_study": "",
+              "institution": "",
+              "graduation_year": null
+            }
+          ],
+          "education_degree": "3 Years Diploma Electronics & Communication Engineer.",
+          "about_description_summary": "3 Years Diploma Electronics & Communication Engineer. Work Experience 1) 2 years working with Shetty infraservices Pvt Ltd as an BMS (Building Management System) BMS Operator in Parinee Devlopers BKC Site.Mumbai.",
+          "linkedin_url": "",
+          "raw_text": "CURRICULUM VITAE\nMD FAIYAZ AHMAD\nVill +Post NARSARA ,Via DMCH ,Dist.Darbhanga ,Bihar, India\nEmail:faiyaz47@yahoo.com,\nMobile no:- +91 9798650755. ,,,, +91 8424076743\nSummary\n3 Years Diploma Electronics & Communication Engineer.\nWork Experience\n1) 2 years working with Shetty infraservices Pvt Ltd as an BMS (Building Management System) BMS\nOperator in Parinee Devlopers BKC Site.Mumbai.\n2) 3 years working with Honeywell Automation India Ltd.BMS Operator for Electronic Security System\nAt Tata Consultancy Services (TCS) Site. ACS, FAS,CCTV Camera.TAC VISTA System. Version 4.1.1\n3) One and half years (18th Month) working gulf Experience of Allied Maintenance Company BMS\nOperator Project of EMAAR Jeddah Gate KSA.\nJob Description\n Worked on EBI R4 10.1 Access Control System and Programming of Cards Access Doors &\nReports Installation of Controller Panel Readers (BT843,BT900)etc. Mentanance of System\nIncluding Checking of Readers and Access Doors Integrating with Fire Alarm System to release\nAccess Doors in Fire Condition.\n Working of FAS (Fire Alarm System) of XLS 1000,XLS 200,XLS 60.\n Working of CCTV (Close Circuit Television) Virson of DVM 202 System.(Digital Video\nManager) & Taking Backup of CCTV Camera.\n Working of LTS (Laptop Tracking System) Vesda System,Water Leakage System, Checkig and\nMentanance of Novec Gas.\n Supervise key Personnel’s in doing Preventive and Corrective Maintenance Safely and adherence\nwith the local Company Safety Codes.\n Perform other tasks and Directly Report to the Admin.\n Downloading of Controller.\nBMS Service.\n Conduct Monthly wise fire drill and bomb threat drill.\n Attending Fault from System –Fire alarm system (Addressable,Conventional system).\n Conduct monthly wise CCTV drill.\n Installation and maintenance of CCTV Cameras-Analogue and Digital-Johnson Control,\nHoneywell.\n Maintenance and Services of Access Control System Honeywell and Schneider.\n Participate in Emergency Response Team as per protocols.\n Interfacing fire modules with Access control system, PA and AHU for tripping in case of fire.\n Service & maintenance IBMS & BMS system.\n Coordinating with Clients, Consultants, Contractors, Vendors. and TPC.\nProfile and Skills\nA Committed, Versatile, Articulate and personable individual with a broad array of skills and experiences,\nhighly motivated, with the ability to work under pressure and with minimum supervision With vast\nknowledge in CCTV,BMS,FAS & Access Control System emergency response team that conduct\nelevator rescue, attend any fire alarm and other emergency concerns to ensure safety of the guests and\nproperty.\nTechnical Skill\n Basic C Programming.\n Microprocessor.\n Microcontroller.\n Basic Networking LAN, WAN, MAN.\nIndustrial Operation and Control of DDC & MCC.\n Water level System.\n FAHU,AHU,FCU.\n Exhaust fans.\n Emergency fans.\n(Parking Jet fan, Parking Supply fan, Parking Extract fan, Lift lobby & Stairwell Pressurization\nfan, Smoke Management Exhaust fan).\n Submersible pump Irrigation pump.\n Lighting Control Panel.\nKey components\nBrand-Siemens & Schneider\nDDC Controller and its Modules, Modbus, Control Relays, Control Transformer etc.\nComputer literacy\nMS Office (Excel, Power point).\nBasic knowledge:\nSemiconductor , Device , Electronic Device , Digital Electronics & PLC.\nHighest Education.\nCollegiate : Sri Krishna Polytechnic Bangalore.\nCourse : Diploma Electronics & Communication Engineer.\nBangalore. (90)\nPersonal Information:\nDate of Birth : 27/12/1986\nGender : Male.\nNationality : Indian.\nMarital Status : Single.\nLanguage : Hindi,English.Urdu.\nPermanent Address:\nVill+Post : Narsara\nVia : DMCH\nDist : Darbhanga\nPS : Bishanpur\nPin no. : 846003\nBihar\nPassport no. : # N8385470\nDeclaration:\nI hereby declare that all the statement made by me are true and complete to the best\nof my knowledge and belief."
+        },
+        "validation_errors": []
+      }
+    ],
+    "created_at": "2026-02-24T05:54:07.899605+00:00",
+    "updated_at": "2026-02-24T05:54:08.079621+00:00"
+  },
+  {
+    "document_id": "eac15d0d-b083-49ab-bb31-56df8fb0abbe",
+    "job_id": "982e17a4-b27b-4f1b-98b8-01b9a4516099",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "processing",
+    "url": "/dapi/v1/document-file/eac15d0d-b083-49ab-bb31-56df8fb0abbe",
+    "file_hash": "7139ba447c4127258fda3b8c98f6f9a309540a5701ba8291be859361ce55f801",
+    "metadata": {
+      "etag": null,
+      "filename": "Sheikabdullah resume.pdf",
+      "page_count": 24,
+      "size_bytes": 12890274,
+      "content_type": "application/pdf"
+    },
+    "entries": [],
+    "created_at": "2026-02-24T05:55:31.987249+00:00",
+    "updated_at": "2026-02-24T05:55:31.987260+00:00"
+  },
+  {
+    "document_id": "d0ea45d8-57a1-425e-be51-6dd1151afb18",
+    "job_id": "72026521-2167-4927-9309-8ab7c641afce",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "processing",
+    "url": "/dapi/v1/document-file/d0ea45d8-57a1-425e-be51-6dd1151afb18",
+    "file_hash": "a1bb04052a403c83d86a0cd386250e3e442baf191408046c2b0858d456fe6c49",
+    "metadata": {
+      "etag": null,
+      "filename": "1254412_Naseem (kazema university).pdf",
+      "page_count": 20,
+      "size_bytes": 8872045,
+      "content_type": "application/pdf"
+    },
+    "entries": [],
+    "created_at": "2026-02-24T06:04:55.359649+00:00",
+    "updated_at": "2026-02-24T06:04:55.359670+00:00"
+  },
+  {
+    "document_id": "cf8bef6a-295e-456a-8d73-0b00e522951c",
+    "job_id": "0463526f-6f8e-4b12-a73a-5a468f0f1adb",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "completed",
+    "url": "/dapi/v1/document-file/cf8bef6a-295e-456a-8d73-0b00e522951c",
+    "file_hash": "a890bfb5a694a934406823a4e608470e165943cd17cdb286ca4596ae4003bf83",
+    "metadata": {
+      "etag": null,
+      "filename": "cf8bef6a-295e-456a-8d73-0b00e522951c.pdf",
+      "page_count": 3,
+      "size_bytes": 69038,
+      "content_type": "application/pdf"
+    },
+    "entries": [
+      {
+        "id": "c64955da-f56f-44c0-ad54-00c05a829daf",
+        "token_id": "83bb7ba6-6a09-4548-848c-67bbd05f8466",
+        "status": "completed",
+        "cost": 10.44,
+        "cost_currency": "INR",
+        "processing_time_seconds": 1.52,
+        "created_at": "2026-02-24T06:07:05.965263+00:00",
+        "updated_at": "2026-02-24T06:07:07.481305+00:00",
+        "is_deduplicated": true,
+        "is_valid": true,
+        "parsed_data": {
+          "first_name": "ACADEMIC",
+          "last_name": "QUALIFICATION",
+          "phone_number": "+91-7639056833",
+          "email": "kart.kart.2008@gmail.com",
+          "date_of_birth": "1981-11-12",
+          "gender": "Male",
+          "religion": "",
+          "marital_status": "Married",
+          "nationality_country_name": "India",
+          "country_region": "affiliated to Madras University",
+          "city": "Aarupadai Veedu Institute of Technology",
+          "postal_code": "600116",
+          "languages": [
+            "Languages Known",
+            "English",
+            "Hindi",
+            "Tamil",
+            "And Kannada"
+          ],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": 10,
+          "passport_number": "Z4935373",
+          "passport_expiry_date": "",
+          "skills": [
+            {
+              "skill_name": "autocad"
+            },
+            {
+              "skill_name": "ccna"
+            },
+            {
+              "skill_name": "excel"
+            },
+            {
+              "skill_name": "maintenance"
+            }
+          ],
+          "education": "Bachelor of Electronics and Communication Engineering from",
+          "education_degree": "Bachelor of Electronics and Communication Engineering from",
+          "about_description_summary": "Toworkinacompetitiveandchallengingworkenvironmentandtocontributethebestofmyabilitytowardsthe growth and development of the progressive company and to pursue a challenging career. ACADEMIC QUALIFICATION Bachelor of Electronics and Communication Engineering from Aarupadai Veedu Institute of Technology ,affiliated to Madras University, Chennai,India",
+          "linkedin_url": "",
+          "gulf_experience": true
+        },
+        "feedback_data": {
+          "first_name": "ACADEMIC",
+          "last_name": "QUALIFICATION",
+          "phone_number": "+91-7639056833",
+          "email": "kart.kart.2008@gmail.com",
+          "date_of_birth": "1981-11-12",
+          "gender": "Male",
+          "religion": "",
+          "marital_status": "Married",
+          "nationality_country_name": "India",
+          "country_region": "affiliated to Madras University",
+          "city": "Aarupadai Veedu Institute of Technology",
+          "postal_code": "600116",
+          "languages": [
+            "Languages Known",
+            "English",
+            "Hindi",
+            "Tamil",
+            "And Kannada"
+          ],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": 10,
+          "gulf_expierence": true,
+          "passport_number": "Z4935373",
+          "passport_expiry_date": "",
+          "skills": [
+            "autocad",
+            "ccna",
+            "excel",
+            "maintenance"
+          ],
+          "education": [
+            {
+              "degree": "Bachelor of Electronics and Communication Engineering from",
+              "field_of_study": "",
+              "institution": "",
+              "graduation_year": null
+            },
+            {
+              "degree": "Higher Degree : Bachelor of Electronicsand Communication Engineering",
+              "field_of_study": "",
+              "institution": "",
+              "graduation_year": null
+            }
+          ],
+          "education_degree": "Bachelor of Electronics and Communication Engineering from",
+          "about_description_summary": "Toworkinacompetitiveandchallengingworkenvironmentandtocontributethebestofmyabilitytowardsthe growth and development of the progressive company and to pursue a challenging career. ACADEMIC QUALIFICATION Bachelor of Electronics and Communication Engineering from Aarupadai Veedu Institute of Technology ,affiliated to Madras University, Chennai,India",
+          "linkedin_url": "",
+          "raw_text": "RESUME\nKARTHIKEYAN LAKSHMANANMob.No: +91-7639056833E-Mail: kart.kart.2008@gmail.com\nOBJECTIVE\nToworkinacompetitiveandchallengingworkenvironmentandtocontributethebestofmyabilitytowardsthe growth and development of the progressive company and to pursue a challenging career.\nACADEMIC QUALIFICATION\nBachelor of Electronics and Communication Engineering from\nAarupadai Veedu Institute of Technology ,affiliated to Madras University, Chennai,India\nKEY SKILLS\n❖ 10 Years of Experience in ELV Systems(4 Years of Gulf Experience and 6Years of India Experience)❖ Implementation and commissioning of ELV Systems.❖ CCTV Installation, Maintenance , Troubleshooting (Bosch , CP Plus, Dahua , Hikvision)❖ Access Controls Installation, Maintenance, Troubleshooting (Fingertec , ZKTeco, Rossalare , Garrisons)❖ Fire Alarm System Installation, Maintenance, Troubleshooting (Bosch, Tyco Fire Alarm Panels).❖ Networking Concepts- CCNA Certified Course.❖ Well convergent with Electronic, Telecom & automation Equipment’s maintenance activities for officeautomation Equipments like Telephones, IP phones, Fax machines.❖ Installation & Maintenance of Biometric Attendance System and attendance management software.❖ Perform plan preventive maintenance of Different electronics system.❖ Desktop Computer Hardware and Software Installation and trouble shooting.❖ AUTOCAD Basic. MS Office (Word, Excel, PowerPoint).\nPROFESSIONAL EXPERIENCE\n● May 2017 to Till date with Yercaud Electronics Pvt Ltd –Chennai asTeam Lead–Security Division.● May 2016 to February 2017 with Dhonaadhi Hitech Innovations- Chennai asTechnical Engineer.● February2011to2015withOmanShapoorjiCoLLC asELVEngineer- Muscat-SultanateofOman(Gulf Experience)\nWORK EXPERIENCE\n1.Yercaud Electronics Pvt Ltd as Team Lead –Security DivisionMay 2017 to till date-\nChennai, India.\nRESPONSIBILITY\n❖ Installation, Commissioning & Maintenance of CCTV Cameras.\n❖ Installation, Commissioning & Maintenance of Biometric Door and Card Access Control Systems\n❖ Installation & Maintenance of Biometric Attendance System and attendance management software.\n❖ Familiar with Essl Biometric Door and Card Access Control System and software\n❖ Installation & Maintenance of Boom Barrier and Flap Barrier.\n❖ Familiar with Dahua , Hik Vision ,Samsung - CCTV Systems with mobile configuration\n❖ Implementing and commissioning of ELV Systems.\n❖ Managing service engineers\n2. Dhonaadhi Hitech Innovations Pvt Ltd as TechnicalengineerfromMay 2016 to feb 2017-\nChennai, India.\nRESPONSIBILITY\n❖ Installation, Commissioning & Maintenance of CCTV Cameras.\n❖ Familiar with CP Plus, Vision and Bosch - CCTV Systems\n❖ Installation, Commissioning & Maintenance of Biometric Attendance System.\n❖ Familiar with Fingertec Biometric Attendance system and software\n❖ Installation, Commissioning & Maintenance of Biometric Door and Card Access Control Systems\n❖ Familiar with Fingertec Biometric Door and Card Access Control System and software\n❖ Installation and commissioning of Walk through Metal Detector (WTMD)\n3. OMAN SHAPOORJI CO LLC as\nELV Engineerfrom 2011to 2015 in Muscat palace(Qasar Al Alam)\nProject & Maintenance division, Ghala, Oman.(GulfExperience)\nRESPONSIBILITY\n❖ Installation, Commissioning & Maintenance of CCTV Cameras, Security System, UPS.\n❖ Familiar with Bosch, IMG Vision, CP Plus - CCTV Systems, Rossalare, Garrisons, Suprema -Security systems.\n❖ Installation, Commissioning, Programming & Maintenance of Lighting Dimmer System.\n❖ Familiar with Polaron, Lutron, Quantron Dimming system.\n❖ Installation, Maintenance of Fire Alarm System. (Bosch, Tyco Fire Alarm Panels).\n❖ Implementation and commissioning of ELV / AV Systems.\n❖ Perform plan preventive maintenance of Different electronics system.\n❖ Well convergent with Electronic, Telecom & automation Equipments maintenance activities foroffice automation Equipments like Telephones, IP phones, Fax machines.\n❖ Having experience of trouble shooting the patch panel Fault clearance.\n❖ Have good communication, supervising and planning skills.\n❖ Generation of various types of reports (Maintenance and Planning)\nPERSONAL DETAILS\nName : L.Karthikeyan\nFather Name : R.Lakshmanan\nDate of Birth : 12\nth\nNovember 1981\nGender : Male\nMarital Status : Married\nNationality : Indian\nLanguages Known : English, Hindi, Tamil,and Kannada.\nHigher Degree : Bachelor of Electronicsand Communication Engineering\nPassport Number : Z4935373\nSKYPE ID : live:kart.kart.2008\nDate of Expiry : 31/10/2029\nPresent Address : Plot No: 10, A3 ApexApartment, Ramamurthy Avenue\nShakthi Nagar, Porur\nChennai, Tamil Nadu, India Pin-600116\nDECLARATION\nI hereby declare that all the information’s furnished above are true to the best of my knowledge and belief.\nThanking You,\nPlace: Yours Truly,\nDate : ( L. Karthikeyan)"
+        },
+        "validation_errors": []
+      }
+    ],
+    "created_at": "2026-02-24T06:07:05.965263+00:00",
+    "updated_at": "2026-02-24T06:07:07.481328+00:00"
+  },
+  {
+    "document_id": "40bcf0bf-a223-4f12-985c-1afaafa51c50",
+    "job_id": "c0c3c531-011d-4597-a3b5-6e191cb1e474",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "completed",
+    "url": "/dapi/v1/document-file/40bcf0bf-a223-4f12-985c-1afaafa51c50",
+    "file_hash": "a890bfb5a694a934406823a4e608470e165943cd17cdb286ca4596ae4003bf83",
+    "metadata": {
+      "etag": null,
+      "filename": "40bcf0bf-a223-4f12-985c-1afaafa51c50.pdf",
+      "page_count": 3,
+      "size_bytes": 69038,
+      "content_type": "application/pdf"
+    },
+    "entries": [
+      {
+        "id": "026c58f3-32af-4936-bcf0-70b54a51546c",
+        "token_id": "ab1eeaab-b8b5-42bd-9577-c2530fcacab9",
+        "status": "completed",
+        "cost": 10.44,
+        "cost_currency": "INR",
+        "processing_time_seconds": 0.1,
+        "created_at": "2026-02-24T06:09:02.768676+00:00",
+        "updated_at": "2026-02-24T06:09:02.867888+00:00",
+        "is_deduplicated": true,
+        "is_valid": true,
+        "parsed_data": {
+          "first_name": "ACADEMIC",
+          "last_name": "QUALIFICATION",
+          "phone_number": "+91-7639056833",
+          "email": "kart.kart.2008@gmail.com",
+          "date_of_birth": "1981-11-12",
+          "gender": "Male",
+          "religion": "",
+          "marital_status": "Married",
+          "nationality_country_name": "India",
+          "country_region": "affiliated to Madras University",
+          "city": "Aarupadai Veedu Institute of Technology",
+          "postal_code": "600116",
+          "languages": [
+            "Languages Known",
+            "English",
+            "Hindi",
+            "Tamil",
+            "And Kannada"
+          ],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": 10,
+          "passport_number": "Z4935373",
+          "passport_expiry_date": "",
+          "skills": [
+            {
+              "skill_name": "autocad"
+            },
+            {
+              "skill_name": "ccna"
+            },
+            {
+              "skill_name": "excel"
+            },
+            {
+              "skill_name": "maintenance"
+            }
+          ],
+          "education": "Bachelor of Electronics and Communication Engineering from",
+          "education_degree": "Bachelor of Electronics and Communication Engineering from",
+          "about_description_summary": "Toworkinacompetitiveandchallengingworkenvironmentandtocontributethebestofmyabilitytowardsthe growth and development of the progressive company and to pursue a challenging career. ACADEMIC QUALIFICATION Bachelor of Electronics and Communication Engineering from Aarupadai Veedu Institute of Technology ,affiliated to Madras University, Chennai,India",
+          "linkedin_url": "",
+          "gulf_experience": true
+        },
+        "feedback_data": {
+          "first_name": "ACADEMIC",
+          "last_name": "QUALIFICATION",
+          "phone_number": "+91-7639056833",
+          "email": "kart.kart.2008@gmail.com",
+          "date_of_birth": "1981-11-12",
+          "gender": "Male",
+          "religion": "",
+          "marital_status": "Married",
+          "nationality_country_name": "India",
+          "country_region": "affiliated to Madras University",
+          "city": "Aarupadai Veedu Institute of Technology",
+          "postal_code": "600116",
+          "languages": [
+            "Languages Known",
+            "English",
+            "Hindi",
+            "Tamil",
+            "And Kannada"
+          ],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": 10,
+          "gulf_expierence": true,
+          "passport_number": "Z4935373",
+          "passport_expiry_date": "",
+          "skills": [
+            "autocad",
+            "ccna",
+            "excel",
+            "maintenance"
+          ],
+          "education": [
+            {
+              "degree": "Bachelor of Electronics and Communication Engineering from",
+              "field_of_study": "",
+              "institution": "",
+              "graduation_year": null
+            },
+            {
+              "degree": "Higher Degree : Bachelor of Electronicsand Communication Engineering",
+              "field_of_study": "",
+              "institution": "",
+              "graduation_year": null
+            }
+          ],
+          "education_degree": "Bachelor of Electronics and Communication Engineering from",
+          "about_description_summary": "Toworkinacompetitiveandchallengingworkenvironmentandtocontributethebestofmyabilitytowardsthe growth and development of the progressive company and to pursue a challenging career. ACADEMIC QUALIFICATION Bachelor of Electronics and Communication Engineering from Aarupadai Veedu Institute of Technology ,affiliated to Madras University, Chennai,India",
+          "linkedin_url": "",
+          "raw_text": "RESUME\nKARTHIKEYAN LAKSHMANANMob.No: +91-7639056833E-Mail: kart.kart.2008@gmail.com\nOBJECTIVE\nToworkinacompetitiveandchallengingworkenvironmentandtocontributethebestofmyabilitytowardsthe growth and development of the progressive company and to pursue a challenging career.\nACADEMIC QUALIFICATION\nBachelor of Electronics and Communication Engineering from\nAarupadai Veedu Institute of Technology ,affiliated to Madras University, Chennai,India\nKEY SKILLS\n❖ 10 Years of Experience in ELV Systems(4 Years of Gulf Experience and 6Years of India Experience)❖ Implementation and commissioning of ELV Systems.❖ CCTV Installation, Maintenance , Troubleshooting (Bosch , CP Plus, Dahua , Hikvision)❖ Access Controls Installation, Maintenance, Troubleshooting (Fingertec , ZKTeco, Rossalare , Garrisons)❖ Fire Alarm System Installation, Maintenance, Troubleshooting (Bosch, Tyco Fire Alarm Panels).❖ Networking Concepts- CCNA Certified Course.❖ Well convergent with Electronic, Telecom & automation Equipment’s maintenance activities for officeautomation Equipments like Telephones, IP phones, Fax machines.❖ Installation & Maintenance of Biometric Attendance System and attendance management software.❖ Perform plan preventive maintenance of Different electronics system.❖ Desktop Computer Hardware and Software Installation and trouble shooting.❖ AUTOCAD Basic. MS Office (Word, Excel, PowerPoint).\nPROFESSIONAL EXPERIENCE\n● May 2017 to Till date with Yercaud Electronics Pvt Ltd –Chennai asTeam Lead–Security Division.● May 2016 to February 2017 with Dhonaadhi Hitech Innovations- Chennai asTechnical Engineer.● February2011to2015withOmanShapoorjiCoLLC asELVEngineer- Muscat-SultanateofOman(Gulf Experience)\nWORK EXPERIENCE\n1.Yercaud Electronics Pvt Ltd as Team Lead –Security DivisionMay 2017 to till date-\nChennai, India.\nRESPONSIBILITY\n❖ Installation, Commissioning & Maintenance of CCTV Cameras.\n❖ Installation, Commissioning & Maintenance of Biometric Door and Card Access Control Systems\n❖ Installation & Maintenance of Biometric Attendance System and attendance management software.\n❖ Familiar with Essl Biometric Door and Card Access Control System and software\n❖ Installation & Maintenance of Boom Barrier and Flap Barrier.\n❖ Familiar with Dahua , Hik Vision ,Samsung - CCTV Systems with mobile configuration\n❖ Implementing and commissioning of ELV Systems.\n❖ Managing service engineers\n2. Dhonaadhi Hitech Innovations Pvt Ltd as TechnicalengineerfromMay 2016 to feb 2017-\nChennai, India.\nRESPONSIBILITY\n❖ Installation, Commissioning & Maintenance of CCTV Cameras.\n❖ Familiar with CP Plus, Vision and Bosch - CCTV Systems\n❖ Installation, Commissioning & Maintenance of Biometric Attendance System.\n❖ Familiar with Fingertec Biometric Attendance system and software\n❖ Installation, Commissioning & Maintenance of Biometric Door and Card Access Control Systems\n❖ Familiar with Fingertec Biometric Door and Card Access Control System and software\n❖ Installation and commissioning of Walk through Metal Detector (WTMD)\n3. OMAN SHAPOORJI CO LLC as\nELV Engineerfrom 2011to 2015 in Muscat palace(Qasar Al Alam)\nProject & Maintenance division, Ghala, Oman.(GulfExperience)\nRESPONSIBILITY\n❖ Installation, Commissioning & Maintenance of CCTV Cameras, Security System, UPS.\n❖ Familiar with Bosch, IMG Vision, CP Plus - CCTV Systems, Rossalare, Garrisons, Suprema -Security systems.\n❖ Installation, Commissioning, Programming & Maintenance of Lighting Dimmer System.\n❖ Familiar with Polaron, Lutron, Quantron Dimming system.\n❖ Installation, Maintenance of Fire Alarm System. (Bosch, Tyco Fire Alarm Panels).\n❖ Implementation and commissioning of ELV / AV Systems.\n❖ Perform plan preventive maintenance of Different electronics system.\n❖ Well convergent with Electronic, Telecom & automation Equipments maintenance activities foroffice automation Equipments like Telephones, IP phones, Fax machines.\n❖ Having experience of trouble shooting the patch panel Fault clearance.\n❖ Have good communication, supervising and planning skills.\n❖ Generation of various types of reports (Maintenance and Planning)\nPERSONAL DETAILS\nName : L.Karthikeyan\nFather Name : R.Lakshmanan\nDate of Birth : 12\nth\nNovember 1981\nGender : Male\nMarital Status : Married\nNationality : Indian\nLanguages Known : English, Hindi, Tamil,and Kannada.\nHigher Degree : Bachelor of Electronicsand Communication Engineering\nPassport Number : Z4935373\nSKYPE ID : live:kart.kart.2008\nDate of Expiry : 31/10/2029\nPresent Address : Plot No: 10, A3 ApexApartment, Ramamurthy Avenue\nShakthi Nagar, Porur\nChennai, Tamil Nadu, India Pin-600116\nDECLARATION\nI hereby declare that all the information’s furnished above are true to the best of my knowledge and belief.\nThanking You,\nPlace: Yours Truly,\nDate : ( L. Karthikeyan)"
+        },
+        "validation_errors": []
+      }
+    ],
+    "created_at": "2026-02-24T06:09:02.768676+00:00",
+    "updated_at": "2026-02-24T06:09:02.867938+00:00"
+  },
+  {
+    "document_id": "ae898775-f37f-45b5-8f66-761e59b05749",
+    "job_id": "a87cc4e1-7257-435a-b8b7-418f96314f20",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "completed",
+    "url": "/dapi/v1/document-file/ae898775-f37f-45b5-8f66-761e59b05749",
+    "file_hash": "a890bfb5a694a934406823a4e608470e165943cd17cdb286ca4596ae4003bf83",
+    "metadata": {
+      "etag": null,
+      "filename": "ae898775-f37f-45b5-8f66-761e59b05749.pdf",
+      "page_count": 3,
+      "size_bytes": 69038,
+      "content_type": "application/pdf"
+    },
+    "entries": [
+      {
+        "id": "b7a923e2-1a70-4b0e-8ec6-bcb9439dff56",
+        "token_id": "f4ff745e-3f8e-45a0-8aab-5070f114f4dd",
+        "status": "completed",
+        "cost": 10.44,
+        "cost_currency": "INR",
+        "processing_time_seconds": 1.37,
+        "created_at": "2026-02-24T06:10:29.623030+00:00",
+        "updated_at": "2026-02-24T06:10:30.992981+00:00",
+        "is_deduplicated": true,
+        "is_valid": true,
+        "parsed_data": {
+          "first_name": "KARTHIKEYAN",
+          "last_name": "LAKSHMANAN",
+          "phone_number": "+91-7639056833",
+          "email": "kart.kart.2008@gmail.com",
+          "date_of_birth": "12/11/1981",
+          "gender": "Male",
+          "religion": "",
+          "marital_status": "Married",
+          "nationality_country_name": "India",
+          "country_region": "affiliated to Madras University",
+          "city": "Aarupadai Veedu Institute of Technology",
+          "postal_code": "600116",
+          "languages": [
+            "Languages Known",
+            "English",
+            "Hindi",
+            "Tamil",
+            "And Kannada"
+          ],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": 10,
+          "passport_number": "Z4935373",
+          "passport_expiry_date": "",
+          "skills": [
+            {
+              "skill_name": "autocad"
+            },
+            {
+              "skill_name": "ccna"
+            },
+            {
+              "skill_name": "excel"
+            },
+            {
+              "skill_name": "maintenance"
+            }
+          ],
+          "education": "Bachelor of Electronics and Communication Engineering from",
+          "education_degree": "Bachelor of Electronics and Communication Engineering from",
+          "about_description_summary": "Toworkinacompetitiveandchallengingworkenvironmentandtocontributethebestofmyabilitytowardsthe growth and development of the progressive company and to pursue a challenging career. ACADEMIC QUALIFICATION Bachelor of Electronics and Communication Engineering from Aarupadai Veedu Institute of Technology ,affiliated to Madras University, Chennai,India",
+          "linkedin_url": "",
+          "gulf_experience": true
+        },
+        "feedback_data": {
+          "first_name": "KARTHIKEYAN",
+          "last_name": "LAKSHMANAN",
+          "phone_number": "+91-7639056833",
+          "email": "kart.kart.2008@gmail.com",
+          "date_of_birth": "12/11/1981",
+          "gender": "Male",
+          "religion": "",
+          "marital_status": "Married",
+          "nationality_country_name": "India",
+          "country_region": "affiliated to Madras University",
+          "city": "Aarupadai Veedu Institute of Technology",
+          "postal_code": "600116",
+          "languages": [
+            "Languages Known",
+            "English",
+            "Hindi",
+            "Tamil",
+            "And Kannada"
+          ],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": 10,
+          "gulf_expierence": true,
+          "passport_number": "Z4935373",
+          "passport_expiry_date": "",
+          "skills": [
+            "autocad",
+            "ccna",
+            "excel",
+            "maintenance"
+          ],
+          "education": [
+            {
+              "degree": "Bachelor of Electronics and Communication Engineering from",
+              "field_of_study": "",
+              "institution": "",
+              "graduation_year": null
+            },
+            {
+              "degree": "Higher Degree : Bachelor of Electronicsand Communication Engineering",
+              "field_of_study": "",
+              "institution": "",
+              "graduation_year": null
+            }
+          ],
+          "education_degree": "Bachelor of Electronics and Communication Engineering from",
+          "about_description_summary": "Toworkinacompetitiveandchallengingworkenvironmentandtocontributethebestofmyabilitytowardsthe growth and development of the progressive company and to pursue a challenging career. ACADEMIC QUALIFICATION Bachelor of Electronics and Communication Engineering from Aarupadai Veedu Institute of Technology ,affiliated to Madras University, Chennai,India",
+          "linkedin_url": "",
+          "raw_text": "RESUME\nKARTHIKEYAN LAKSHMANANMob.No: +91-7639056833E-Mail: kart.kart.2008@gmail.com\nOBJECTIVE\nToworkinacompetitiveandchallengingworkenvironmentandtocontributethebestofmyabilitytowardsthe growth and development of the progressive company and to pursue a challenging career.\nACADEMIC QUALIFICATION\nBachelor of Electronics and Communication Engineering from\nAarupadai Veedu Institute of Technology ,affiliated to Madras University, Chennai,India\nKEY SKILLS\n❖ 10 Years of Experience in ELV Systems(4 Years of Gulf Experience and 6Years of India Experience)❖ Implementation and commissioning of ELV Systems.❖ CCTV Installation, Maintenance , Troubleshooting (Bosch , CP Plus, Dahua , Hikvision)❖ Access Controls Installation, Maintenance, Troubleshooting (Fingertec , ZKTeco, Rossalare , Garrisons)❖ Fire Alarm System Installation, Maintenance, Troubleshooting (Bosch, Tyco Fire Alarm Panels).❖ Networking Concepts- CCNA Certified Course.❖ Well convergent with Electronic, Telecom & automation Equipment’s maintenance activities for officeautomation Equipments like Telephones, IP phones, Fax machines.❖ Installation & Maintenance of Biometric Attendance System and attendance management software.❖ Perform plan preventive maintenance of Different electronics system.❖ Desktop Computer Hardware and Software Installation and trouble shooting.❖ AUTOCAD Basic. MS Office (Word, Excel, PowerPoint).\nPROFESSIONAL EXPERIENCE\n● May 2017 to Till date with Yercaud Electronics Pvt Ltd –Chennai asTeam Lead–Security Division.● May 2016 to February 2017 with Dhonaadhi Hitech Innovations- Chennai asTechnical Engineer.● February2011to2015withOmanShapoorjiCoLLC asELVEngineer- Muscat-SultanateofOman(Gulf Experience)\nWORK EXPERIENCE\n1.Yercaud Electronics Pvt Ltd as Team Lead –Security DivisionMay 2017 to till date-\nChennai, India.\nRESPONSIBILITY\n❖ Installation, Commissioning & Maintenance of CCTV Cameras.\n❖ Installation, Commissioning & Maintenance of Biometric Door and Card Access Control Systems\n❖ Installation & Maintenance of Biometric Attendance System and attendance management software.\n❖ Familiar with Essl Biometric Door and Card Access Control System and software\n❖ Installation & Maintenance of Boom Barrier and Flap Barrier.\n❖ Familiar with Dahua , Hik Vision ,Samsung - CCTV Systems with mobile configuration\n❖ Implementing and commissioning of ELV Systems.\n❖ Managing service engineers\n2. Dhonaadhi Hitech Innovations Pvt Ltd as TechnicalengineerfromMay 2016 to feb 2017-\nChennai, India.\nRESPONSIBILITY\n❖ Installation, Commissioning & Maintenance of CCTV Cameras.\n❖ Familiar with CP Plus, Vision and Bosch - CCTV Systems\n❖ Installation, Commissioning & Maintenance of Biometric Attendance System.\n❖ Familiar with Fingertec Biometric Attendance system and software\n❖ Installation, Commissioning & Maintenance of Biometric Door and Card Access Control Systems\n❖ Familiar with Fingertec Biometric Door and Card Access Control System and software\n❖ Installation and commissioning of Walk through Metal Detector (WTMD)\n3. OMAN SHAPOORJI CO LLC as\nELV Engineerfrom 2011to 2015 in Muscat palace(Qasar Al Alam)\nProject & Maintenance division, Ghala, Oman.(GulfExperience)\nRESPONSIBILITY\n❖ Installation, Commissioning & Maintenance of CCTV Cameras, Security System, UPS.\n❖ Familiar with Bosch, IMG Vision, CP Plus - CCTV Systems, Rossalare, Garrisons, Suprema -Security systems.\n❖ Installation, Commissioning, Programming & Maintenance of Lighting Dimmer System.\n❖ Familiar with Polaron, Lutron, Quantron Dimming system.\n❖ Installation, Maintenance of Fire Alarm System. (Bosch, Tyco Fire Alarm Panels).\n❖ Implementation and commissioning of ELV / AV Systems.\n❖ Perform plan preventive maintenance of Different electronics system.\n❖ Well convergent with Electronic, Telecom & automation Equipments maintenance activities foroffice automation Equipments like Telephones, IP phones, Fax machines.\n❖ Having experience of trouble shooting the patch panel Fault clearance.\n❖ Have good communication, supervising and planning skills.\n❖ Generation of various types of reports (Maintenance and Planning)\nPERSONAL DETAILS\nName : L.Karthikeyan\nFather Name : R.Lakshmanan\nDate of Birth : 12\nth\nNovember 1981\nGender : Male\nMarital Status : Married\nNationality : Indian\nLanguages Known : English, Hindi, Tamil,and Kannada.\nHigher Degree : Bachelor of Electronicsand Communication Engineering\nPassport Number : Z4935373\nSKYPE ID : live:kart.kart.2008\nDate of Expiry : 31/10/2029\nPresent Address : Plot No: 10, A3 ApexApartment, Ramamurthy Avenue\nShakthi Nagar, Porur\nChennai, Tamil Nadu, India Pin-600116\nDECLARATION\nI hereby declare that all the information’s furnished above are true to the best of my knowledge and belief.\nThanking You,\nPlace: Yours Truly,\nDate : ( L. Karthikeyan)"
+        },
+        "validation_errors": []
+      }
+    ],
+    "created_at": "2026-02-24T06:10:29.623030+00:00",
+    "updated_at": "2026-02-24T06:10:30.993000+00:00"
+  },
+  {
+    "document_id": "a88723cb-5bc7-4e9e-ad2b-5b0cabad6d95",
+    "job_id": "a6171a19-bd9b-46a8-9d77-280ad4c32def",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "completed",
+    "url": "/dapi/v1/document-file/a88723cb-5bc7-4e9e-ad2b-5b0cabad6d95",
+    "file_hash": "57b613f47e97545db234a9f14417115dde03595ec1bc4dd0de380289cc8af4a1",
+    "metadata": {
+      "etag": null,
+      "filename": "a88723cb-5bc7-4e9e-ad2b-5b0cabad6d95.pdf",
+      "page_count": 2,
+      "size_bytes": 233272,
+      "content_type": "application/pdf"
+    },
+    "entries": [
+      {
+        "id": "8be75545-a71d-46f1-86e0-5b5d4bc077cf",
+        "token_id": "92ea1e1b-9ec9-418b-8f14-a29a1b27a526",
+        "status": "completed",
+        "cost": 10.44,
+        "cost_currency": "INR",
+        "processing_time_seconds": 0.1,
+        "created_at": "2026-02-24T06:10:51.752396+00:00",
+        "updated_at": "2026-02-24T06:10:51.855880+00:00",
+        "is_deduplicated": false,
+        "is_valid": true,
+        "parsed_data": {
+          "first_name": "SHABAZ",
+          "last_name": "KHAN",
+          "phone_number": "2015\n2011\n2008",
+          "email": "shabaz.k9315@gmail.com",
+          "date_of_birth": "1993-02-15",
+          "gender": "",
+          "religion": "",
+          "marital_status": "",
+          "nationality_country_name": "",
+          "country_region": "",
+          "city": "",
+          "postal_code": "",
+          "languages": [],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": null,
+          "passport_number": "",
+          "passport_expiry_date": "",
+          "skills": [
+            {
+              "skill_name": "maintenance"
+            },
+            {
+              "skill_name": "tally"
+            }
+          ],
+          "education": "B.Com",
+          "education_degree": "B.Com",
+          "about_description_summary": "SHABAZ KHAN Career Objective • To work in an organization where I am able to contribute to the organization’s with my skills and get an opportunity to gain exposure that would help me build a successful career. Educational Qualifications Class/Graduation School/College University/Board Year of Completion CGPA B.com D devaraja urs",
+          "linkedin_url": "",
+          "gulf_experience": false
+        },
+        "feedback_data": {
+          "first_name": "SHABAZ",
+          "last_name": "KHAN",
+          "phone_number": "2015\n2011\n2008",
+          "email": "shabaz.k9315@gmail.com",
+          "date_of_birth": "1993-02-15",
+          "gender": "",
+          "religion": "",
+          "marital_status": "",
+          "nationality_country_name": "",
+          "country_region": "",
+          "city": "",
+          "postal_code": "",
+          "languages": [],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": null,
+          "gulf_expierence": false,
+          "passport_number": "",
+          "passport_expiry_date": "",
+          "skills": [
+            "maintenance",
+            "tally"
+          ],
+          "education": [],
+          "education_degree": "B.Com",
+          "about_description_summary": "SHABAZ KHAN Career Objective • To work in an organization where I am able to contribute to the organization’s with my skills and get an opportunity to gain exposure that would help me build a successful career. Educational Qualifications Class/Graduation School/College University/Board Year of Completion CGPA B.com D devaraja urs",
+          "linkedin_url": "",
+          "raw_text": "RESUME\nSHABAZ KHAN\nMobile no: 9686221956,\nEmail Address: shabaz.k9315@gmail.com\nCareer Objective\n• To work in an organization where I am able to contribute to the organization’s with my\nskills and get an opportunity to gain exposure that would help me build a successful\ncareer.\nEducational Qualifications\nClass/Graduation School/College University/Board Year of Completion CGPA\nB.com\nD devaraja urs\nGovt First Grade\nCollege Hunsur\nUniversity of\nMysore 53.25%\nII PUC Govt PU college\nfor boys, Hunsur\nKarnataka Board\nof Pre-University\nEducation\n56.33%\nSSLC Govt boys junior\ncollage,Hunsur\nKarnataka\nSecondary\nEducation\nExamination\nBoard\n62.72%\nKey Skills\n• Basic Computers .\n• Tally .\n• Computer Hardware and Networking .\nWork Experience\n•\n•\n•\n2015\n2011\n2008\nInstallation cctv camera and service maintenance.\n•\nDetecting and changing of faulty components.\nWorking profile :Computer operator and service advisor\nPeriod :6 July 2018 to present working.\nOrganization. :Infodeck solution\nPersonal details\nName : Shabaz Khan\nFather’s Name : Khayamuddin\nDate of Birth : 15-02-1993\nHobbies\nAddress : #228 Big Masjid Street Hunsur Tq, Mysore Karnataka.\nDECLARATION\nI hereby declare that above mention information is correct upto my knowledge\nSHABAZ KHAN\n: Mobile Reviewing, Numismatics, Gaming and Travelling"
+        },
+        "validation_errors": []
+      }
+    ],
+    "created_at": "2026-02-24T06:10:51.752396+00:00",
+    "updated_at": "2026-02-24T06:10:51.856015+00:00"
+  },
+  {
+    "document_id": "1c00f4b0-44ab-4bb4-b9e9-b69803607d92",
+    "job_id": "a1c9b918-3481-4ee2-93fc-8c2b710d1083",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "completed",
+    "url": "/dapi/v1/document-file/1c00f4b0-44ab-4bb4-b9e9-b69803607d92",
+    "file_hash": "fd176d7bcad5d5777ee3fc1565b5ef55a9f790f96b1fe2c926745e24b12c66a6",
+    "metadata": {
+      "etag": null,
+      "filename": "1c00f4b0-44ab-4bb4-b9e9-b69803607d92.pdf",
+      "page_count": 3,
+      "size_bytes": 189218,
+      "content_type": "application/pdf"
+    },
+    "entries": [
+      {
+        "id": "5770470c-3b72-4277-9beb-7ac9644b291b",
+        "token_id": "c321cbd1-07fa-41dd-a46a-27e0d1516b77",
+        "status": "completed",
+        "cost": 10.44,
+        "cost_currency": "INR",
+        "processing_time_seconds": 1.38,
+        "created_at": "2026-02-24T06:15:32.478267+00:00",
+        "updated_at": "2026-02-24T06:15:33.856305+00:00",
+        "is_deduplicated": false,
+        "is_valid": true,
+        "parsed_data": {
+          "first_name": "Kashyap",
+          "last_name": "Pandya",
+          "phone_number": "+91 9974895678",
+          "email": "kashyapandya@yahoo.com",
+          "date_of_birth": "25/04/1986",
+          "gender": "Male",
+          "religion": "",
+          "marital_status": "Married",
+          "nationality_country_name": "India",
+          "country_region": "",
+          "city": "“Pitru Krupa”",
+          "postal_code": "360005",
+          "languages": [
+            "Languages English",
+            "Hindi",
+            "Gujarati",
+            "English"
+          ],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": 12,
+          "passport_number": "",
+          "passport_expiry_date": "",
+          "skills": [
+            {
+              "skill_name": "aws"
+            },
+            {
+              "skill_name": "erp"
+            },
+            {
+              "skill_name": "firewall"
+            },
+            {
+              "skill_name": "maintenance"
+            },
+            {
+              "skill_name": "network security"
+            },
+            {
+              "skill_name": "tally"
+            }
+          ],
+          "education": "• B.E. (Computer Engg.) – Completed in July",
+          "education_degree": "• B.E. (Computer Engg.) – Completed in July",
+          "about_description_summary": "• Assembling of Hardware components and Installation of Software. • SAP, Mail Security, Cloud Security, Firewall, NAS Server & Security, CCTV. • MCSA & MCSE – Windows Server 2016. • Establishment of LAN Networks and Network Security.",
+          "linkedin_url": "",
+          "gulf_experience": false
+        },
+        "feedback_data": {
+          "first_name": "Kashyap",
+          "last_name": "Pandya",
+          "phone_number": "+91 9974895678",
+          "email": "kashyapandya@yahoo.com",
+          "date_of_birth": "25/04/1986",
+          "gender": "Male",
+          "religion": "",
+          "marital_status": "Married",
+          "nationality_country_name": "India",
+          "country_region": "",
+          "city": "“Pitru Krupa”",
+          "postal_code": "360005",
+          "languages": [
+            "Languages English",
+            "Hindi",
+            "Gujarati",
+            "English"
+          ],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": 12,
+          "gulf_expierence": false,
+          "passport_number": "",
+          "passport_expiry_date": "",
+          "skills": [
+            "aws",
+            "erp",
+            "firewall",
+            "maintenance",
+            "network security",
+            "tally"
+          ],
+          "education": [
+            {
+              "degree": "• B.E. (Computer Engg.) – Completed in July",
+              "field_of_study": "",
+              "institution": "2008 from Saurashtra University",
+              "graduation_year": 2008
+            }
+          ],
+          "education_degree": "• B.E. (Computer Engg.) – Completed in July",
+          "about_description_summary": "• Assembling of Hardware components and Installation of Software. • SAP, Mail Security, Cloud Security, Firewall, NAS Server & Security, CCTV. • MCSA & MCSE – Windows Server 2016. • Establishment of LAN Networks and Network Security.",
+          "linkedin_url": "",
+          "raw_text": "Kashyap Natvarlal Pandya\nComputer Engineer\n“Pitru Krupa”,\nBlock No 19/2,\n3-Dharmaraj Park,\nSadhuVaswaniMarg\nUniversity Road,\nRajkot-360005.\nCareer Objective:\nMobile: +91 9974895678\nEmail: kashyapandya@yahoo.com\nTo create footwork in emerging industry where I can get an opportunity to combine my\ntechnical knowledge and creativity to generate and communicate ideas so that mutual exponential\ngrowth can be attained.\nSummary:\n• Assembling of Hardware components and Installation of Software.\n• SAP, Mail Security, Cloud Security, Firewall, NAS Server & Security, CCTV.\n• MCSA & MCSE – Windows Server 2016.\n• Establishment of LAN Networks and Network Security.\nEducation Details:\n• 10th – Completed in May-2001 from G.S.E.B. With 82.00%.\n• 12th (Science) – Completed in May-2003 from G.H.E.B With 48.00%.\n• B.E. (Computer Engg.) – Completed in July-2008 from Saurashtra University-\nWith 52.00%\nAchievement:\n• Secured First rank in the National level Symposium Tech-Utkarsh, Robotics\nCompetition at AITS engineering college in year 2005.\n• Secured Second rank in the National level Symposium Tech-Utkarsh, Hardware Project\nCompetition at AITS engineering college in year 2005.\n• Secured First rank in the National level Symposium INNOVATION, Robotics\nCompetition at C.U. SHAH VADHVAN engineering college in year 2005.\n• Secured Second rank in the National level Symposium INNOVATION, Hardware\nProject Competition at C.U. SHAH VADHVAN engineering college in year 2005.\nPersonal Qualities:\n• Self-Confident, Comprehensive Problem-Solving Skills, Motivator,\ninnovative thinking, sharp technical analyst.\n• Team player with flexible, positive and realistic attitude\n• Ability to adopt rapidly changing and expanding environment\nExperience: Total Experience - 12+ Years (SAP Experience 5+ Years)\n• 2 Year (15/01/2009 to 08/01/2011) As A IT Engineer & Lecturer in\nSmt. S.B.Gardi Sankool (Mangrol).\n• 2 year (01/06/2011 to 26/12/2013) As a System Administrator, Admin\nIncharge and Head of Computer Department in J.M. Sabva Institute of\nEngineering and Technology - Botad.\n• 1 Year (01/01/2014 to 31/05/2015) As a I.T. Officer in Ankur Industries\nRajkot.\n• 4 Year (11/06/2015 to 30/06/2019) As a Sr. M.I.S.-I.T.\nOfficer in Amul Sarhad Dairy Anjar Kutch, Managing Hardware,\nSoftware & Networking of 19 Chilling Centers, Head Office &\nManufacturing Plant and Cattle Feed Plant.\n• 1 Year & 3 Months (From 10/09/2019 to 31/12/2020) Worked as an\nAssistant Manager-I.T. in GACL-NALCO Alkalies & Chemicals Pvt. Ltd.\nVadodara\n• Currently (Since January-2021) working as a QA and Support IT Manager\nin Techrover Solutions Pvt. Ltd. – Rajkot.\nJob Specification at Sarhad Dairy – Amul India\n1. Maintaining Hardware, Software and Network of Head office, Manufacturing\nPlant and 19 Chilling Centers along with CCTV camera.\n2. Hardware-Desktop Computer, Laptop, printer, UPS, Battery, Server,\nCCTV camera, DVR, NVR, RF devices, Router, Switches etc...\n3. Software - SAP – Procurement Data with Societies & Chilling Center Data in\ndetail, SAP Software and Related Software Management, SMS software –\nExecutives & Societies, Website Management Antivirus Management,\nWebsite/Surfing Management, Cyberoam Management, AMCS Software\nManagement, Cloud Data Management, Monthly Report of all Centers and\nManufacturing Plant, Area Field Supervisor Monthly Report etc.\n4. Network – Managing Network of Head Office, Manufacturing Plant\nand 19 Chilling Centers.\n5. AMCS System Distribution and Management.\n6. Weight Scale and Fat Machine Management – Societies & Chilling Centers.\n7. Desktop & Laptop Software Installation, Format and All Hardware Maintenance.\n8. Windows Server-2016 Data Centre Edition. Managing OU and its Policies,\nWDS, Active Directory etc.\nJob Specification at GACL-NALCO\n1. Maintenance of Hardware, Software and Network of Head office &\nManufacturing Plant along with CCTV camera.\n2. Hardware - Desktop Computer, Laptop, printer, UPS, Battery, Server,\nCCTV camera, DVR, NVR, RF devices, Router, Switches etc...\n3. Software & ERP – SAP, Operating System, MS Office with Outlook, One\nDrive & All Other General Software and Drivers.\n4. NAS Solution–QNAP-NAS Solution & Security. BackUP of Head Office\n& Remote Site VPN, Accessing File and Folders Remotely – Specially\nWork from Home Situation. Secure Connectivity from Any Network.\n5. CCTV & CCTV BackUP Solution with Security.\n6. Network – LAN Network & Wireless Network Solution, RF Network\nSolution in terms of LAN, WAN (internet)\n7. Firewall Management – Cyberoam.\n8. Mail Solution – Mail Cloud Management – Mithi, Trend Micro Security,\nMail User Management, Mail Archival, Mail Data Security & Maintenance,\nMail Auto Store and Archival with User Rights, All Mail Data Replica.\n9. Domain & Website Hosting Solution.\n10. EPABX - EPABX Solution, BackUp, User’s Rights and Management &\nMaintenance.\n11. O.S. – Windows XP, Vista, 7, 8, 10.\n12. Antivirus Standalone and SMB Product Implementation and Management.\n13. DLP Solution Installation and Management.\n14. SAP & VPN implementation, Connectivity, Rights Management for All\nUsers.\n15. Managing Microsoft Teams Video Conference – Microsoft Teams Admin\nConsole Management, User and Group Creation, Implementation, Training\nand Management.\n16. Polycom V.C. – Polycom Video Conference System Implementation and\nManagement in Admin Console and User.\n17. License Management – Windows OS, Antivirus, Adobe Reader, MS Office\n2016 & 2019 etc License Management.\nCurrent Job Specification:\n1. Project Manager of Collateral Edge, Forney etc. Projects.\n2. QA & Support Manager for Bubble App & Risk Release Projects.\n3. AWS Infrastructure and Security Management.\n4. IT infrastructure and Security Manager.\n5. Cloud Email Management and Security.\n6. Data Link Prevention and Antivirus Management.\n7. Windows OS, Microsoft, Adobe, Tally, TeamViewer, etc License\nManagement.\n8. Firewall Management & LAN and WiFi Management.\n9. Troubleshooting of Laptop, Desktop, Printer, BackUp Devises, CCTV.\nPersonal Details:\nBirth Date 24th April, 1986\nLanguages English, Hindi, Gujarati\nGender Male\nMarital Status Married\nI hereby declare that the information furnished above is true to the best of my knowledge.\nKashyap N. Pandya"
+        },
+        "validation_errors": []
+      }
+    ],
+    "created_at": "2026-02-24T06:15:32.478267+00:00",
+    "updated_at": "2026-02-24T06:15:33.856322+00:00"
+  },
+  {
+    "document_id": "866ed856-a408-4835-ac53-6be81abd7316",
+    "job_id": "178c65bf-0df5-45a4-b930-d4cc2874dee5",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "completed",
+    "url": "/dapi/v1/document-file/866ed856-a408-4835-ac53-6be81abd7316",
+    "file_hash": "fd176d7bcad5d5777ee3fc1565b5ef55a9f790f96b1fe2c926745e24b12c66a6",
+    "metadata": {
+      "etag": null,
+      "filename": "866ed856-a408-4835-ac53-6be81abd7316.pdf",
+      "page_count": 3,
+      "size_bytes": 189218,
+      "content_type": "application/pdf"
+    },
+    "entries": [
+      {
+        "id": "9af5d39b-57d2-44f9-b6f1-b4f82e2c9915",
+        "token_id": "4026da75-4a49-4003-bda3-aab5ece695e3",
+        "status": "completed",
+        "cost": 10.44,
+        "cost_currency": "INR",
+        "processing_time_seconds": 0.16,
+        "created_at": "2026-02-24T06:16:53.166654+00:00",
+        "updated_at": "2026-02-24T06:16:53.327123+00:00",
+        "is_deduplicated": true,
+        "is_valid": true,
+        "parsed_data": {
+          "first_name": "Kashyap",
+          "last_name": "Pandya",
+          "phone_number": "+91 9974895678",
+          "email": "kashyapandya@yahoo.com",
+          "date_of_birth": "25/04/1986",
+          "gender": "Male",
+          "religion": "",
+          "marital_status": "Married",
+          "nationality_country_name": "India",
+          "country_region": "",
+          "city": "Rajkot",
+          "postal_code": "360005",
+          "languages": [
+            "Languages English",
+            "Hindi",
+            "Gujarati",
+            "English"
+          ],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": 12,
+          "passport_number": "",
+          "passport_expiry_date": "",
+          "skills": [
+            {
+              "skill_name": "aws"
+            },
+            {
+              "skill_name": "erp"
+            },
+            {
+              "skill_name": "firewall"
+            },
+            {
+              "skill_name": "maintenance"
+            },
+            {
+              "skill_name": "network security"
+            },
+            {
+              "skill_name": "tally"
+            }
+          ],
+          "education": "• B.E. (Computer Engg.) – Completed in July",
+          "education_degree": "• B.E. (Computer Engg.) – Completed in July",
+          "about_description_summary": "• Assembling of Hardware components and Installation of Software. • SAP, Mail Security, Cloud Security, Firewall, NAS Server & Security, CCTV. • MCSA & MCSE – Windows Server 2016. • Establishment of LAN Networks and Network Security.",
+          "linkedin_url": "",
+          "gulf_experience": false
+        },
+        "feedback_data": {
+          "first_name": "Kashyap",
+          "last_name": "Pandya",
+          "phone_number": "+91 9974895678",
+          "email": "kashyapandya@yahoo.com",
+          "date_of_birth": "25/04/1986",
+          "gender": "Male",
+          "religion": "",
+          "marital_status": "Married",
+          "nationality_country_name": "India",
+          "country_region": "",
+          "city": "Rajkot",
+          "postal_code": "360005",
+          "languages": [
+            "Languages English",
+            "Hindi",
+            "Gujarati",
+            "English"
+          ],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": 12,
+          "gulf_expierence": false,
+          "passport_number": "",
+          "passport_expiry_date": "",
+          "skills": [
+            "aws",
+            "erp",
+            "firewall",
+            "maintenance",
+            "network security",
+            "tally"
+          ],
+          "education": [
+            {
+              "degree": "• B.E. (Computer Engg.) – Completed in July",
+              "field_of_study": "",
+              "institution": "2008 from Saurashtra University",
+              "graduation_year": 2008
+            }
+          ],
+          "education_degree": "• B.E. (Computer Engg.) – Completed in July",
+          "about_description_summary": "• Assembling of Hardware components and Installation of Software. • SAP, Mail Security, Cloud Security, Firewall, NAS Server & Security, CCTV. • MCSA & MCSE – Windows Server 2016. • Establishment of LAN Networks and Network Security.",
+          "linkedin_url": "",
+          "raw_text": "Kashyap Natvarlal Pandya\nComputer Engineer\n“Pitru Krupa”,\nBlock No 19/2,\n3-Dharmaraj Park,\nSadhuVaswaniMarg\nUniversity Road,\nRajkot-360005.\nCareer Objective:\nMobile: +91 9974895678\nEmail: kashyapandya@yahoo.com\nTo create footwork in emerging industry where I can get an opportunity to combine my\ntechnical knowledge and creativity to generate and communicate ideas so that mutual exponential\ngrowth can be attained.\nSummary:\n• Assembling of Hardware components and Installation of Software.\n• SAP, Mail Security, Cloud Security, Firewall, NAS Server & Security, CCTV.\n• MCSA & MCSE – Windows Server 2016.\n• Establishment of LAN Networks and Network Security.\nEducation Details:\n• 10th – Completed in May-2001 from G.S.E.B. With 82.00%.\n• 12th (Science) – Completed in May-2003 from G.H.E.B With 48.00%.\n• B.E. (Computer Engg.) – Completed in July-2008 from Saurashtra University-\nWith 52.00%\nAchievement:\n• Secured First rank in the National level Symposium Tech-Utkarsh, Robotics\nCompetition at AITS engineering college in year 2005.\n• Secured Second rank in the National level Symposium Tech-Utkarsh, Hardware Project\nCompetition at AITS engineering college in year 2005.\n• Secured First rank in the National level Symposium INNOVATION, Robotics\nCompetition at C.U. SHAH VADHVAN engineering college in year 2005.\n• Secured Second rank in the National level Symposium INNOVATION, Hardware\nProject Competition at C.U. SHAH VADHVAN engineering college in year 2005.\nPersonal Qualities:\n• Self-Confident, Comprehensive Problem-Solving Skills, Motivator,\ninnovative thinking, sharp technical analyst.\n• Team player with flexible, positive and realistic attitude\n• Ability to adopt rapidly changing and expanding environment\nExperience: Total Experience - 12+ Years (SAP Experience 5+ Years)\n• 2 Year (15/01/2009 to 08/01/2011) As A IT Engineer & Lecturer in\nSmt. S.B.Gardi Sankool (Mangrol).\n• 2 year (01/06/2011 to 26/12/2013) As a System Administrator, Admin\nIncharge and Head of Computer Department in J.M. Sabva Institute of\nEngineering and Technology - Botad.\n• 1 Year (01/01/2014 to 31/05/2015) As a I.T. Officer in Ankur Industries\nRajkot.\n• 4 Year (11/06/2015 to 30/06/2019) As a Sr. M.I.S.-I.T.\nOfficer in Amul Sarhad Dairy Anjar Kutch, Managing Hardware,\nSoftware & Networking of 19 Chilling Centers, Head Office &\nManufacturing Plant and Cattle Feed Plant.\n• 1 Year & 3 Months (From 10/09/2019 to 31/12/2020) Worked as an\nAssistant Manager-I.T. in GACL-NALCO Alkalies & Chemicals Pvt. Ltd.\nVadodara\n• Currently (Since January-2021) working as a QA and Support IT Manager\nin Techrover Solutions Pvt. Ltd. – Rajkot.\nJob Specification at Sarhad Dairy – Amul India\n1. Maintaining Hardware, Software and Network of Head office, Manufacturing\nPlant and 19 Chilling Centers along with CCTV camera.\n2. Hardware-Desktop Computer, Laptop, printer, UPS, Battery, Server,\nCCTV camera, DVR, NVR, RF devices, Router, Switches etc...\n3. Software - SAP – Procurement Data with Societies & Chilling Center Data in\ndetail, SAP Software and Related Software Management, SMS software –\nExecutives & Societies, Website Management Antivirus Management,\nWebsite/Surfing Management, Cyberoam Management, AMCS Software\nManagement, Cloud Data Management, Monthly Report of all Centers and\nManufacturing Plant, Area Field Supervisor Monthly Report etc.\n4. Network – Managing Network of Head Office, Manufacturing Plant\nand 19 Chilling Centers.\n5. AMCS System Distribution and Management.\n6. Weight Scale and Fat Machine Management – Societies & Chilling Centers.\n7. Desktop & Laptop Software Installation, Format and All Hardware Maintenance.\n8. Windows Server-2016 Data Centre Edition. Managing OU and its Policies,\nWDS, Active Directory etc.\nJob Specification at GACL-NALCO\n1. Maintenance of Hardware, Software and Network of Head office &\nManufacturing Plant along with CCTV camera.\n2. Hardware - Desktop Computer, Laptop, printer, UPS, Battery, Server,\nCCTV camera, DVR, NVR, RF devices, Router, Switches etc...\n3. Software & ERP – SAP, Operating System, MS Office with Outlook, One\nDrive & All Other General Software and Drivers.\n4. NAS Solution–QNAP-NAS Solution & Security. BackUP of Head Office\n& Remote Site VPN, Accessing File and Folders Remotely – Specially\nWork from Home Situation. Secure Connectivity from Any Network.\n5. CCTV & CCTV BackUP Solution with Security.\n6. Network – LAN Network & Wireless Network Solution, RF Network\nSolution in terms of LAN, WAN (internet)\n7. Firewall Management – Cyberoam.\n8. Mail Solution – Mail Cloud Management – Mithi, Trend Micro Security,\nMail User Management, Mail Archival, Mail Data Security & Maintenance,\nMail Auto Store and Archival with User Rights, All Mail Data Replica.\n9. Domain & Website Hosting Solution.\n10. EPABX - EPABX Solution, BackUp, User’s Rights and Management &\nMaintenance.\n11. O.S. – Windows XP, Vista, 7, 8, 10.\n12. Antivirus Standalone and SMB Product Implementation and Management.\n13. DLP Solution Installation and Management.\n14. SAP & VPN implementation, Connectivity, Rights Management for All\nUsers.\n15. Managing Microsoft Teams Video Conference – Microsoft Teams Admin\nConsole Management, User and Group Creation, Implementation, Training\nand Management.\n16. Polycom V.C. – Polycom Video Conference System Implementation and\nManagement in Admin Console and User.\n17. License Management – Windows OS, Antivirus, Adobe Reader, MS Office\n2016 & 2019 etc License Management.\nCurrent Job Specification:\n1. Project Manager of Collateral Edge, Forney etc. Projects.\n2. QA & Support Manager for Bubble App & Risk Release Projects.\n3. AWS Infrastructure and Security Management.\n4. IT infrastructure and Security Manager.\n5. Cloud Email Management and Security.\n6. Data Link Prevention and Antivirus Management.\n7. Windows OS, Microsoft, Adobe, Tally, TeamViewer, etc License\nManagement.\n8. Firewall Management & LAN and WiFi Management.\n9. Troubleshooting of Laptop, Desktop, Printer, BackUp Devises, CCTV.\nPersonal Details:\nBirth Date 24th April, 1986\nLanguages English, Hindi, Gujarati\nGender Male\nMarital Status Married\nI hereby declare that the information furnished above is true to the best of my knowledge.\nKashyap N. Pandya"
+        },
+        "validation_errors": []
+      }
+    ],
+    "created_at": "2026-02-24T06:16:53.166654+00:00",
+    "updated_at": "2026-02-24T06:16:53.327150+00:00"
+  },
+  {
+    "document_id": "f197b4b6-be39-4047-9cab-0e53ae847065",
+    "job_id": "12dd367f-997e-45bc-b66c-1ce6cfb7bb0f",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "completed",
+    "url": "/dapi/v1/document-file/f197b4b6-be39-4047-9cab-0e53ae847065",
+    "file_hash": "fd176d7bcad5d5777ee3fc1565b5ef55a9f790f96b1fe2c926745e24b12c66a6",
+    "metadata": {
+      "etag": null,
+      "filename": "f197b4b6-be39-4047-9cab-0e53ae847065.pdf",
+      "page_count": 3,
+      "size_bytes": 189218,
+      "content_type": "application/pdf"
+    },
+    "entries": [
+      {
+        "id": "f7d6821f-96e7-4051-afa8-908d6f4703ae",
+        "token_id": "ab18523e-13f6-4b65-b38f-37acd627c7bf",
+        "status": "completed",
+        "cost": 10.44,
+        "cost_currency": "INR",
+        "processing_time_seconds": 0.16,
+        "created_at": "2026-02-24T06:18:34.380787+00:00",
+        "updated_at": "2026-02-24T06:18:34.545045+00:00",
+        "is_deduplicated": true,
+        "is_valid": true,
+        "parsed_data": {
+          "first_name": "Kashyap",
+          "last_name": "Pandya",
+          "phone_number": "+91 9974895678",
+          "email": "kashyapandya@yahoo.com",
+          "date_of_birth": "25/04/1986",
+          "gender": "Male",
+          "religion": "",
+          "marital_status": "Married",
+          "nationality_country_name": "India",
+          "country_region": "",
+          "city": "Rajkot",
+          "postal_code": "360005",
+          "languages": [
+            "Languages English",
+            "Hindi",
+            "Gujarati",
+            "English"
+          ],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": 12,
+          "passport_number": "",
+          "passport_expiry_date": "",
+          "skills": [
+            {
+              "skill_name": "aws"
+            },
+            {
+              "skill_name": "erp"
+            },
+            {
+              "skill_name": "firewall"
+            },
+            {
+              "skill_name": "maintenance"
+            },
+            {
+              "skill_name": "network security"
+            },
+            {
+              "skill_name": "tally"
+            }
+          ],
+          "education": "• B.E. (Computer Engg.) – Completed in July",
+          "education_degree": "• B.E. (Computer Engg.) – Completed in July",
+          "about_description_summary": "• Assembling of Hardware components and Installation of Software. • SAP, Mail Security, Cloud Security, Firewall, NAS Server & Security, CCTV. • MCSA & MCSE – Windows Server 2016. • Establishment of LAN Networks and Network Security.",
+          "linkedin_url": "",
+          "gulf_experience": false
+        },
+        "feedback_data": {
+          "first_name": "Kashyap",
+          "last_name": "Pandya",
+          "phone_number": "+91 9974895678",
+          "email": "kashyapandya@yahoo.com",
+          "date_of_birth": "25/04/1986",
+          "gender": "Male",
+          "religion": "",
+          "marital_status": "Married",
+          "nationality_country_name": "India",
+          "country_region": "",
+          "city": "Rajkot",
+          "postal_code": "360005",
+          "languages": [
+            "Languages English",
+            "Hindi",
+            "Gujarati",
+            "English"
+          ],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": 12,
+          "gulf_expierence": false,
+          "passport_number": "",
+          "passport_expiry_date": "",
+          "skills": [
+            "aws",
+            "erp",
+            "firewall",
+            "maintenance",
+            "network security",
+            "tally"
+          ],
+          "education": [
+            {
+              "degree": "• B.E. (Computer Engg.) – Completed in July",
+              "field_of_study": "",
+              "institution": "2008 from Saurashtra University",
+              "graduation_year": 2008
+            }
+          ],
+          "education_degree": "• B.E. (Computer Engg.) – Completed in July",
+          "about_description_summary": "• Assembling of Hardware components and Installation of Software. • SAP, Mail Security, Cloud Security, Firewall, NAS Server & Security, CCTV. • MCSA & MCSE – Windows Server 2016. • Establishment of LAN Networks and Network Security.",
+          "linkedin_url": "",
+          "raw_text": "Kashyap Natvarlal Pandya\nComputer Engineer\n“Pitru Krupa”,\nBlock No 19/2,\n3-Dharmaraj Park,\nSadhuVaswaniMarg\nUniversity Road,\nRajkot-360005.\nCareer Objective:\nMobile: +91 9974895678\nEmail: kashyapandya@yahoo.com\nTo create footwork in emerging industry where I can get an opportunity to combine my\ntechnical knowledge and creativity to generate and communicate ideas so that mutual exponential\ngrowth can be attained.\nSummary:\n• Assembling of Hardware components and Installation of Software.\n• SAP, Mail Security, Cloud Security, Firewall, NAS Server & Security, CCTV.\n• MCSA & MCSE – Windows Server 2016.\n• Establishment of LAN Networks and Network Security.\nEducation Details:\n• 10th – Completed in May-2001 from G.S.E.B. With 82.00%.\n• 12th (Science) – Completed in May-2003 from G.H.E.B With 48.00%.\n• B.E. (Computer Engg.) – Completed in July-2008 from Saurashtra University-\nWith 52.00%\nAchievement:\n• Secured First rank in the National level Symposium Tech-Utkarsh, Robotics\nCompetition at AITS engineering college in year 2005.\n• Secured Second rank in the National level Symposium Tech-Utkarsh, Hardware Project\nCompetition at AITS engineering college in year 2005.\n• Secured First rank in the National level Symposium INNOVATION, Robotics\nCompetition at C.U. SHAH VADHVAN engineering college in year 2005.\n• Secured Second rank in the National level Symposium INNOVATION, Hardware\nProject Competition at C.U. SHAH VADHVAN engineering college in year 2005.\nPersonal Qualities:\n• Self-Confident, Comprehensive Problem-Solving Skills, Motivator,\ninnovative thinking, sharp technical analyst.\n• Team player with flexible, positive and realistic attitude\n• Ability to adopt rapidly changing and expanding environment\nExperience: Total Experience - 12+ Years (SAP Experience 5+ Years)\n• 2 Year (15/01/2009 to 08/01/2011) As A IT Engineer & Lecturer in\nSmt. S.B.Gardi Sankool (Mangrol).\n• 2 year (01/06/2011 to 26/12/2013) As a System Administrator, Admin\nIncharge and Head of Computer Department in J.M. Sabva Institute of\nEngineering and Technology - Botad.\n• 1 Year (01/01/2014 to 31/05/2015) As a I.T. Officer in Ankur Industries\nRajkot.\n• 4 Year (11/06/2015 to 30/06/2019) As a Sr. M.I.S.-I.T.\nOfficer in Amul Sarhad Dairy Anjar Kutch, Managing Hardware,\nSoftware & Networking of 19 Chilling Centers, Head Office &\nManufacturing Plant and Cattle Feed Plant.\n• 1 Year & 3 Months (From 10/09/2019 to 31/12/2020) Worked as an\nAssistant Manager-I.T. in GACL-NALCO Alkalies & Chemicals Pvt. Ltd.\nVadodara\n• Currently (Since January-2021) working as a QA and Support IT Manager\nin Techrover Solutions Pvt. Ltd. – Rajkot.\nJob Specification at Sarhad Dairy – Amul India\n1. Maintaining Hardware, Software and Network of Head office, Manufacturing\nPlant and 19 Chilling Centers along with CCTV camera.\n2. Hardware-Desktop Computer, Laptop, printer, UPS, Battery, Server,\nCCTV camera, DVR, NVR, RF devices, Router, Switches etc...\n3. Software - SAP – Procurement Data with Societies & Chilling Center Data in\ndetail, SAP Software and Related Software Management, SMS software –\nExecutives & Societies, Website Management Antivirus Management,\nWebsite/Surfing Management, Cyberoam Management, AMCS Software\nManagement, Cloud Data Management, Monthly Report of all Centers and\nManufacturing Plant, Area Field Supervisor Monthly Report etc.\n4. Network – Managing Network of Head Office, Manufacturing Plant\nand 19 Chilling Centers.\n5. AMCS System Distribution and Management.\n6. Weight Scale and Fat Machine Management – Societies & Chilling Centers.\n7. Desktop & Laptop Software Installation, Format and All Hardware Maintenance.\n8. Windows Server-2016 Data Centre Edition. Managing OU and its Policies,\nWDS, Active Directory etc.\nJob Specification at GACL-NALCO\n1. Maintenance of Hardware, Software and Network of Head office &\nManufacturing Plant along with CCTV camera.\n2. Hardware - Desktop Computer, Laptop, printer, UPS, Battery, Server,\nCCTV camera, DVR, NVR, RF devices, Router, Switches etc...\n3. Software & ERP – SAP, Operating System, MS Office with Outlook, One\nDrive & All Other General Software and Drivers.\n4. NAS Solution–QNAP-NAS Solution & Security. BackUP of Head Office\n& Remote Site VPN, Accessing File and Folders Remotely – Specially\nWork from Home Situation. Secure Connectivity from Any Network.\n5. CCTV & CCTV BackUP Solution with Security.\n6. Network – LAN Network & Wireless Network Solution, RF Network\nSolution in terms of LAN, WAN (internet)\n7. Firewall Management – Cyberoam.\n8. Mail Solution – Mail Cloud Management – Mithi, Trend Micro Security,\nMail User Management, Mail Archival, Mail Data Security & Maintenance,\nMail Auto Store and Archival with User Rights, All Mail Data Replica.\n9. Domain & Website Hosting Solution.\n10. EPABX - EPABX Solution, BackUp, User’s Rights and Management &\nMaintenance.\n11. O.S. – Windows XP, Vista, 7, 8, 10.\n12. Antivirus Standalone and SMB Product Implementation and Management.\n13. DLP Solution Installation and Management.\n14. SAP & VPN implementation, Connectivity, Rights Management for All\nUsers.\n15. Managing Microsoft Teams Video Conference – Microsoft Teams Admin\nConsole Management, User and Group Creation, Implementation, Training\nand Management.\n16. Polycom V.C. – Polycom Video Conference System Implementation and\nManagement in Admin Console and User.\n17. License Management – Windows OS, Antivirus, Adobe Reader, MS Office\n2016 & 2019 etc License Management.\nCurrent Job Specification:\n1. Project Manager of Collateral Edge, Forney etc. Projects.\n2. QA & Support Manager for Bubble App & Risk Release Projects.\n3. AWS Infrastructure and Security Management.\n4. IT infrastructure and Security Manager.\n5. Cloud Email Management and Security.\n6. Data Link Prevention and Antivirus Management.\n7. Windows OS, Microsoft, Adobe, Tally, TeamViewer, etc License\nManagement.\n8. Firewall Management & LAN and WiFi Management.\n9. Troubleshooting of Laptop, Desktop, Printer, BackUp Devises, CCTV.\nPersonal Details:\nBirth Date 24th April, 1986\nLanguages English, Hindi, Gujarati\nGender Male\nMarital Status Married\nI hereby declare that the information furnished above is true to the best of my knowledge.\nKashyap N. Pandya"
+        },
+        "validation_errors": []
+      }
+    ],
+    "created_at": "2026-02-24T06:18:34.380787+00:00",
+    "updated_at": "2026-02-24T06:18:34.545077+00:00"
+  },
+  {
+    "document_id": "0313a0c7-ea27-49ba-a84a-94d4935bbe3b",
+    "job_id": "7190cac0-e981-4951-ae45-ae5d77c8059c",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "completed",
+    "url": "/dapi/v1/document-file/0313a0c7-ea27-49ba-a84a-94d4935bbe3b",
+    "file_hash": "fd176d7bcad5d5777ee3fc1565b5ef55a9f790f96b1fe2c926745e24b12c66a6",
+    "metadata": {
+      "etag": null,
+      "filename": "0313a0c7-ea27-49ba-a84a-94d4935bbe3b.pdf",
+      "page_count": 3,
+      "size_bytes": 189218,
+      "content_type": "application/pdf"
+    },
+    "entries": [
+      {
+        "id": "9c3d16ca-da71-4ee7-abeb-8a5ca7cd7119",
+        "token_id": "7ea33961-3bad-41c3-a6a8-cce9b43b85b1",
+        "status": "completed",
+        "cost": 10.44,
+        "cost_currency": "INR",
+        "processing_time_seconds": 0.16,
+        "created_at": "2026-02-24T06:32:03.849539+00:00",
+        "updated_at": "2026-02-24T06:32:04.012088+00:00",
+        "is_deduplicated": true,
+        "is_valid": true,
+        "parsed_data": {
+          "first_name": "Kashyap",
+          "last_name": "Pandya",
+          "phone_number": "+91 9974895678",
+          "email": "kashyapandya@yahoo.com",
+          "date_of_birth": "25/04/1986",
+          "gender": "Male",
+          "religion": "",
+          "marital_status": "Married",
+          "nationality_country_name": "India",
+          "country_region": "",
+          "city": "Rajkot",
+          "postal_code": "360005",
+          "languages": [
+            "Languages English",
+            "Hindi",
+            "Gujarati",
+            "English"
+          ],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": 12,
+          "passport_number": "",
+          "passport_expiry_date": "",
+          "skills": [
+            {
+              "skill_name": "aws"
+            },
+            {
+              "skill_name": "erp"
+            },
+            {
+              "skill_name": "firewall"
+            },
+            {
+              "skill_name": "maintenance"
+            },
+            {
+              "skill_name": "network security"
+            },
+            {
+              "skill_name": "tally"
+            }
+          ],
+          "education": "• B.E. (Computer Engg.) – Completed in July",
+          "education_degree": "• B.E. (Computer Engg.) – Completed in July",
+          "about_description_summary": "• Assembling of Hardware components and Installation of Software. • SAP, Mail Security, Cloud Security, Firewall, NAS Server & Security, CCTV. • MCSA & MCSE – Windows Server 2016. • Establishment of LAN Networks and Network Security.",
+          "linkedin_url": "",
+          "gulf_experience": false
+        },
+        "feedback_data": {
+          "first_name": "Kashyap",
+          "last_name": "Pandya",
+          "phone_number": "+91 9974895678",
+          "email": "kashyapandya@yahoo.com",
+          "date_of_birth": "25/04/1986",
+          "gender": "Male",
+          "religion": "",
+          "marital_status": "Married",
+          "nationality_country_name": "India",
+          "country_region": "",
+          "city": "Rajkot",
+          "postal_code": "360005",
+          "languages": [
+            "Languages English",
+            "Hindi",
+            "Gujarati",
+            "English"
+          ],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": 12,
+          "gulf_expierence": false,
+          "passport_number": "",
+          "passport_expiry_date": "",
+          "skills": [
+            "aws",
+            "erp",
+            "firewall",
+            "maintenance",
+            "network security",
+            "tally"
+          ],
+          "education": [
+            {
+              "degree": "• B.E. (Computer Engg.) – Completed in July",
+              "field_of_study": "",
+              "institution": "2008 from Saurashtra University",
+              "graduation_year": 2008
+            }
+          ],
+          "education_degree": "• B.E. (Computer Engg.) – Completed in July",
+          "about_description_summary": "• Assembling of Hardware components and Installation of Software. • SAP, Mail Security, Cloud Security, Firewall, NAS Server & Security, CCTV. • MCSA & MCSE – Windows Server 2016. • Establishment of LAN Networks and Network Security.",
+          "linkedin_url": "",
+          "raw_text": "Kashyap Natvarlal Pandya\nComputer Engineer\n“Pitru Krupa”,\nBlock No 19/2,\n3-Dharmaraj Park,\nSadhuVaswaniMarg\nUniversity Road,\nRajkot-360005.\nCareer Objective:\nMobile: +91 9974895678\nEmail: kashyapandya@yahoo.com\nTo create footwork in emerging industry where I can get an opportunity to combine my\ntechnical knowledge and creativity to generate and communicate ideas so that mutual exponential\ngrowth can be attained.\nSummary:\n• Assembling of Hardware components and Installation of Software.\n• SAP, Mail Security, Cloud Security, Firewall, NAS Server & Security, CCTV.\n• MCSA & MCSE – Windows Server 2016.\n• Establishment of LAN Networks and Network Security.\nEducation Details:\n• 10th – Completed in May-2001 from G.S.E.B. With 82.00%.\n• 12th (Science) – Completed in May-2003 from G.H.E.B With 48.00%.\n• B.E. (Computer Engg.) – Completed in July-2008 from Saurashtra University-\nWith 52.00%\nAchievement:\n• Secured First rank in the National level Symposium Tech-Utkarsh, Robotics\nCompetition at AITS engineering college in year 2005.\n• Secured Second rank in the National level Symposium Tech-Utkarsh, Hardware Project\nCompetition at AITS engineering college in year 2005.\n• Secured First rank in the National level Symposium INNOVATION, Robotics\nCompetition at C.U. SHAH VADHVAN engineering college in year 2005.\n• Secured Second rank in the National level Symposium INNOVATION, Hardware\nProject Competition at C.U. SHAH VADHVAN engineering college in year 2005.\nPersonal Qualities:\n• Self-Confident, Comprehensive Problem-Solving Skills, Motivator,\ninnovative thinking, sharp technical analyst.\n• Team player with flexible, positive and realistic attitude\n• Ability to adopt rapidly changing and expanding environment\nExperience: Total Experience - 12+ Years (SAP Experience 5+ Years)\n• 2 Year (15/01/2009 to 08/01/2011) As A IT Engineer & Lecturer in\nSmt. S.B.Gardi Sankool (Mangrol).\n• 2 year (01/06/2011 to 26/12/2013) As a System Administrator, Admin\nIncharge and Head of Computer Department in J.M. Sabva Institute of\nEngineering and Technology - Botad.\n• 1 Year (01/01/2014 to 31/05/2015) As a I.T. Officer in Ankur Industries\nRajkot.\n• 4 Year (11/06/2015 to 30/06/2019) As a Sr. M.I.S.-I.T.\nOfficer in Amul Sarhad Dairy Anjar Kutch, Managing Hardware,\nSoftware & Networking of 19 Chilling Centers, Head Office &\nManufacturing Plant and Cattle Feed Plant.\n• 1 Year & 3 Months (From 10/09/2019 to 31/12/2020) Worked as an\nAssistant Manager-I.T. in GACL-NALCO Alkalies & Chemicals Pvt. Ltd.\nVadodara\n• Currently (Since January-2021) working as a QA and Support IT Manager\nin Techrover Solutions Pvt. Ltd. – Rajkot.\nJob Specification at Sarhad Dairy – Amul India\n1. Maintaining Hardware, Software and Network of Head office, Manufacturing\nPlant and 19 Chilling Centers along with CCTV camera.\n2. Hardware-Desktop Computer, Laptop, printer, UPS, Battery, Server,\nCCTV camera, DVR, NVR, RF devices, Router, Switches etc...\n3. Software - SAP – Procurement Data with Societies & Chilling Center Data in\ndetail, SAP Software and Related Software Management, SMS software –\nExecutives & Societies, Website Management Antivirus Management,\nWebsite/Surfing Management, Cyberoam Management, AMCS Software\nManagement, Cloud Data Management, Monthly Report of all Centers and\nManufacturing Plant, Area Field Supervisor Monthly Report etc.\n4. Network – Managing Network of Head Office, Manufacturing Plant\nand 19 Chilling Centers.\n5. AMCS System Distribution and Management.\n6. Weight Scale and Fat Machine Management – Societies & Chilling Centers.\n7. Desktop & Laptop Software Installation, Format and All Hardware Maintenance.\n8. Windows Server-2016 Data Centre Edition. Managing OU and its Policies,\nWDS, Active Directory etc.\nJob Specification at GACL-NALCO\n1. Maintenance of Hardware, Software and Network of Head office &\nManufacturing Plant along with CCTV camera.\n2. Hardware - Desktop Computer, Laptop, printer, UPS, Battery, Server,\nCCTV camera, DVR, NVR, RF devices, Router, Switches etc...\n3. Software & ERP – SAP, Operating System, MS Office with Outlook, One\nDrive & All Other General Software and Drivers.\n4. NAS Solution–QNAP-NAS Solution & Security. BackUP of Head Office\n& Remote Site VPN, Accessing File and Folders Remotely – Specially\nWork from Home Situation. Secure Connectivity from Any Network.\n5. CCTV & CCTV BackUP Solution with Security.\n6. Network – LAN Network & Wireless Network Solution, RF Network\nSolution in terms of LAN, WAN (internet)\n7. Firewall Management – Cyberoam.\n8. Mail Solution – Mail Cloud Management – Mithi, Trend Micro Security,\nMail User Management, Mail Archival, Mail Data Security & Maintenance,\nMail Auto Store and Archival with User Rights, All Mail Data Replica.\n9. Domain & Website Hosting Solution.\n10. EPABX - EPABX Solution, BackUp, User’s Rights and Management &\nMaintenance.\n11. O.S. – Windows XP, Vista, 7, 8, 10.\n12. Antivirus Standalone and SMB Product Implementation and Management.\n13. DLP Solution Installation and Management.\n14. SAP & VPN implementation, Connectivity, Rights Management for All\nUsers.\n15. Managing Microsoft Teams Video Conference – Microsoft Teams Admin\nConsole Management, User and Group Creation, Implementation, Training\nand Management.\n16. Polycom V.C. – Polycom Video Conference System Implementation and\nManagement in Admin Console and User.\n17. License Management – Windows OS, Antivirus, Adobe Reader, MS Office\n2016 & 2019 etc License Management.\nCurrent Job Specification:\n1. Project Manager of Collateral Edge, Forney etc. Projects.\n2. QA & Support Manager for Bubble App & Risk Release Projects.\n3. AWS Infrastructure and Security Management.\n4. IT infrastructure and Security Manager.\n5. Cloud Email Management and Security.\n6. Data Link Prevention and Antivirus Management.\n7. Windows OS, Microsoft, Adobe, Tally, TeamViewer, etc License\nManagement.\n8. Firewall Management & LAN and WiFi Management.\n9. Troubleshooting of Laptop, Desktop, Printer, BackUp Devises, CCTV.\nPersonal Details:\nBirth Date 24th April, 1986\nLanguages English, Hindi, Gujarati\nGender Male\nMarital Status Married\nI hereby declare that the information furnished above is true to the best of my knowledge.\nKashyap N. Pandya"
+        },
+        "validation_errors": []
+      }
+    ],
+    "created_at": "2026-02-24T06:32:03.849539+00:00",
+    "updated_at": "2026-02-24T06:32:04.012112+00:00"
+  },
+  {
+    "document_id": "b15de244-79c1-4820-87af-471b1d05be46",
+    "job_id": "e28460d5-23d4-492c-9207-c244666647c7",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "completed",
+    "url": "/dapi/v1/document-file/b15de244-79c1-4820-87af-471b1d05be46",
+    "file_hash": "a890bfb5a694a934406823a4e608470e165943cd17cdb286ca4596ae4003bf83",
+    "metadata": {
+      "etag": null,
+      "filename": "b15de244-79c1-4820-87af-471b1d05be46.pdf",
+      "page_count": 3,
+      "size_bytes": 69038,
+      "content_type": "application/pdf"
+    },
+    "entries": [
+      {
+        "id": "1b4a7cbb-16f4-4114-ab40-9249af5528fe",
+        "token_id": "fa4d0c08-3026-4531-9c82-95141531e360",
+        "status": "completed",
+        "cost": 10.44,
+        "cost_currency": "INR",
+        "processing_time_seconds": 0.19,
+        "created_at": "2026-02-24T06:36:57.364214+00:00",
+        "updated_at": "2026-02-24T06:36:57.552446+00:00",
+        "is_deduplicated": true,
+        "is_valid": true,
+        "parsed_data": {
+          "first_name": "KARTHIKEYAN",
+          "last_name": "LAKSHMANAN",
+          "phone_number": "+91-7639056833",
+          "email": "kart.kart.2008@gmail.com",
+          "date_of_birth": "12/11/1981",
+          "gender": "Male",
+          "religion": "",
+          "marital_status": "Married",
+          "nationality_country_name": "India",
+          "country_region": "affiliated to Madras University",
+          "city": "Aarupadai Veedu Institute of Technology",
+          "postal_code": "600116",
+          "languages": [
+            "Languages Known",
+            "English",
+            "Hindi",
+            "Tamil",
+            "And Kannada"
+          ],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": 10,
+          "passport_number": "Z4935373",
+          "passport_expiry_date": "",
+          "skills": [
+            {
+              "skill_name": "autocad"
+            },
+            {
+              "skill_name": "ccna"
+            },
+            {
+              "skill_name": "excel"
+            },
+            {
+              "skill_name": "maintenance"
+            }
+          ],
+          "education": "Bachelor of Electronics and Communication Engineering from",
+          "education_degree": "Bachelor of Electronics and Communication Engineering from",
+          "about_description_summary": "Toworkinacompetitiveandchallengingworkenvironmentandtocontributethebestofmyabilitytowardsthe growth and development of the progressive company and to pursue a challenging career. ACADEMIC QUALIFICATION Bachelor of Electronics and Communication Engineering from Aarupadai Veedu Institute of Technology ,affiliated to Madras University, Chennai,India",
+          "linkedin_url": "",
+          "gulf_experience": true
+        },
+        "feedback_data": {
+          "first_name": "KARTHIKEYAN",
+          "last_name": "LAKSHMANAN",
+          "phone_number": "+91-7639056833",
+          "email": "kart.kart.2008@gmail.com",
+          "date_of_birth": "12/11/1981",
+          "gender": "Male",
+          "religion": "",
+          "marital_status": "Married",
+          "nationality_country_name": "India",
+          "country_region": "affiliated to Madras University",
+          "city": "Aarupadai Veedu Institute of Technology",
+          "postal_code": "600116",
+          "languages": [
+            "Languages Known",
+            "English",
+            "Hindi",
+            "Tamil",
+            "And Kannada"
+          ],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": 10,
+          "gulf_expierence": true,
+          "passport_number": "Z4935373",
+          "passport_expiry_date": "",
+          "skills": [
+            "autocad",
+            "ccna",
+            "excel",
+            "maintenance"
+          ],
+          "education": [
+            {
+              "degree": "Bachelor of Electronics and Communication Engineering from",
+              "field_of_study": "",
+              "institution": "",
+              "graduation_year": null
+            },
+            {
+              "degree": "Higher Degree : Bachelor of Electronicsand Communication Engineering",
+              "field_of_study": "",
+              "institution": "",
+              "graduation_year": null
+            }
+          ],
+          "education_degree": "Bachelor of Electronics and Communication Engineering from",
+          "about_description_summary": "Toworkinacompetitiveandchallengingworkenvironmentandtocontributethebestofmyabilitytowardsthe growth and development of the progressive company and to pursue a challenging career. ACADEMIC QUALIFICATION Bachelor of Electronics and Communication Engineering from Aarupadai Veedu Institute of Technology ,affiliated to Madras University, Chennai,India",
+          "linkedin_url": "",
+          "raw_text": "RESUME\nKARTHIKEYAN LAKSHMANANMob.No: +91-7639056833E-Mail: kart.kart.2008@gmail.com\nOBJECTIVE\nToworkinacompetitiveandchallengingworkenvironmentandtocontributethebestofmyabilitytowardsthe growth and development of the progressive company and to pursue a challenging career.\nACADEMIC QUALIFICATION\nBachelor of Electronics and Communication Engineering from\nAarupadai Veedu Institute of Technology ,affiliated to Madras University, Chennai,India\nKEY SKILLS\n❖ 10 Years of Experience in ELV Systems(4 Years of Gulf Experience and 6Years of India Experience)❖ Implementation and commissioning of ELV Systems.❖ CCTV Installation, Maintenance , Troubleshooting (Bosch , CP Plus, Dahua , Hikvision)❖ Access Controls Installation, Maintenance, Troubleshooting (Fingertec , ZKTeco, Rossalare , Garrisons)❖ Fire Alarm System Installation, Maintenance, Troubleshooting (Bosch, Tyco Fire Alarm Panels).❖ Networking Concepts- CCNA Certified Course.❖ Well convergent with Electronic, Telecom & automation Equipment’s maintenance activities for officeautomation Equipments like Telephones, IP phones, Fax machines.❖ Installation & Maintenance of Biometric Attendance System and attendance management software.❖ Perform plan preventive maintenance of Different electronics system.❖ Desktop Computer Hardware and Software Installation and trouble shooting.❖ AUTOCAD Basic. MS Office (Word, Excel, PowerPoint).\nPROFESSIONAL EXPERIENCE\n● May 2017 to Till date with Yercaud Electronics Pvt Ltd –Chennai asTeam Lead–Security Division.● May 2016 to February 2017 with Dhonaadhi Hitech Innovations- Chennai asTechnical Engineer.● February2011to2015withOmanShapoorjiCoLLC asELVEngineer- Muscat-SultanateofOman(Gulf Experience)\nWORK EXPERIENCE\n1.Yercaud Electronics Pvt Ltd as Team Lead –Security DivisionMay 2017 to till date-\nChennai, India.\nRESPONSIBILITY\n❖ Installation, Commissioning & Maintenance of CCTV Cameras.\n❖ Installation, Commissioning & Maintenance of Biometric Door and Card Access Control Systems\n❖ Installation & Maintenance of Biometric Attendance System and attendance management software.\n❖ Familiar with Essl Biometric Door and Card Access Control System and software\n❖ Installation & Maintenance of Boom Barrier and Flap Barrier.\n❖ Familiar with Dahua , Hik Vision ,Samsung - CCTV Systems with mobile configuration\n❖ Implementing and commissioning of ELV Systems.\n❖ Managing service engineers\n2. Dhonaadhi Hitech Innovations Pvt Ltd as TechnicalengineerfromMay 2016 to feb 2017-\nChennai, India.\nRESPONSIBILITY\n❖ Installation, Commissioning & Maintenance of CCTV Cameras.\n❖ Familiar with CP Plus, Vision and Bosch - CCTV Systems\n❖ Installation, Commissioning & Maintenance of Biometric Attendance System.\n❖ Familiar with Fingertec Biometric Attendance system and software\n❖ Installation, Commissioning & Maintenance of Biometric Door and Card Access Control Systems\n❖ Familiar with Fingertec Biometric Door and Card Access Control System and software\n❖ Installation and commissioning of Walk through Metal Detector (WTMD)\n3. OMAN SHAPOORJI CO LLC as\nELV Engineerfrom 2011to 2015 in Muscat palace(Qasar Al Alam)\nProject & Maintenance division, Ghala, Oman.(GulfExperience)\nRESPONSIBILITY\n❖ Installation, Commissioning & Maintenance of CCTV Cameras, Security System, UPS.\n❖ Familiar with Bosch, IMG Vision, CP Plus - CCTV Systems, Rossalare, Garrisons, Suprema -Security systems.\n❖ Installation, Commissioning, Programming & Maintenance of Lighting Dimmer System.\n❖ Familiar with Polaron, Lutron, Quantron Dimming system.\n❖ Installation, Maintenance of Fire Alarm System. (Bosch, Tyco Fire Alarm Panels).\n❖ Implementation and commissioning of ELV / AV Systems.\n❖ Perform plan preventive maintenance of Different electronics system.\n❖ Well convergent with Electronic, Telecom & automation Equipments maintenance activities foroffice automation Equipments like Telephones, IP phones, Fax machines.\n❖ Having experience of trouble shooting the patch panel Fault clearance.\n❖ Have good communication, supervising and planning skills.\n❖ Generation of various types of reports (Maintenance and Planning)\nPERSONAL DETAILS\nName : L.Karthikeyan\nFather Name : R.Lakshmanan\nDate of Birth : 12\nth\nNovember 1981\nGender : Male\nMarital Status : Married\nNationality : Indian\nLanguages Known : English, Hindi, Tamil,and Kannada.\nHigher Degree : Bachelor of Electronicsand Communication Engineering\nPassport Number : Z4935373\nSKYPE ID : live:kart.kart.2008\nDate of Expiry : 31/10/2029\nPresent Address : Plot No: 10, A3 ApexApartment, Ramamurthy Avenue\nShakthi Nagar, Porur\nChennai, Tamil Nadu, India Pin-600116\nDECLARATION\nI hereby declare that all the information’s furnished above are true to the best of my knowledge and belief.\nThanking You,\nPlace: Yours Truly,\nDate : ( L. Karthikeyan)"
+        },
+        "validation_errors": []
+      }
+    ],
+    "created_at": "2026-02-24T06:36:57.364214+00:00",
+    "updated_at": "2026-02-24T06:36:57.553061+00:00"
+  },
+  {
+    "document_id": "1009d73c-daae-4e3e-946c-92075f2995fd",
+    "job_id": "e08096a9-b7e2-46ac-8cdb-03bec59bab53",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "processing",
+    "url": "/dapi/v1/document-file/1009d73c-daae-4e3e-946c-92075f2995fd",
+    "file_hash": "a1bb04052a403c83d86a0cd386250e3e442baf191408046c2b0858d456fe6c49",
+    "metadata": {
+      "etag": null,
+      "filename": "1254412_Naseem (kazema university).pdf",
+      "page_count": 20,
+      "size_bytes": 8872045,
+      "content_type": "application/pdf"
+    },
+    "entries": [],
+    "created_at": "2026-02-24T06:39:53.298838+00:00",
+    "updated_at": "2026-02-24T06:39:53.298850+00:00"
+  },
+  {
+    "document_id": "76868a34-aaa1-4a8d-8f88-10945ecc7687",
+    "job_id": "7aa7f78c-b689-46f4-b87b-a559a0f8671d",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "completed",
+    "url": "/dapi/v1/document-file/76868a34-aaa1-4a8d-8f88-10945ecc7687",
+    "file_hash": "a890bfb5a694a934406823a4e608470e165943cd17cdb286ca4596ae4003bf83",
+    "metadata": {
+      "etag": null,
+      "filename": "76868a34-aaa1-4a8d-8f88-10945ecc7687.pdf",
+      "page_count": 3,
+      "size_bytes": 69038,
+      "content_type": "application/pdf"
+    },
+    "entries": [
+      {
+        "id": "6423d5d6-3896-451c-b947-6351cd540a56",
+        "token_id": "c5eaf208-0179-40c6-9d15-0b3fef42a66c",
+        "status": "completed",
+        "cost": 10.44,
+        "cost_currency": "INR",
+        "processing_time_seconds": 1.5,
+        "created_at": "2026-02-24T06:44:16.918900+00:00",
+        "updated_at": "2026-02-24T06:44:18.419235+00:00",
+        "is_deduplicated": true,
+        "is_valid": true,
+        "parsed_data": {
+          "first_name": "KARTHIKEYAN",
+          "last_name": "LAKSHMANAN",
+          "phone_number": "+91-7639056833",
+          "email": "kart.kart.2008@gmail.com",
+          "date_of_birth": "12/11/1981",
+          "gender": "Male",
+          "religion": "",
+          "marital_status": "Married",
+          "nationality_country_name": "India",
+          "country_region": "affiliated to Madras University",
+          "city": "Aarupadai Veedu Institute of Technology",
+          "postal_code": "600116",
+          "languages": [
+            "English",
+            "Hindi",
+            "Tamil",
+            "And Kannada"
+          ],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": 10,
+          "passport_number": "Z4935373",
+          "passport_expiry_date": "",
+          "skills": [
+            {
+              "skill_name": "autocad"
+            },
+            {
+              "skill_name": "ccna"
+            },
+            {
+              "skill_name": "excel"
+            },
+            {
+              "skill_name": "maintenance"
+            }
+          ],
+          "education": "Bachelor of Electronics and Communication Engineering from",
+          "education_degree": "Bachelor of Electronics and Communication Engineering from",
+          "about_description_summary": "Toworkinacompetitiveandchallengingworkenvironmentandtocontributethebestofmyabilitytowardsthe growth and development of the progressive company and to pursue a challenging career. ACADEMIC QUALIFICATION Bachelor of Electronics and Communication Engineering from Aarupadai Veedu Institute of Technology ,affiliated to Madras University, Chennai,India",
+          "linkedin_url": "",
+          "gulf_experience": true
+        },
+        "feedback_data": {
+          "first_name": "KARTHIKEYAN",
+          "last_name": "LAKSHMANAN",
+          "phone_number": "+91-7639056833",
+          "email": "kart.kart.2008@gmail.com",
+          "date_of_birth": "12/11/1981",
+          "gender": "Male",
+          "religion": "",
+          "marital_status": "Married",
+          "nationality_country_name": "India",
+          "country_region": "affiliated to Madras University",
+          "city": "Aarupadai Veedu Institute of Technology",
+          "postal_code": "600116",
+          "languages": [
+            "English",
+            "Hindi",
+            "Tamil",
+            "And Kannada"
+          ],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": 10,
+          "gulf_expierence": true,
+          "passport_number": "Z4935373",
+          "passport_expiry_date": "",
+          "skills": [
+            "autocad",
+            "ccna",
+            "excel",
+            "maintenance"
+          ],
+          "education": [
+            {
+              "degree": "Bachelor of Electronics and Communication Engineering from",
+              "field_of_study": "",
+              "institution": "",
+              "graduation_year": null
+            },
+            {
+              "degree": "Higher Degree : Bachelor of Electronicsand Communication Engineering",
+              "field_of_study": "",
+              "institution": "",
+              "graduation_year": null
+            }
+          ],
+          "education_degree": "Bachelor of Electronics and Communication Engineering from",
+          "about_description_summary": "Toworkinacompetitiveandchallengingworkenvironmentandtocontributethebestofmyabilitytowardsthe growth and development of the progressive company and to pursue a challenging career. ACADEMIC QUALIFICATION Bachelor of Electronics and Communication Engineering from Aarupadai Veedu Institute of Technology ,affiliated to Madras University, Chennai,India",
+          "linkedin_url": "",
+          "raw_text": "RESUME\nKARTHIKEYAN LAKSHMANANMob.No: +91-7639056833E-Mail: kart.kart.2008@gmail.com\nOBJECTIVE\nToworkinacompetitiveandchallengingworkenvironmentandtocontributethebestofmyabilitytowardsthe growth and development of the progressive company and to pursue a challenging career.\nACADEMIC QUALIFICATION\nBachelor of Electronics and Communication Engineering from\nAarupadai Veedu Institute of Technology ,affiliated to Madras University, Chennai,India\nKEY SKILLS\n❖ 10 Years of Experience in ELV Systems(4 Years of Gulf Experience and 6Years of India Experience)❖ Implementation and commissioning of ELV Systems.❖ CCTV Installation, Maintenance , Troubleshooting (Bosch , CP Plus, Dahua , Hikvision)❖ Access Controls Installation, Maintenance, Troubleshooting (Fingertec , ZKTeco, Rossalare , Garrisons)❖ Fire Alarm System Installation, Maintenance, Troubleshooting (Bosch, Tyco Fire Alarm Panels).❖ Networking Concepts- CCNA Certified Course.❖ Well convergent with Electronic, Telecom & automation Equipment’s maintenance activities for officeautomation Equipments like Telephones, IP phones, Fax machines.❖ Installation & Maintenance of Biometric Attendance System and attendance management software.❖ Perform plan preventive maintenance of Different electronics system.❖ Desktop Computer Hardware and Software Installation and trouble shooting.❖ AUTOCAD Basic. MS Office (Word, Excel, PowerPoint).\nPROFESSIONAL EXPERIENCE\n● May 2017 to Till date with Yercaud Electronics Pvt Ltd –Chennai asTeam Lead–Security Division.● May 2016 to February 2017 with Dhonaadhi Hitech Innovations- Chennai asTechnical Engineer.● February2011to2015withOmanShapoorjiCoLLC asELVEngineer- Muscat-SultanateofOman(Gulf Experience)\nWORK EXPERIENCE\n1.Yercaud Electronics Pvt Ltd as Team Lead –Security DivisionMay 2017 to till date-\nChennai, India.\nRESPONSIBILITY\n❖ Installation, Commissioning & Maintenance of CCTV Cameras.\n❖ Installation, Commissioning & Maintenance of Biometric Door and Card Access Control Systems\n❖ Installation & Maintenance of Biometric Attendance System and attendance management software.\n❖ Familiar with Essl Biometric Door and Card Access Control System and software\n❖ Installation & Maintenance of Boom Barrier and Flap Barrier.\n❖ Familiar with Dahua , Hik Vision ,Samsung - CCTV Systems with mobile configuration\n❖ Implementing and commissioning of ELV Systems.\n❖ Managing service engineers\n2. Dhonaadhi Hitech Innovations Pvt Ltd as TechnicalengineerfromMay 2016 to feb 2017-\nChennai, India.\nRESPONSIBILITY\n❖ Installation, Commissioning & Maintenance of CCTV Cameras.\n❖ Familiar with CP Plus, Vision and Bosch - CCTV Systems\n❖ Installation, Commissioning & Maintenance of Biometric Attendance System.\n❖ Familiar with Fingertec Biometric Attendance system and software\n❖ Installation, Commissioning & Maintenance of Biometric Door and Card Access Control Systems\n❖ Familiar with Fingertec Biometric Door and Card Access Control System and software\n❖ Installation and commissioning of Walk through Metal Detector (WTMD)\n3. OMAN SHAPOORJI CO LLC as\nELV Engineerfrom 2011to 2015 in Muscat palace(Qasar Al Alam)\nProject & Maintenance division, Ghala, Oman.(GulfExperience)\nRESPONSIBILITY\n❖ Installation, Commissioning & Maintenance of CCTV Cameras, Security System, UPS.\n❖ Familiar with Bosch, IMG Vision, CP Plus - CCTV Systems, Rossalare, Garrisons, Suprema -Security systems.\n❖ Installation, Commissioning, Programming & Maintenance of Lighting Dimmer System.\n❖ Familiar with Polaron, Lutron, Quantron Dimming system.\n❖ Installation, Maintenance of Fire Alarm System. (Bosch, Tyco Fire Alarm Panels).\n❖ Implementation and commissioning of ELV / AV Systems.\n❖ Perform plan preventive maintenance of Different electronics system.\n❖ Well convergent with Electronic, Telecom & automation Equipments maintenance activities foroffice automation Equipments like Telephones, IP phones, Fax machines.\n❖ Having experience of trouble shooting the patch panel Fault clearance.\n❖ Have good communication, supervising and planning skills.\n❖ Generation of various types of reports (Maintenance and Planning)\nPERSONAL DETAILS\nName : L.Karthikeyan\nFather Name : R.Lakshmanan\nDate of Birth : 12\nth\nNovember 1981\nGender : Male\nMarital Status : Married\nNationality : Indian\nLanguages Known : English, Hindi, Tamil,and Kannada.\nHigher Degree : Bachelor of Electronicsand Communication Engineering\nPassport Number : Z4935373\nSKYPE ID : live:kart.kart.2008\nDate of Expiry : 31/10/2029\nPresent Address : Plot No: 10, A3 ApexApartment, Ramamurthy Avenue\nShakthi Nagar, Porur\nChennai, Tamil Nadu, India Pin-600116\nDECLARATION\nI hereby declare that all the information’s furnished above are true to the best of my knowledge and belief.\nThanking You,\nPlace: Yours Truly,\nDate : ( L. Karthikeyan)"
+        },
+        "validation_errors": []
+      }
+    ],
+    "created_at": "2026-02-24T06:44:16.918900+00:00",
+    "updated_at": "2026-02-24T06:44:18.419253+00:00"
+  },
+  {
+    "document_id": "a448f31d-54dc-4f2b-ac4f-7c3aa4760d3f",
+    "job_id": "9e875ac6-fed2-4b85-8564-5a5bd812bf42",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "processing",
+    "url": "/dapi/v1/document-file/a448f31d-54dc-4f2b-ac4f-7c3aa4760d3f",
+    "file_hash": "7139ba447c4127258fda3b8c98f6f9a309540a5701ba8291be859361ce55f801",
+    "metadata": {
+      "etag": null,
+      "filename": "Sheikabdullah resume.pdf",
+      "page_count": 24,
+      "size_bytes": 12890274,
+      "content_type": "application/pdf"
+    },
+    "entries": [],
+    "created_at": "2026-02-24T06:45:17.692102+00:00",
+    "updated_at": "2026-02-24T06:45:17.692113+00:00"
+  },
+  {
+    "document_id": "ca91d630-030c-4241-b8bd-261af1a47847",
+    "job_id": "d5e9c1c2-5e80-4be7-b52e-e9736de8f0e9",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "processing",
+    "url": "/dapi/v1/document-file/ca91d630-030c-4241-b8bd-261af1a47847",
+    "file_hash": "7139ba447c4127258fda3b8c98f6f9a309540a5701ba8291be859361ce55f801",
+    "metadata": {
+      "etag": null,
+      "filename": "Sheikabdullah resume.pdf",
+      "page_count": 24,
+      "size_bytes": 12890274,
+      "content_type": "application/pdf"
+    },
+    "entries": [],
+    "created_at": "2026-02-24T06:48:39.625342+00:00",
+    "updated_at": "2026-02-24T06:48:39.625359+00:00"
+  },
+  {
+    "document_id": "9c92e596-3806-4ae2-a3e3-111d835a44bf",
+    "job_id": "dcc2af14-bc6d-4c40-ada2-4935c0f81f82",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "processing",
+    "url": "/dapi/v1/document-file/9c92e596-3806-4ae2-a3e3-111d835a44bf",
+    "file_hash": "7139ba447c4127258fda3b8c98f6f9a309540a5701ba8291be859361ce55f801",
+    "metadata": {
+      "etag": null,
+      "filename": "Sheikabdullah resume.pdf",
+      "page_count": 24,
+      "processed_pages": 0,
+      "total_pages": 24,
+      "progress_percent": 0,
+      "size_bytes": 12890274,
+      "content_type": "application/pdf"
+    },
+    "entries": [],
+    "created_at": "2026-02-24T06:54:58.795431+00:00",
+    "updated_at": "2026-02-24T06:54:58.807400+00:00"
+  },
+  {
+    "document_id": "47bd7c47-df35-4f1e-928a-f3ba6c4c4958",
+    "job_id": "33b43092-0ace-4a93-b32f-7f563dbe076d",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "processing",
+    "url": "/dapi/v1/document-file/47bd7c47-df35-4f1e-928a-f3ba6c4c4958",
+    "file_hash": "7139ba447c4127258fda3b8c98f6f9a309540a5701ba8291be859361ce55f801",
+    "metadata": {
+      "etag": null,
+      "filename": "Sheikabdullah resume.pdf",
+      "page_count": 24,
+      "processed_pages": 24,
+      "total_pages": 24,
+      "progress_percent": 100,
+      "size_bytes": 12890274,
+      "content_type": "application/pdf"
+    },
+    "entries": [],
+    "created_at": "2026-02-24T06:59:35.419773+00:00",
+    "updated_at": "2026-02-24T06:59:35.869311+00:00"
+  },
+  {
+    "document_id": "b2db7f62-692f-4437-8c40-14c4eb24ba6c",
+    "job_id": "e7ff582c-9295-4d56-883d-003c82d50279",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "processing",
+    "url": "/dapi/v1/document-file/b2db7f62-692f-4437-8c40-14c4eb24ba6c",
+    "file_hash": "7139ba447c4127258fda3b8c98f6f9a309540a5701ba8291be859361ce55f801",
+    "metadata": {
+      "etag": null,
+      "filename": "Sheikabdullah resume.pdf",
+      "page_count": 24,
+      "processed_pages": 24,
+      "total_pages": 24,
+      "progress_percent": 100,
+      "processing_stage": "extracting_text",
+      "size_bytes": 12890274,
+      "content_type": "application/pdf"
+    },
+    "entries": [],
+    "created_at": "2026-02-24T07:02:59.443845+00:00",
+    "updated_at": "2026-02-24T07:02:59.707548+00:00"
+  },
+  {
+    "document_id": "c27af252-a5a0-49ab-b855-42384f46af36",
+    "job_id": "627422e4-4af6-46f5-986e-c21a0a994c85",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "completed",
+    "url": "/dapi/v1/document-file/c27af252-a5a0-49ab-b855-42384f46af36",
+    "file_hash": "a890bfb5a694a934406823a4e608470e165943cd17cdb286ca4596ae4003bf83",
+    "metadata": {
+      "etag": null,
+      "filename": "c27af252-a5a0-49ab-b855-42384f46af36.pdf",
+      "page_count": 3,
+      "processed_pages": 3,
+      "total_pages": 3,
+      "progress_percent": 100,
+      "processing_stage": "completed",
+      "size_bytes": 69038,
+      "content_type": "application/pdf"
+    },
+    "entries": [
+      {
+        "id": "19b0d84e-60f0-4257-a3ce-7999aee98a35",
+        "token_id": "29244469-e528-49e3-9d48-bc073f35ad16",
+        "status": "completed",
+        "cost": 10.44,
+        "cost_currency": "INR",
+        "processing_time_seconds": 1.41,
+        "created_at": "2026-02-24T07:08:16.267061+00:00",
+        "updated_at": "2026-02-24T07:08:17.678971+00:00",
+        "is_deduplicated": true,
+        "is_valid": true,
+        "parsed_data": {
+          "first_name": "KARTHIKEYAN",
+          "last_name": "LAKSHMANAN",
+          "phone_number": "+91-7639056833",
+          "email": "kart.kart.2008@gmail.com",
+          "date_of_birth": "12/11/1981",
+          "gender": "Male",
+          "religion": "",
+          "marital_status": "Married",
+          "nationality_country_name": "India",
+          "country_region": "affiliated to Madras University",
+          "city": "Aarupadai Veedu Institute of Technology",
+          "postal_code": "600116",
+          "languages": [
+            "English",
+            "Hindi",
+            "Tamil",
+            "And Kannada"
+          ],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": 10,
+          "passport_number": "Z4935373",
+          "passport_expiry_date": "",
+          "skills": [
+            {
+              "skill_name": "autocad"
+            },
+            {
+              "skill_name": "ccna"
+            },
+            {
+              "skill_name": "excel"
+            },
+            {
+              "skill_name": "maintenance"
+            }
+          ],
+          "education": "Bachelor of Electronics and Communication Engineering from",
+          "education_degree": "Bachelor of Electronics and Communication Engineering from",
+          "about_description_summary": "Toworkinacompetitiveandchallengingworkenvironmentandtocontributethebestofmyabilitytowardsthe growth and development of the progressive company and to pursue a challenging career. ACADEMIC QUALIFICATION Bachelor of Electronics and Communication Engineering from Aarupadai Veedu Institute of Technology ,affiliated to Madras University, Chennai,India",
+          "linkedin_url": "",
+          "gulf_experience": true
+        },
+        "feedback_data": {
+          "first_name": "KARTHIKEYAN",
+          "last_name": "LAKSHMANAN",
+          "phone_number": "+91-7639056833",
+          "email": "kart.kart.2008@gmail.com",
+          "date_of_birth": "12/11/1981",
+          "gender": "Male",
+          "religion": "",
+          "marital_status": "Married",
+          "nationality_country_name": "India",
+          "country_region": "affiliated to Madras University",
+          "city": "Aarupadai Veedu Institute of Technology",
+          "postal_code": "600116",
+          "languages": [
+            "English",
+            "Hindi",
+            "Tamil",
+            "And Kannada"
+          ],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": 10,
+          "gulf_expierence": true,
+          "passport_number": "Z4935373",
+          "passport_expiry_date": "",
+          "skills": [
+            "autocad",
+            "ccna",
+            "excel",
+            "maintenance"
+          ],
+          "education": [
+            {
+              "degree": "Bachelor of Electronics and Communication Engineering from",
+              "field_of_study": "",
+              "institution": "",
+              "graduation_year": null
+            },
+            {
+              "degree": "Higher Degree : Bachelor of Electronicsand Communication Engineering",
+              "field_of_study": "",
+              "institution": "",
+              "graduation_year": null
+            }
+          ],
+          "education_degree": "Bachelor of Electronics and Communication Engineering from",
+          "about_description_summary": "Toworkinacompetitiveandchallengingworkenvironmentandtocontributethebestofmyabilitytowardsthe growth and development of the progressive company and to pursue a challenging career. ACADEMIC QUALIFICATION Bachelor of Electronics and Communication Engineering from Aarupadai Veedu Institute of Technology ,affiliated to Madras University, Chennai,India",
+          "linkedin_url": "",
+          "raw_text": "RESUME\nKARTHIKEYAN LAKSHMANANMob.No: +91-7639056833E-Mail: kart.kart.2008@gmail.com\nOBJECTIVE\nToworkinacompetitiveandchallengingworkenvironmentandtocontributethebestofmyabilitytowardsthe growth and development of the progressive company and to pursue a challenging career.\nACADEMIC QUALIFICATION\nBachelor of Electronics and Communication Engineering from\nAarupadai Veedu Institute of Technology ,affiliated to Madras University, Chennai,India\nKEY SKILLS\n❖ 10 Years of Experience in ELV Systems(4 Years of Gulf Experience and 6Years of India Experience)❖ Implementation and commissioning of ELV Systems.❖ CCTV Installation, Maintenance , Troubleshooting (Bosch , CP Plus, Dahua , Hikvision)❖ Access Controls Installation, Maintenance, Troubleshooting (Fingertec , ZKTeco, Rossalare , Garrisons)❖ Fire Alarm System Installation, Maintenance, Troubleshooting (Bosch, Tyco Fire Alarm Panels).❖ Networking Concepts- CCNA Certified Course.❖ Well convergent with Electronic, Telecom & automation Equipment’s maintenance activities for officeautomation Equipments like Telephones, IP phones, Fax machines.❖ Installation & Maintenance of Biometric Attendance System and attendance management software.❖ Perform plan preventive maintenance of Different electronics system.❖ Desktop Computer Hardware and Software Installation and trouble shooting.❖ AUTOCAD Basic. MS Office (Word, Excel, PowerPoint).\nPROFESSIONAL EXPERIENCE\n● May 2017 to Till date with Yercaud Electronics Pvt Ltd –Chennai asTeam Lead–Security Division.● May 2016 to February 2017 with Dhonaadhi Hitech Innovations- Chennai asTechnical Engineer.● February2011to2015withOmanShapoorjiCoLLC asELVEngineer- Muscat-SultanateofOman(Gulf Experience)\nWORK EXPERIENCE\n1.Yercaud Electronics Pvt Ltd as Team Lead –Security DivisionMay 2017 to till date-\nChennai, India.\nRESPONSIBILITY\n❖ Installation, Commissioning & Maintenance of CCTV Cameras.\n❖ Installation, Commissioning & Maintenance of Biometric Door and Card Access Control Systems\n❖ Installation & Maintenance of Biometric Attendance System and attendance management software.\n❖ Familiar with Essl Biometric Door and Card Access Control System and software\n❖ Installation & Maintenance of Boom Barrier and Flap Barrier.\n❖ Familiar with Dahua , Hik Vision ,Samsung - CCTV Systems with mobile configuration\n❖ Implementing and commissioning of ELV Systems.\n❖ Managing service engineers\n2. Dhonaadhi Hitech Innovations Pvt Ltd as TechnicalengineerfromMay 2016 to feb 2017-\nChennai, India.\nRESPONSIBILITY\n❖ Installation, Commissioning & Maintenance of CCTV Cameras.\n❖ Familiar with CP Plus, Vision and Bosch - CCTV Systems\n❖ Installation, Commissioning & Maintenance of Biometric Attendance System.\n❖ Familiar with Fingertec Biometric Attendance system and software\n❖ Installation, Commissioning & Maintenance of Biometric Door and Card Access Control Systems\n❖ Familiar with Fingertec Biometric Door and Card Access Control System and software\n❖ Installation and commissioning of Walk through Metal Detector (WTMD)\n3. OMAN SHAPOORJI CO LLC as\nELV Engineerfrom 2011to 2015 in Muscat palace(Qasar Al Alam)\nProject & Maintenance division, Ghala, Oman.(GulfExperience)\nRESPONSIBILITY\n❖ Installation, Commissioning & Maintenance of CCTV Cameras, Security System, UPS.\n❖ Familiar with Bosch, IMG Vision, CP Plus - CCTV Systems, Rossalare, Garrisons, Suprema -Security systems.\n❖ Installation, Commissioning, Programming & Maintenance of Lighting Dimmer System.\n❖ Familiar with Polaron, Lutron, Quantron Dimming system.\n❖ Installation, Maintenance of Fire Alarm System. (Bosch, Tyco Fire Alarm Panels).\n❖ Implementation and commissioning of ELV / AV Systems.\n❖ Perform plan preventive maintenance of Different electronics system.\n❖ Well convergent with Electronic, Telecom & automation Equipments maintenance activities foroffice automation Equipments like Telephones, IP phones, Fax machines.\n❖ Having experience of trouble shooting the patch panel Fault clearance.\n❖ Have good communication, supervising and planning skills.\n❖ Generation of various types of reports (Maintenance and Planning)\nPERSONAL DETAILS\nName : L.Karthikeyan\nFather Name : R.Lakshmanan\nDate of Birth : 12\nth\nNovember 1981\nGender : Male\nMarital Status : Married\nNationality : Indian\nLanguages Known : English, Hindi, Tamil,and Kannada.\nHigher Degree : Bachelor of Electronicsand Communication Engineering\nPassport Number : Z4935373\nSKYPE ID : live:kart.kart.2008\nDate of Expiry : 31/10/2029\nPresent Address : Plot No: 10, A3 ApexApartment, Ramamurthy Avenue\nShakthi Nagar, Porur\nChennai, Tamil Nadu, India Pin-600116\nDECLARATION\nI hereby declare that all the information’s furnished above are true to the best of my knowledge and belief.\nThanking You,\nPlace: Yours Truly,\nDate : ( L. Karthikeyan)"
+        },
+        "validation_errors": []
+      }
+    ],
+    "created_at": "2026-02-24T07:08:16.267061+00:00",
+    "updated_at": "2026-02-24T07:08:17.678999+00:00"
+  },
+  {
+    "document_id": "9c647900-6454-4928-b030-769d1baabce0",
+    "job_id": "eed548c0-f25e-4fdc-9f1b-eba6e30541e2",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "processing",
+    "url": "/dapi/v1/document-file/9c647900-6454-4928-b030-769d1baabce0",
+    "file_hash": "7139ba447c4127258fda3b8c98f6f9a309540a5701ba8291be859361ce55f801",
+    "metadata": {
+      "etag": null,
+      "filename": "Sheikabdullah resume.pdf",
+      "page_count": 24,
+      "processed_pages": 24,
+      "total_pages": 24,
+      "progress_percent": 100,
+      "processing_stage": "extracting_text",
+      "size_bytes": 12890274,
+      "content_type": "application/pdf"
+    },
+    "entries": [],
+    "created_at": "2026-02-24T07:09:06.654151+00:00",
+    "updated_at": "2026-02-24T07:09:06.921703+00:00"
+  },
+  {
+    "document_id": "e2cd11f4-b659-4597-8aa4-9e1f0d023c66",
+    "job_id": "6005b29d-5f28-4eec-ba6e-6eebde4aceb2",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "processing",
+    "url": "/dapi/v1/document-file/e2cd11f4-b659-4597-8aa4-9e1f0d023c66",
+    "file_hash": "7139ba447c4127258fda3b8c98f6f9a309540a5701ba8291be859361ce55f801",
+    "metadata": {
+      "etag": null,
+      "filename": "Sheikabdullah resume.pdf",
+      "page_count": 24,
+      "processed_pages": 0,
+      "total_pages": 24,
+      "progress_percent": 0,
+      "processing_stage": "extracting_text",
+      "size_bytes": 12890274,
+      "content_type": "application/pdf"
+    },
+    "entries": [],
+    "created_at": "2026-02-24T07:13:25.071093+00:00",
+    "updated_at": "2026-02-24T07:13:25.089809+00:00"
+  },
+  {
+    "document_id": "f1179616-cb98-4a58-9a54-008459c85831",
+    "job_id": "4f800b16-7503-4634-9d37-a19480b685dd",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "processing",
+    "url": "/dapi/v1/document-file/f1179616-cb98-4a58-9a54-008459c85831",
+    "file_hash": "7139ba447c4127258fda3b8c98f6f9a309540a5701ba8291be859361ce55f801",
+    "metadata": {
+      "etag": null,
+      "filename": "Sheikabdullah resume.pdf",
+      "page_count": 24,
+      "processed_pages": 0,
+      "total_pages": 24,
+      "progress_percent": 0,
+      "processing_stage": "extracting_text",
+      "size_bytes": 12890274,
+      "content_type": "application/pdf"
+    },
+    "entries": [],
+    "created_at": "2026-02-24T07:13:38.002735+00:00",
+    "updated_at": "2026-02-24T07:13:38.029258+00:00"
+  },
+  {
+    "document_id": "809190f9-c48f-4891-89dc-9e9a34f799fa",
+    "job_id": "99bed413-879e-4046-bab7-f52ed703c2e9",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "processing",
+    "url": "/dapi/v1/document-file/809190f9-c48f-4891-89dc-9e9a34f799fa",
+    "file_hash": "7139ba447c4127258fda3b8c98f6f9a309540a5701ba8291be859361ce55f801",
+    "metadata": {
+      "etag": null,
+      "filename": "Sheikabdullah resume.pdf",
+      "page_count": 24,
+      "processed_pages": 0,
+      "total_pages": 24,
+      "progress_percent": 0,
+      "processing_stage": "extracting_text",
+      "size_bytes": 12890274,
+      "content_type": "application/pdf"
+    },
+    "entries": [],
+    "created_at": "2026-02-24T07:17:25.177630+00:00",
+    "updated_at": "2026-02-24T07:17:25.198349+00:00"
+  },
+  {
+    "document_id": "32046e5b-0871-4286-b6f0-ed941791ac11",
+    "job_id": "be7e1cd7-9b7f-4bfb-b105-2d8ac2cc8bfa",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "processing",
+    "url": "/dapi/v1/document-file/32046e5b-0871-4286-b6f0-ed941791ac11",
+    "file_hash": "7139ba447c4127258fda3b8c98f6f9a309540a5701ba8291be859361ce55f801",
+    "metadata": {
+      "etag": null,
+      "filename": "Sheikabdullah resume.pdf",
+      "page_count": 24,
+      "processed_pages": 0,
+      "total_pages": 24,
+      "progress_percent": 0,
+      "processing_stage": "extracting_text",
+      "size_bytes": 12890274,
+      "content_type": "application/pdf"
+    },
+    "entries": [],
+    "created_at": "2026-02-24T07:20:02.692563+00:00",
+    "updated_at": "2026-02-24T07:20:02.714772+00:00"
+  },
+  {
+    "document_id": "afe7a5a0-9696-46ae-87ad-8e107f5d5f04",
+    "job_id": "4ea0b130-8b6b-4f48-a866-efec74a1b34b",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "completed",
+    "url": "/dapi/v1/document-file/afe7a5a0-9696-46ae-87ad-8e107f5d5f04",
+    "file_hash": "2244f16d3da15ad0e33b2ff0bb343441811ffaf9e25bccc0d3c47fee84ca8d89",
+    "metadata": {
+      "etag": null,
+      "filename": "afe7a5a0-9696-46ae-87ad-8e107f5d5f04.pdf",
+      "page_count": 3,
+      "processed_pages": 3,
+      "total_pages": 3,
+      "progress_percent": 100,
+      "processing_stage": "completed",
+      "size_bytes": 118171,
+      "content_type": "application/pdf"
+    },
+    "entries": [
+      {
+        "id": "58066c29-e128-4afb-bf9e-99b556812096",
+        "token_id": "25bf0026-0eb8-485e-88af-4574a03751c8",
+        "status": "completed",
+        "cost": 10.44,
+        "cost_currency": "INR",
+        "processing_time_seconds": 1.78,
+        "created_at": "2026-02-24T07:21:24.042043+00:00",
+        "updated_at": "2026-02-24T07:21:25.823293+00:00",
+        "is_deduplicated": true,
+        "is_valid": true,
+        "parsed_data": {
+          "first_name": "CURRICULUM",
+          "last_name": "VITAE",
+          "phone_number": "+91 8424076743",
+          "email": "faiyaz47@yahoo.com",
+          "date_of_birth": "27/12/1986",
+          "gender": "Male",
+          "religion": "",
+          "marital_status": "Single",
+          "nationality_country_name": "India",
+          "country_region": "Via DMCH",
+          "city": "Vill +Post NARSARA",
+          "postal_code": "846003",
+          "languages": [
+            "Hindi",
+            "English Urdu",
+            "English",
+            "Urdu"
+          ],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": 3,
+          "passport_number": "N8385470",
+          "passport_expiry_date": "",
+          "skills": [
+            {
+              "skill_name": "excel"
+            },
+            {
+              "skill_name": "maintenance"
+            }
+          ],
+          "education": "3 Years Diploma Electronics & Communication Engineer.",
+          "education_degree": "3 Years Diploma Electronics & Communication Engineer.",
+          "about_description_summary": "3 Years Diploma Electronics & Communication Engineer. Work Experience 1) 2 years working with Shetty infraservices Pvt Ltd as an BMS (Building Management System) BMS Operator in Parinee Devlopers BKC Site.Mumbai.",
+          "linkedin_url": "",
+          "gulf_experience": true
+        },
+        "feedback_data": {
+          "first_name": "CURRICULUM",
+          "last_name": "VITAE",
+          "phone_number": "+91 8424076743",
+          "email": "faiyaz47@yahoo.com",
+          "date_of_birth": "27/12/1986",
+          "gender": "Male",
+          "religion": "",
+          "marital_status": "Single",
+          "nationality_country_name": "India",
+          "country_region": "Via DMCH",
+          "city": "Vill +Post NARSARA",
+          "postal_code": "846003",
+          "languages": [
+            "Hindi",
+            "English Urdu",
+            "English",
+            "Urdu"
+          ],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": 3,
+          "gulf_expierence": true,
+          "passport_number": "N8385470",
+          "passport_expiry_date": "",
+          "skills": [
+            "excel",
+            "maintenance"
+          ],
+          "education": [
+            {
+              "degree": "3 Years Diploma Electronics & Communication Engineer.",
+              "field_of_study": "",
+              "institution": "",
+              "graduation_year": null
+            },
+            {
+              "degree": "Operator in Parinee Devlopers BKC Site.Mumbai.",
+              "field_of_study": "",
+              "institution": "",
+              "graduation_year": null
+            },
+            {
+              "degree": "Course : Diploma Electronics & Communication Engineer.",
+              "field_of_study": "",
+              "institution": "",
+              "graduation_year": null
+            }
+          ],
+          "education_degree": "3 Years Diploma Electronics & Communication Engineer.",
+          "about_description_summary": "3 Years Diploma Electronics & Communication Engineer. Work Experience 1) 2 years working with Shetty infraservices Pvt Ltd as an BMS (Building Management System) BMS Operator in Parinee Devlopers BKC Site.Mumbai.",
+          "linkedin_url": "",
+          "raw_text": "CURRICULUM VITAE\nMD FAIYAZ AHMAD\nVill +Post NARSARA ,Via DMCH ,Dist.Darbhanga ,Bihar, India\nEmail:faiyaz47@yahoo.com,\nMobile no:- +91 9798650755. ,,,, +91 8424076743\nSummary\n3 Years Diploma Electronics & Communication Engineer.\nWork Experience\n1) 2 years working with Shetty infraservices Pvt Ltd as an BMS (Building Management System) BMS\nOperator in Parinee Devlopers BKC Site.Mumbai.\n2) 3 years working with Honeywell Automation India Ltd.BMS Operator for Electronic Security System\nAt Tata Consultancy Services (TCS) Site. ACS, FAS,CCTV Camera.TAC VISTA System. Version 4.1.1\n3) One and half years (18th Month) working gulf Experience of Allied Maintenance Company BMS\nOperator Project of EMAAR Jeddah Gate KSA.\nJob Description\n Worked on EBI R4 10.1 Access Control System and Programming of Cards Access Doors &\nReports Installation of Controller Panel Readers (BT843,BT900)etc. Mentanance of System\nIncluding Checking of Readers and Access Doors Integrating with Fire Alarm System to release\nAccess Doors in Fire Condition.\n Working of FAS (Fire Alarm System) of XLS 1000,XLS 200,XLS 60.\n Working of CCTV (Close Circuit Television) Virson of DVM 202 System.(Digital Video\nManager) & Taking Backup of CCTV Camera.\n Working of LTS (Laptop Tracking System) Vesda System,Water Leakage System, Checkig and\nMentanance of Novec Gas.\n Supervise key Personnel’s in doing Preventive and Corrective Maintenance Safely and adherence\nwith the local Company Safety Codes.\n Perform other tasks and Directly Report to the Admin.\n Downloading of Controller.\nBMS Service.\n Conduct Monthly wise fire drill and bomb threat drill.\n Attending Fault from System –Fire alarm system (Addressable,Conventional system).\n Conduct monthly wise CCTV drill.\n Installation and maintenance of CCTV Cameras-Analogue and Digital-Johnson Control,\nHoneywell.\n Maintenance and Services of Access Control System Honeywell and Schneider.\n Participate in Emergency Response Team as per protocols.\n Interfacing fire modules with Access control system, PA and AHU for tripping in case of fire.\n Service & maintenance IBMS & BMS system.\n Coordinating with Clients, Consultants, Contractors, Vendors. and TPC.\nProfile and Skills\nA Committed, Versatile, Articulate and personable individual with a broad array of skills and experiences,\nhighly motivated, with the ability to work under pressure and with minimum supervision With vast\nknowledge in CCTV,BMS,FAS & Access Control System emergency response team that conduct\nelevator rescue, attend any fire alarm and other emergency concerns to ensure safety of the guests and\nproperty.\nTechnical Skill\n Basic C Programming.\n Microprocessor.\n Microcontroller.\n Basic Networking LAN, WAN, MAN.\nIndustrial Operation and Control of DDC & MCC.\n Water level System.\n FAHU,AHU,FCU.\n Exhaust fans.\n Emergency fans.\n(Parking Jet fan, Parking Supply fan, Parking Extract fan, Lift lobby & Stairwell Pressurization\nfan, Smoke Management Exhaust fan).\n Submersible pump Irrigation pump.\n Lighting Control Panel.\nKey components\nBrand-Siemens & Schneider\nDDC Controller and its Modules, Modbus, Control Relays, Control Transformer etc.\nComputer literacy\nMS Office (Excel, Power point).\nBasic knowledge:\nSemiconductor , Device , Electronic Device , Digital Electronics & PLC.\nHighest Education.\nCollegiate : Sri Krishna Polytechnic Bangalore.\nCourse : Diploma Electronics & Communication Engineer.\nBangalore. (90)\nPersonal Information:\nDate of Birth : 27/12/1986\nGender : Male.\nNationality : Indian.\nMarital Status : Single.\nLanguage : Hindi,English.Urdu.\nPermanent Address:\nVill+Post : Narsara\nVia : DMCH\nDist : Darbhanga\nPS : Bishanpur\nPin no. : 846003\nBihar\nPassport no. : # N8385470\nDeclaration:\nI hereby declare that all the statement made by me are true and complete to the best\nof my knowledge and belief."
+        },
+        "validation_errors": []
+      }
+    ],
+    "created_at": "2026-02-24T07:21:24.042043+00:00",
+    "updated_at": "2026-02-24T07:21:25.823329+00:00"
+  },
+  {
+    "document_id": "8a4c8691-7778-4510-8f20-a243560e6a09",
+    "job_id": "c8b03d61-70a9-4211-92c1-00a80450c054",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "processing",
+    "url": "/dapi/v1/document-file/8a4c8691-7778-4510-8f20-a243560e6a09",
+    "file_hash": "7139ba447c4127258fda3b8c98f6f9a309540a5701ba8291be859361ce55f801",
+    "metadata": {
+      "etag": null,
+      "filename": "Sheikabdullah resume.pdf",
+      "page_count": 24,
+      "processed_pages": 0,
+      "total_pages": 24,
+      "progress_percent": 0,
+      "processing_stage": "queued",
+      "size_bytes": 12890274,
+      "content_type": "application/pdf"
+    },
+    "entries": [],
+    "created_at": "2026-02-24T07:22:32.387401+00:00",
+    "updated_at": "2026-02-24T07:22:32.387420+00:00"
+  },
+  {
+    "document_id": "b2392d5a-f10a-41b3-946e-0f2fe11a2d95",
+    "job_id": "7afd363a-abb0-4d98-b09c-67e04e53fb4a",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "completed",
+    "url": "/dapi/v1/document-file/b2392d5a-f10a-41b3-946e-0f2fe11a2d95",
+    "file_hash": "b8742e32f083de349eee51504a735af00e87243bde73c40f7e10e6168e39d034",
+    "metadata": {
+      "etag": null,
+      "filename": "b2392d5a-f10a-41b3-946e-0f2fe11a2d95.jpeg",
+      "page_count": 1,
+      "size_bytes": 106042,
+      "content_type": "image/jpeg"
+    },
+    "entries": [
+      {
+        "id": "8e59f11e-b01f-4eff-8185-0498a4571df3",
+        "token_id": "e24fdee9-e654-478f-bd6a-18a5fb1ac789",
+        "status": "completed",
+        "cost": 10.44,
+        "cost_currency": "INR",
+        "processing_time_seconds": 50.46,
+        "created_at": "2026-02-24T07:26:41.268799+00:00",
+        "updated_at": "2026-02-24T07:27:31.729837+00:00",
+        "is_deduplicated": false,
+        "is_valid": true,
+        "parsed_data": {
+          "first_name": "Akhtar",
+          "last_name": "Ali",
+          "phone_number": "",
+          "email": "",
+          "date_of_birth": "",
+          "gender": "",
+          "religion": "",
+          "marital_status": "",
+          "nationality_country_name": "",
+          "country_region": "",
+          "city": "Failed to load video: PlatformException(VideoError",
+          "postal_code": "640020",
+          "languages": [],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": null,
+          "passport_number": "",
+          "passport_expiry_date": "",
+          "skills": [
+            {
+              "skill_name": "recruitment"
+            }
+          ],
+          "education": "",
+          "education_degree": "",
+          "about_description_summary": "@akhtar_alikhan 3 weeks ago Failed to load video: PlatformException(VideoError, Video player had error GO.I: MediaCodecVideoRenderer error, index=0, format=Format(0, null, video/mp4, video/avc, ColorInfo(BT709, Limited range, SDR SMPTE 170M, false, 8bit Luma, 8bit Chroma)], [-1, -1]), format_supported=YES, null, null) Retry",
+          "linkedin_url": "",
+          "gulf_experience": true
+        },
+        "feedback_data": {
+          "first_name": "Akhtar",
+          "last_name": "Ali",
+          "phone_number": "",
+          "email": "",
+          "date_of_birth": "",
+          "gender": "",
+          "religion": "",
+          "marital_status": "",
+          "nationality_country_name": "",
+          "country_region": "",
+          "city": "Failed to load video: PlatformException(VideoError",
+          "postal_code": "640020",
+          "languages": [],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": null,
+          "gulf_expierence": true,
+          "passport_number": "",
+          "passport_expiry_date": "",
+          "skills": [
+            "recruitment"
+          ],
+          "education": [],
+          "education_degree": "",
+          "about_description_summary": "@akhtar_alikhan 3 weeks ago Failed to load video: PlatformException(VideoError, Video player had error GO.I: MediaCodecVideoRenderer error, index=0, format=Format(0, null, video/mp4, video/avc, ColorInfo(BT709, Limited range, SDR SMPTE 170M, false, 8bit Luma, 8bit Chroma)], [-1, -1]), format_supported=YES, null, null) Retry",
+          "linkedin_url": ""
+        },
+        "validation_errors": []
+      }
+    ],
+    "created_at": "2026-02-24T07:26:41.268799+00:00",
+    "updated_at": "2026-02-24T07:27:31.729872+00:00"
+  },
+  {
+    "document_id": "37a17b72-badb-4361-8add-90fddaba396c",
+    "job_id": "6e895abc-8abe-4b35-883f-0ad633f94991",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "completed",
+    "url": "/dapi/v1/document-file/37a17b72-badb-4361-8add-90fddaba396c",
+    "file_hash": "b8742e32f083de349eee51504a735af00e87243bde73c40f7e10e6168e39d034",
+    "metadata": {
+      "etag": null,
+      "filename": "37a17b72-badb-4361-8add-90fddaba396c.jpeg",
+      "page_count": 1,
+      "size_bytes": 106042,
+      "content_type": "image/jpeg"
+    },
+    "entries": [
+      {
+        "id": "9853f015-d699-4eb7-9939-98cf0099dbb9",
+        "token_id": "956078ee-d7f1-4504-a570-0d3f752afc4f",
+        "status": "completed",
+        "cost": 10.44,
+        "cost_currency": "INR",
+        "processing_time_seconds": 57.49,
+        "created_at": "2026-02-24T07:28:16.733588+00:00",
+        "updated_at": "2026-02-24T08:31:26.682411+00:00",
+        "is_deduplicated": true,
+        "is_valid": true,
+        "parsed_data": {
+          "first_name": "Akhtar",
+          "last_name": "Ali",
+          "phone_number": "",
+          "email": "",
+          "date_of_birth": "",
+          "gender": "",
+          "religion": "",
+          "marital_status": "",
+          "nationality_country_name": "",
+          "country_region": "",
+          "city": "Failed to load video: PlatformException(VideoError",
+          "postal_code": "640020",
+          "languages": [],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": null,
+          "passport_number": "",
+          "passport_expiry_date": "",
+          "skills": [
+            {
+              "skill_name": "recruitment"
+            }
+          ],
+          "education": "",
+          "education_degree": "",
+          "about_description_summary": "@akhtar_alikhan 3 weeks ago Failed to load video: PlatformException(VideoError, Video player had error GO.I: MediaCodecVideoRenderer error, index=0, format=Format(0, null, video/mp4, video/avc, ColorInfo(BT709, Limited range, SDR SMPTE 170M, false, 8bit Luma, 8bit Chroma)], [-1, -1]), format_supported=YES, null, null) Retry",
+          "linkedin_url": "",
+          "gulf_experience": true
+        },
+        "feedback_data": {
+          "first_name": "Akhtar",
+          "last_name": "Ali",
+          "phone_number": "",
+          "email": "",
+          "date_of_birth": "",
+          "gender": "",
+          "religion": "",
+          "marital_status": "",
+          "nationality_country_name": "",
+          "country_region": "",
+          "city": "Failed to load video: PlatformException(VideoError",
+          "postal_code": "640020",
+          "languages": [],
+          "industry_type": "",
+          "designation_or_position": "",
+          "total_experience": null,
+          "gulf_expierence": true,
+          "passport_number": "",
+          "passport_expiry_date": "",
+          "skills": [
+            "recruitment"
+          ],
+          "education": [],
+          "education_degree": "",
+          "about_description_summary": "@akhtar_alikhan 3 weeks ago Failed to load video: PlatformException(VideoError, Video player had error GO.I: MediaCodecVideoRenderer error, index=0, format=Format(0, null, video/mp4, video/avc, ColorInfo(BT709, Limited range, SDR SMPTE 170M, false, 8bit Luma, 8bit Chroma)], [-1, -1]), format_supported=YES, null, null) Retry",
+          "linkedin_url": ""
+        },
+        "validation_errors": []
+      }
+    ],
+    "created_at": "2026-02-24T07:28:16.733588+00:00",
+    "updated_at": "2026-02-24T08:31:26.682461+00:00"
+  },
+  {
+    "document_id": "7ba2fe11-966c-4aa4-8b92-53c7e86c10b0",
+    "job_id": "11c75c0e-35a3-4041-87a9-7d400698d1fa",
+    "parser_id": "f92700",
+    "environment": "dev",
+    "status": "processing",
+    "url": "/dapi/v1/document-file/7ba2fe11-966c-4aa4-8b92-53c7e86c10b0",
+    "file_hash": "dff2c952c235fdeaa0f05551380776bd7b45b76dd76a68a2ca09cb1e75e6afe3",
+    "metadata": {
+      "etag": null,
+      "filename": "Production-engineer-Resume-Sample.jpg",
+      "page_count": 1,
+      "processed_pages": 0,
+      "total_pages": 1,
+      "progress_percent": 0,
+      "processing_stage": "queued",
+      "size_bytes": 395173,
+      "content_type": "image/jpeg"
+    },
+    "entries": [],
+    "created_at": "2026-02-24T08:32:56.780145+00:00",
+    "updated_at": "2026-02-24T08:32:56.780160+00:00"
   }
 ]

@@ -9,12 +9,14 @@ import os
 import base64
 import hmac
 import mimetypes
+import atexit
+from concurrent.futures import ThreadPoolExecutor
 from threading import Lock
 from datetime import datetime, timezone
 from pathlib import Path
 from uuid import uuid4
 
-from fastapi import BackgroundTasks, FastAPI, File, Form, Header, HTTPException, Query, UploadFile
+from fastapi import FastAPI, File, Form, Header, HTTPException, Query, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, Response
 
@@ -51,11 +53,92 @@ DATASET_PATH = Path("data/resume_training_seed.json")
 MODEL_PATH = Path("models/resume_mapping_model.json")
 SESSION_STORE_PATH = Path("data/feedback_sessions.json")
 FEEDBACK_LOG_PATH = Path("data/feedback_log.json")
+FEEDBACK_FIELD_CHANGES_PATH = Path("data/feedback_field_changes.json")
 TRAINING_EVENTS_PATH = Path("data/training_events.json")
 FEEDBACK_MEMORY_PATH = Path("data/feedback_memory.json")
 ASYNC_DOCUMENTS_PATH = Path("data/async_documents.json")
 UPLOADS_DIR = Path("data/uploads")
 ASYNC_DOC_LOCK = Lock()
+
+
+def _async_worker_count() -> int:
+    try:
+        configured = int(os.getenv("ASYNC_OCR_WORKERS", "0"))
+    except Exception:
+        configured = 0
+    if configured > 0:
+        return configured
+    cpu = os.cpu_count() or 2
+    return max(1, min(1, cpu))
+
+
+ASYNC_OCR_EXECUTOR = ThreadPoolExecutor(max_workers=_async_worker_count(), thread_name_prefix="ocr-worker")
+atexit.register(lambda: ASYNC_OCR_EXECUTOR.shutdown(wait=False, cancel_futures=True))
+
+
+def _format_dd_mm_yyyy(day: int, month: int, year: int) -> str:
+    return f"{day:02d}/{month:02d}/{year:04d}"
+
+
+def _parse_dob_to_dd_mm_yyyy(raw: object) -> str | None:
+    value = str(raw or "").strip()
+    if not value:
+        return None
+
+    clean = re.sub(r"\s+", " ", value.replace(",", " ")).strip()
+
+    # yyyy-mm-dd / yyyy/mm/dd / yyyy.mm.dd
+    m = re.match(r"^(\d{4})[\/\.-](\d{1,2})[\/\.-](\d{1,2})$", clean)
+    if m:
+        year, month, day = int(m.group(1)), int(m.group(2)), int(m.group(3))
+        try:
+            datetime(year, month, day)
+            return _format_dd_mm_yyyy(day, month, year)
+        except Exception:
+            return None
+
+    # dd-mm-yyyy / dd/mm/yy / dd.mm.yyyy
+    m = re.match(r"^(\d{1,2})[\/\.-](\d{1,2})[\/\.-](\d{2,4})$", clean)
+    if m:
+        day, month, year = int(m.group(1)), int(m.group(2)), int(m.group(3))
+        if year < 100:
+            year += 1900 if year > 30 else 2000
+        try:
+            datetime(year, month, day)
+            return _format_dd_mm_yyyy(day, month, year)
+        except Exception:
+            return None
+
+    # ISO with time (e.g. 1993-02-15T00:00:00)
+    try:
+        dt = datetime.fromisoformat(clean.replace("Z", "+00:00"))
+        return _format_dd_mm_yyyy(dt.day, dt.month, dt.year)
+    except Exception:
+        pass
+
+    for fmt in ("%d %b %Y", "%d %B %Y", "%b %d %Y", "%B %d %Y"):
+        try:
+            dt = datetime.strptime(clean, fmt)
+            return _format_dd_mm_yyyy(dt.day, dt.month, dt.year)
+        except Exception:
+            continue
+
+    return None
+
+
+def _normalize_dob_fields(payload: object, key_hint: str = "") -> object:
+    if isinstance(payload, dict):
+        out = {}
+        for k, v in payload.items():
+            out[k] = _normalize_dob_fields(v, str(k))
+        return out
+    if isinstance(payload, list):
+        return [_normalize_dob_fields(item, key_hint) for item in payload]
+    if isinstance(payload, str):
+        if re.search(r"(dob|date[_\s]*of[_\s]*birth|birth[_\s]*date)", key_hint, flags=re.IGNORECASE):
+            normalized = _parse_dob_to_dd_mm_yyyy(payload)
+            return normalized if normalized else payload
+    return payload
 
 
 def _load_json_list(path: Path) -> list:
@@ -151,6 +234,7 @@ def _convert_skills_for_api(skills: object) -> list:
 
 def _normalize_parsed_for_api(parsed: dict) -> dict:
     row = dict(parsed)
+    row = _normalize_dob_fields(row)
     row["skills"] = _convert_skills_for_api(row.get("skills", []))
     row["education"] = row.get("education_degree") or ""
     row["gulf_experience"] = row.get("gulf_expierence")
@@ -198,6 +282,28 @@ def _upsert_document(updated: dict) -> None:
         _save_async_documents(docs)
 
 
+def _mutate_document(document_id: str, mutator) -> bool:
+    with ASYNC_DOC_LOCK:
+        docs = _load_async_documents()
+        changed = False
+        found = False
+        for row in docs:
+            if str(row.get("document_id", "")) != str(document_id):
+                continue
+            found = True
+            changed = bool(mutator(row))
+            if changed:
+                row["updated_at"] = _now_iso()
+            break
+        if found and changed:
+            _save_async_documents(docs)
+        return found
+
+
+def _queue_async_document(**kwargs) -> None:
+    ASYNC_OCR_EXECUTOR.submit(_process_async_document, **kwargs)
+
+
 def _process_async_document(
     document_id: str,
     parser_id: str,
@@ -214,8 +320,27 @@ def _process_async_document(
     created_at = _now_iso()
     try:
         path = Path(source_path)
-        raw_text = extract_raw_text(path, preprocess=True, fast=True, pdf_dpi=150 if page_count >= 12 else 180)
+
+        target_dpi = 180
+        use_preprocess = True
+        if page_count >= 20:
+            target_dpi = 105
+            use_preprocess = False
+        elif page_count >= 12:
+            target_dpi = 140
+
+        raw_text = extract_raw_text(
+            path,
+            preprocess=use_preprocess,
+            fast=True,
+            pdf_dpi=target_dpi,
+            progress_callback=None,
+        )
         parsed = parse_resume_text(raw_text, mode="balanced")
+        # Keep async flow consistent with /test flow by applying learned
+        # corrections for matching raw-text fingerprints.
+        parsed = _apply_feedback_memory(parsed, raw_text)
+        parsed = _normalize_dob_fields(parsed)
         token_id = _register_session(parsed, mode=f"async:{parser_id}")
         parsed_api = _normalize_parsed_for_api(parsed)
         errors = _validation_errors(parsed_api)
@@ -250,7 +375,7 @@ def _process_async_document(
             "is_deduplicated": dedup_entry is not None,
             "is_valid": is_valid,
             "parsed_data": parsed_api,
-            "feedback_data": parsed,
+            "feedback_data": _strip_raw_text(parsed),
             "validation_errors": errors,
         }
         doc = {
@@ -473,6 +598,25 @@ def _find_session(token_id: str) -> dict | None:
     return None
 
 
+def _find_document_id_by_token(token_id: str) -> str:
+    docs = _load_async_documents()
+    for row in docs:
+        entries = row.get("entries", []) if isinstance(row.get("entries"), list) else []
+        for entry in entries:
+            if str(entry.get("token_id", "")) == token_id:
+                return str(row.get("document_id", "") or "")
+    return ""
+
+
+def _json_value_changed(old_value: object, new_value: object) -> bool:
+    try:
+        return json.dumps(old_value, sort_keys=True, ensure_ascii=False) != json.dumps(
+            new_value, sort_keys=True, ensure_ascii=False
+        )
+    except Exception:
+        return str(old_value) != str(new_value)
+
+
 @app.get("/health")
 def health() -> dict:
     return {"status": "ok"}
@@ -546,14 +690,13 @@ def get_document_file(
 @app.post("/dapi/v1/parser/{parser_id}/parse/async")
 async def parse_async_endpoint(
     parser_id: str,
-    background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
     environment: str = Form("dev"),
     authorization: str | None = Header(default=None),
 ) -> dict:
     _validate_authorization(authorization)
     suffix = Path(file.filename or "").suffix.lower()
-    if suffix not in {".pdf", ".png", ".jpg", ".jpeg", ".tiff", ".bmp", ".docx", ".txt"}:
+    if suffix not in {".pdf", ".png", ".jpg", ".jpeg", ".tiff", ".tif", ".bmp", ".webp", ".gif", ".docx", ".txt"}:
         raise HTTPException(status_code=400, detail=f"Unsupported file type: {suffix}")
 
     raw = await file.read()
@@ -581,6 +724,10 @@ async def parse_async_endpoint(
             "etag": None,
             "filename": file.filename or stored_path.name,
             "page_count": page_count,
+            "processed_pages": 0,
+            "total_pages": page_count,
+            "progress_percent": 0,
+            "processing_stage": "queued",
             "size_bytes": len(raw),
             "content_type": file.content_type or "application/octet-stream",
         },
@@ -590,8 +737,7 @@ async def parse_async_endpoint(
     }
     _upsert_document(doc)
 
-    background_tasks.add_task(
-        _process_async_document,
+    _queue_async_document(
         document_id=document_id,
         parser_id=parser_id,
         environment=environment,
@@ -614,7 +760,6 @@ async def parse_async_endpoint(
 @app.post("/dapi/v1/parser/{parser_id}/parse/async/batch")
 async def parse_async_batch_endpoint(
     parser_id: str,
-    background_tasks: BackgroundTasks,
     files: list[UploadFile] = File(...),
     environment: str = Form("dev"),
     authorization: str | None = Header(default=None),
@@ -626,7 +771,7 @@ async def parse_async_batch_endpoint(
     queued = []
     for file in files:
         suffix = Path(file.filename or "").suffix.lower()
-        if suffix not in {".pdf", ".png", ".jpg", ".jpeg", ".tiff", ".bmp", ".docx", ".txt"}:
+        if suffix not in {".pdf", ".png", ".jpg", ".jpeg", ".tiff", ".tif", ".bmp", ".webp", ".gif", ".docx", ".txt"}:
             continue
         raw = await file.read()
         if not raw:
@@ -651,6 +796,10 @@ async def parse_async_batch_endpoint(
                 "etag": None,
                 "filename": file.filename or stored_path.name,
                 "page_count": page_count,
+                "processed_pages": 0,
+                "total_pages": page_count,
+                "progress_percent": 0,
+                "processing_stage": "queued",
                 "size_bytes": len(raw),
                 "content_type": file.content_type or "application/octet-stream",
             },
@@ -659,8 +808,7 @@ async def parse_async_batch_endpoint(
             "updated_at": _now_iso(),
         }
         _upsert_document(doc)
-        background_tasks.add_task(
-            _process_async_document,
+        _queue_async_document(
             document_id=document_id,
             parser_id=parser_id,
             environment=environment,
@@ -793,9 +941,13 @@ def retrain_mapping_endpoint(payload: RetrainMappingRequest) -> RetrainMappingRe
 
 
 @app.post("/feedback", response_model=FeedbackResponse)
-def feedback_endpoint(payload: FeedbackRequest) -> FeedbackResponse:
+def feedback_endpoint(
+    payload: FeedbackRequest,
+    authorization: str | None = Header(default=None),
+) -> FeedbackResponse:
     if payload.rating < 1 or payload.rating > 5:
         raise HTTPException(status_code=400, detail="rating must be between 1 and 5")
+    auth_payload = _validate_authorization(authorization)
 
     session = _find_session(payload.token_id)
     if session is None:
@@ -805,6 +957,8 @@ def feedback_endpoint(payload: FeedbackRequest) -> FeedbackResponse:
     resolved_token_id = payload.token_id
     extracted_data = _strip_raw_text(payload.extracted_data.model_dump()) if payload.extracted_data else None
     corrected_data_raw = _strip_raw_text(payload.corrected_data.model_dump()) if payload.corrected_data else None
+    extracted_data = _normalize_dob_fields(extracted_data) if extracted_data is not None else None
+    corrected_data_raw = _normalize_dob_fields(corrected_data_raw) if corrected_data_raw is not None else None
     feedback_weight = _rating_to_feedback_weight(payload.rating)
     feedback_accuracy = float(payload.rating) / 5.0
 
@@ -821,11 +975,47 @@ def feedback_endpoint(payload: FeedbackRequest) -> FeedbackResponse:
         corrected_data = _merge_with_baseline(extracted_data, baseline_pred, corrected_fields)
 
     if corrected_data is not None:
+        corrected_data = _normalize_dob_fields(corrected_data)
         feedback_accuracy = float(evaluate(baseline_pred or {}, corrected_data).get("overall", 0.0))
+
+    user_id = str(payload.user_id or "").strip()
+    if not user_id:
+        if isinstance(auth_payload, dict) and str(auth_payload.get("sub", "")).strip():
+            user_id = str(auth_payload.get("sub", "")).strip()
+        elif authorization:
+            user_id = "api_token_user"
+        else:
+            user_id = "anonymous"
+    document_id = _find_document_id_by_token(resolved_token_id)
+
+    if corrected_data is not None:
+        field_changes = _load_json_list(FEEDBACK_FIELD_CHANGES_PATH)
+        for field_name in sorted(set(list(baseline_pred.keys()) + list(corrected_data.keys()))):
+            if field_name == "raw_text":
+                continue
+            old_value = baseline_pred.get(field_name)
+            new_value = corrected_data.get(field_name)
+            if not _json_value_changed(old_value, new_value):
+                continue
+            field_changes.append(
+                {
+                    "user_id": user_id,
+                    "document_id": document_id,
+                    "token_id": resolved_token_id,
+                    "field_name": field_name,
+                    "old_value": old_value,
+                    "new_value": new_value,
+                    "timestamp": submitted_at,
+                    "rating": payload.rating,
+                }
+            )
+        _save_json_list(FEEDBACK_FIELD_CHANGES_PATH, field_changes)
 
     feedback_log = _load_json_list(FEEDBACK_LOG_PATH)
     feedback_log.append(
         {
+            "user_id": user_id,
+            "document_id": document_id,
             "token_id": resolved_token_id,
             "rating": payload.rating,
             "feedback_weight": feedback_weight,
@@ -841,7 +1031,7 @@ def feedback_endpoint(payload: FeedbackRequest) -> FeedbackResponse:
     retrained = False
     train_source = corrected_data
     if train_source is not None:
-        train_row = dict(train_source)
+        train_row = _normalize_dob_fields(dict(train_source))
         train_row["_feedback_rating"] = payload.rating
         train_row["_feedback_weight"] = feedback_weight
         train_row["_feedback_submitted_at"] = submitted_at
@@ -1021,7 +1211,7 @@ async def test_endpoint(
     pdf_dpi: int = Form(220),
 ) -> ExtractionWithTokenResponse:
     suffix = Path(resume_file.filename or "").suffix.lower()
-    if suffix not in {".pdf", ".png", ".jpg", ".jpeg", ".tiff", ".bmp", ".docx", ".txt"}:
+    if suffix not in {".pdf", ".png", ".jpg", ".jpeg", ".tiff", ".tif", ".bmp", ".webp", ".gif", ".docx", ".txt"}:
         raise HTTPException(status_code=400, detail=f"Unsupported file type: {suffix}")
     if mode not in {"fast", "balanced", "resume_bert"}:
         raise HTTPException(status_code=400, detail=f"Unsupported mode: {mode}")
@@ -1039,6 +1229,7 @@ async def test_endpoint(
         )
         parsed = parse_resume_text(raw_text, mode=mode)
         parsed = _apply_feedback_memory(parsed, raw_text)
+        parsed = _normalize_dob_fields(parsed)
     except Exception as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     finally:
@@ -1064,7 +1255,7 @@ async def auto_test_llm_colab_endpoint(
     auto_train: bool = Form(True),
 ) -> AutoTrainLLMResponse:
     suffix = Path(resume_file.filename or "").suffix.lower()
-    supported_types = {".pdf", ".png", ".jpg", ".jpeg", ".tiff", ".bmp", ".docx", ".txt"}
+    supported_types = {".pdf", ".png", ".jpg", ".jpeg", ".tiff", ".tif", ".bmp", ".webp", ".gif", ".docx", ".txt"}
     if suffix not in supported_types:
         raise HTTPException(status_code=400, detail=f"Unsupported file type: {suffix}")
     if mode not in {"fast", "balanced", "resume_bert"}:
@@ -1101,6 +1292,7 @@ async def auto_test_llm_colab_endpoint(
                 max_new_tokens=llm_max_new_tokens,
                 debug_events=llm_debug,
             )
+            llm_parsed = _normalize_dob_fields(llm_parsed)
         else:
             llm_error = "OCR returned empty text; skipped LLM extraction."
             llm_debug.append("skipped_llm_call_because_raw_text_is_empty")

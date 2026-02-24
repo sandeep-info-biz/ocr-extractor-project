@@ -1,6 +1,7 @@
 {
   "first_names": [
     "Kashyap",
+    "KARTHIKEYAN",
     "CURRICULUM",
     "Demo",
     "Neha",
@@ -25,6 +26,7 @@
   ],
   "last_names": [
     "Pandya",
+    "LAKSHMANAN",
     "VITAE",
     "User",
     "Patel",
@@ -47,6 +49,8 @@
     "Bansal"
   ],
   "cities": [
+    "Aarupadai Veedu Institute of Technology",
+    "Rajkot",
     "“Pitru Krupa”",
     "Vill +Post NARSARA",
     "Ahmedabad",
@@ -68,6 +72,7 @@
     "Chennai"
   ],
   "country_regions": [
+    "affiliated to Madras University",
     "Via DMCH",
     "Gujarat",
     "Maharashtra",
@@ -88,6 +93,7 @@
   ],
   "postal_codes": [
     "360005",
+    "600116",
     "846003",
     "201301",
     "395010",
@@ -113,6 +119,7 @@
   ],
   "date_of_births": [
     "25/04/1986",
+    "12/11/1981",
     "27/12/1986",
     "1997-05-15",
     "1996-02-10",
@@ -145,23 +152,25 @@
     "Islam"
   ],
   "marital_statuses": [
-    "Single",
-    "Married"
+    "Married",
+    "Single"
   ],
   "languages": [
     "English",
     "Hindi",
     "Gujarati",
+    "Tamil",
+    "Languages English",
+    "And Kannada",
     "Urdu",
     "Marathi",
-    "Languages English",
     "English Urdu",
+    "Languages Known",
     "Malayalam",
     "Bengali",
     "Bhojpuri",
     "Punjabi",
-    "Konkani",
-    "Tamil"
+    "Konkani"
   ],
   "industry_types": [
     "Information Technology",
@@ -196,6 +205,7 @@
     "Finance Executive"
   ],
   "passport_numbers": [
+    "Z4935373",
     "N8385470",
     "Z1234567",
     "M7654321",
@@ -244,7 +254,9 @@
   ],
   "education_degrees": [
     "• B.E. (Computer Engg.) – Completed in July",
+    "Bachelor of Electronics and Communication Engineering from",
     "3 Years Diploma Electronics & Communication Engineer.",
+    "Higher Degree : Bachelor of Electronicsand Communication Engineering",
     "B.Tech",
     "Bachelor of Technology",
     "Operator in Parinee Devlopers BKC Site.Mumbai.",
@@ -271,6 +283,7 @@
   ],
   "summaries": [
     "• Assembling of Hardware components and Installation of Software. • SAP, Mail Security, Cloud Security, Firewall, NAS Server & Security, CCTV. • MCSA & MCSE – Windows Server 2016. • Establishment of LAN Networks and Network Security.",
+    "Toworkinacompetitiveandchallengingworkenvironmentandtocontributethebestofmyabilitytowardsthe growth and development of the progressive company and to pursue a challenging career. ACADEMIC QUALIFICATION Bachelor of Electronics and Communication Engineering from Aarupadai Veedu Institute of Technology ,affiliated to Madras University, Chennai,India",
     "3 Years Diploma Electronics & Communication Engineer. Work Experience 1) 2 years working with Shetty infraservices Pvt Ltd as an BMS (Building Management System) BMS Operator in Parinee Devlopers BKC Site.Mumbai.",
     "Software engineer specializing in Java and microservices architecture. Experienced in developing scalable backend services.",
     "HR professional with expertise in recruitment and employee engagement. Proven track record in handling HR operations for IT teams.",
@@ -320,13 +333,14 @@
     "ERP",
     "Firewall",
     "Network Security",
+    "AutoCAD",
+    "CCNA",
     "Python",
     "Java",
     "MySQL",
     "Docker",
     "SEO",
     "Digital Marketing",
-    "AutoCAD",
     "SQL",
     "Selenium",
     "Manual Testing",
@@ -368,7 +382,6 @@
     "FastAPI",
     "REST APIs",
     "TestNG",
-    "CCNA",
     "Routing",
     "Switching",
     "Django",
