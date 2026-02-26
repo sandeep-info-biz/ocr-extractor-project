@@ -22,6 +22,12 @@ data/feedback_sessions.json
 data/feedback_log.json
 data/training_events.json
 data/feedback_memory.json
+data/async_documents.json
+data/async_job_queue.json
+data/.async_documents.lock
+data/.async_jobs.lock
+data/worker_heartbeats.json
+data/.worker_heartbeats.lock
 outputs/*.pdf
 outputs/*.png
 outputs/*.jpg

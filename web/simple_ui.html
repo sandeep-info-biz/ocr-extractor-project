@@ -66,6 +66,13 @@
       padding: 2rem 1rem;
     }
 
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+
     .wrap {
       max-width: 1400px;
       margin: 0 auto;
@@ -149,6 +156,15 @@
       font-size: 0.85rem;
       margin-top: 0.5rem;
       display: inline-block;
+    }
+
+    .err:empty {
+      display: none;
+    }
+
+    .auth-grid input {
+      min-width: 220px;
+      flex: 1 1 240px;
     }
 
     input[type="file"] {
@@ -400,7 +416,9 @@
         <h2 style="margin:0; display:flex; gap:6px; align-items:center;">SimplyParse · intelligent document console</h2>
         <div class="header-actions">
           <button id="btnTopHistory" type="button">History</button>
+          <button id="btnKillAll" type="button" style="background:var(--danger); border-color:var(--danger);">Kill all</button>
           <div class="theme-switch">
+            <button class="theme-btn" id="themeSystem" type="button">System</button>
             <button class="theme-btn active" id="themeLight" type="button">Light</button>
             <button class="theme-btn" id="themeDark" type="button">Dark</button>
           </div>
@@ -410,14 +428,14 @@
 
     <div class="card">
       <div style="margin-bottom:1.2rem;"><span class="pill">authentication</span></div>
-      <div class="row">
-        <input id="apiBase" placeholder="https://api.example.com" value="http://127.0.0.1:8000" />
-        <input id="username" placeholder="username" value="admin" />
-        <input id="password" placeholder="password" type="password" value="admin123" />
-        <button id="btnLogin" type="button">Login</button>
-        <span id="loginState" class="muted">Not logged in</span>
-      </div>
-      <div id="loginErr" class="err"></div>
+      <form id="loginForm" class="row auth-grid">
+        <input id="apiBase" placeholder="https://api.example.com" value="http://127.0.0.1:8000" aria-label="API base URL" autocomplete="url" />
+        <input id="username" placeholder="username" aria-label="Username" autocomplete="username" />
+        <input id="password" placeholder="password" type="password" aria-label="Password" autocomplete="current-password" />
+        <button id="btnLogin" type="submit">Login</button>
+        <span id="loginState" class="muted" role="status" aria-live="polite">Not logged in</span>
+      </form>
+      <div id="loginErr" class="err" role="alert" aria-live="assertive"></div>
     </div>
 
     <div class="card">
@@ -432,7 +450,8 @@
         <button id="btnBatch" type="button">Upload & process</button>
       </div>
       <div class="muted">manual fetch mode · feedback fine-tuning · live preview</div>
-      <div id="batchErr" class="err"></div>
+      <div id="queueHealth" class="muted" style="margin-top:6px;">Queue: - | Workers: -</div>
+      <div id="batchErr" class="err" role="alert" aria-live="assertive"></div>
     </div>
 
     <div id="docs"></div>
@@ -490,22 +509,39 @@
       const learningHistory = [];
       const accuracyHistory = [];
       const feedbackHistory = [];
+      let queueHealthTimer = null;
       const $ = (id) => document.getElementById(id);
 
       const htmlEl = document.documentElement;
+      const systemBtn = $("themeSystem");
       const lightBtn = $("themeLight");
       const darkBtn = $("themeDark");
+      const loginForm = $("loginForm");
+      const loginBtn = $("btnLogin");
 
-      function setTheme(theme) {
-        htmlEl.setAttribute("data-theme", theme);
-        localStorage.setItem("simplyparse-theme", theme);
-        lightBtn.classList.toggle("active", theme === "light");
-        darkBtn.classList.toggle("active", theme === "dark");
+      function resolvedTheme(mode) {
+        if (mode === "dark") return "dark";
+        if (mode === "light") return "light";
+        return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
       }
 
-      setTheme(localStorage.getItem("simplyparse-theme") || "light");
+      function setTheme(mode) {
+        const theme = resolvedTheme(mode);
+        htmlEl.setAttribute("data-theme", theme);
+        localStorage.setItem("simplyparse-theme", mode);
+        systemBtn.classList.toggle("active", mode === "system");
+        lightBtn.classList.toggle("active", mode === "light");
+        darkBtn.classList.toggle("active", mode === "dark");
+      }
+
+      setTheme(localStorage.getItem("simplyparse-theme") || "system");
+      systemBtn.addEventListener("click", () => setTheme("system"));
       lightBtn.addEventListener("click", () => setTheme("light"));
       darkBtn.addEventListener("click", () => setTheme("dark"));
+      window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+        const mode = localStorage.getItem("simplyparse-theme") || "system";
+        if (mode === "system") setTheme("system");
+      });
 
       function normalizeApiBase(raw) {
         const value = String(raw || "").trim();
@@ -801,6 +837,28 @@
         }
       }
 
+      async function checkQueueHealth() {
+        try {
+          if (!token) return;
+          const res = await fetch(apiUrl("/dapi/v1/queue/stats"), { headers: authHeaders() });
+          const data = await res.json();
+          if (!res.ok) return;
+          const queued = Number(data?.data?.queued || 0);
+          const processing = Number(data?.data?.processing || 0);
+          const activeWorkers = Number(data?.data?.active_workers || 0);
+          const busyWorkers = Number(data?.data?.busy_workers || 0);
+          const healthEl = $("queueHealth");
+          if (healthEl) {
+            healthEl.textContent = `Queue: queued=${queued}, processing=${processing}, failed=${Number(data?.data?.failed || 0)} | Workers: active=${activeWorkers}, busy=${busyWorkers}`;
+          }
+          if (queued > 0 && activeWorkers === 0) {
+            setErr("batchErr", `Jobs are queued (${queued}) and no active worker heartbeat found. Start worker: python main.py worker`);
+          } else if ($("batchErr")?.textContent?.includes("Jobs are queued")) {
+            setErr("batchErr", "");
+          }
+        } catch (_) {}
+      }
+
       function addFeedbackHistoryItem(item) {
         feedbackHistory.unshift(item);
         if (feedbackHistory.length > 100) feedbackHistory.length = 100;
@@ -862,6 +920,8 @@
         const feedbackData = entry && entry.feedback_data ? entry.feedback_data : parsed;
         const tokenId = entry && entry.token_id ? entry.token_id : "";
         const errorMessage = entry && entry.error_message ? String(entry.error_message) : "";
+        const queueStatus = String(doc.queue?.status || "");
+        const queueError = String(doc.queue?.last_error || "");
         const docId = doc.document_id || "unknown";
         const parserId = doc.parser_id || "";
         const canManualFetch = Boolean(parserId);
@@ -871,6 +931,8 @@
             <span class="pill">${status}</span>
           </div>
           <div class="muted" style="margin-top:5px;">document_id: ${docId}</div>
+          ${queueStatus ? `<div class="muted" style="margin-top:5px;">queue: ${queueStatus}${doc.queue?.attempts ? ` (attempts: ${doc.queue.attempts})` : ""}</div>` : ""}
+          ${queueError ? `<div class="err" style="margin-top:8px;">Queue error: ${queueError}</div>` : ""}
           ${errorMessage ? `<div class="err" style="margin-top:8px;">Error: ${errorMessage}</div>` : ""}
           <div class="grid doc-grid">
             <div class="preview-col">
@@ -926,9 +988,12 @@
         for (const el of docElements.values()) syncDocPreviewHeight(el);
       });
 
-      $("btnLogin").addEventListener("click", async () => {
+      loginForm.addEventListener("submit", async (ev) => {
+        ev.preventDefault();
         setErr("loginErr", "");
         try {
+          loginBtn.disabled = true;
+          loginBtn.textContent = "Logging in...";
           const fd = new FormData();
           fd.append("username", $("username").value.trim());
           fd.append("password", $("password").value);
@@ -941,8 +1006,16 @@
           loadFeedbackHistory();
           renderFeedbackHistory();
           refreshAccuracyGraph().catch(() => {});
+          checkQueueHealth().catch(() => {});
+          if (queueHealthTimer) clearInterval(queueHealthTimer);
+          queueHealthTimer = setInterval(() => {
+            checkQueueHealth().catch(() => {});
+          }, 5000);
         } catch (e) {
           setErr("loginErr", e.message || String(e));
+        } finally {
+          loginBtn.disabled = false;
+          loginBtn.textContent = "Login";
         }
       });
 
@@ -976,6 +1049,7 @@
             });
             upsertDoc(docsMap.get(docId));
           }
+          checkQueueHealth().catch(() => {});
         } catch (e) {
           setErr("batchErr", e.message || String(e));
         }
@@ -999,6 +1073,18 @@
                 : payload.status === "failed"
                   ? "Failed"
                   : "processing";
+            }
+            if (payload.status !== "completed" && payload.queue?.status === "queued") {
+              await checkQueueHealth();
+              const healthText = $("queueHealth")?.textContent || "";
+              if (healthText.includes("active=0")) {
+                setErr("batchErr", "Document is queued and no active worker heartbeat found. Start: python main.py worker");
+              } else {
+                setErr("batchErr", "Document is queued. Worker is running; wait and click Fetch response again.");
+              }
+            } else if (payload.status === "failed") {
+              const message = payload.entries?.[0]?.error_message || payload.queue?.last_error || "processing failed";
+              setErr("batchErr", message);
             }
           } catch (e) {
             if (stateEl) stateEl.textContent = "";
@@ -1062,6 +1148,31 @@
         feedbackHistory.length = 0;
         saveFeedbackHistory();
         renderFeedbackHistory();
+      });
+
+      $("btnKillAll").addEventListener("click", async () => {
+        try {
+          if (!token) throw new Error("Login first");
+          const yes = window.confirm("Kill worker and API processes and clear queue/worker state files?");
+          if (!yes) return;
+          setErr("batchErr", "");
+          const res = await fetch(apiUrl("/admin/kill-all-processes?stop_api=true&clear_state=true"), {
+            method: "POST",
+            headers: authHeaders(),
+          });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) throw new Error(data.detail || "kill request failed");
+          const killed = Array.isArray(data?.data?.killed_worker_pids) ? data.data.killed_worker_pids.join(", ") : "";
+          const cleared = Number(data?.data?.cleared_jobs || 0);
+          setErr("batchErr", `Kill requested. Worker PIDs: ${killed || "none"}, cleared jobs: ${cleared}. API will stop.`);
+          $("queueHealth").textContent = "Queue: - | Workers: -";
+          if (queueHealthTimer) {
+            clearInterval(queueHealthTimer);
+            queueHealthTimer = null;
+          }
+        } catch (e) {
+          setErr("batchErr", e.message || String(e));
+        }
       });
 
       $("btnTopHistory").addEventListener("click", () => {

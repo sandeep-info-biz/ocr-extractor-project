@@ -1,5 +1,43 @@
 # OCR Extractor Project
 
+## Target Architecture (Java + Python)
+
+- `Java (Spring Boot)`:
+  - Main backend entrypoint
+  - Thymeleaf UI
+  - File upload form and result rendering
+  - Calls Python API for extraction
+- `Python (FastAPI)`:
+  - OCR + ML extraction logic
+  - `/test` endpoint used by Java
+  - Optional async worker and training/feedback endpoints
+
+### Run full stack locally
+
+1. Start Python OCR/ML service:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python main.py api --host 127.0.0.1 --port 8000
+```
+
+2. Start Java backend + Thymeleaf UI (new terminal):
+
+```bash
+mvn spring-boot:run
+```
+
+3. Open:
+
+- `http://127.0.0.1:8080`
+
+Environment variables for Java:
+
+- `PYTHON_SERVICE_BASE_URL` (default `http://127.0.0.1:8000`)
+- `PYTHON_SERVICE_TIMEOUT_SECONDS` (default `180`)
+
 ## Run on Laptop (optimized)
 
 Use Python `3.11` for best compatibility and speed.
@@ -10,6 +48,29 @@ python -m venv .venv
 pip install -r requirements.txt
 python main.py api --host 127.0.0.1 --port 8000
 ```
+
+For production-style async processing (recommended), run OCR worker as a separate process:
+
+```bash
+# terminal 1
+python main.py api --host 127.0.0.1 --port 8000
+
+# terminal 2
+python main.py worker --poll-seconds 0.8 --max-attempts 3
+```
+
+Optional worker concurrency:
+
+```bash
+# example: run 2 OCR jobs in parallel inside worker process
+export ASYNC_WORKER_THREADS=2
+python main.py worker
+```
+
+Why this matters:
+- API process only queues jobs and responds quickly.
+- Worker process handles heavy OCR/ML extraction.
+- Large PDFs no longer block other API endpoints.
 
 Windows OCR prerequisites (for scanned PDFs/images):
 1. Install Tesseract OCR and add it to `PATH`.
@@ -70,6 +131,10 @@ Training data priority in feedback flow:
 Feedback-weighted learning:
 - User `rating` now influences training weight (`5` has highest weight).
 - Corrected entries are stored with feedback metadata and used to prioritize reliable patterns during mapping retrain.
+
+Async queue observability:
+- `GET /dapi/v1/queue/stats`
+- Returns queued / processing / failed job counts.
 
 Training/feedback analytics endpoint:
 - `GET /analytics/training-feedback`

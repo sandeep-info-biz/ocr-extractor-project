@@ -86,6 +86,39 @@
       "has_corrected_data": true,
       "retrained": true,
       "total_dataset_entries": 28
+    },
+    {
+      "timestamp": "2026-02-26T16:18:51.007485+00:00",
+      "token_id": "eb3f6fc3-9716-44a3-8356-e5f7a9f4786b",
+      "rating": 5,
+      "feedback_weight": 4,
+      "feedback_accuracy": 0.7,
+      "has_extracted_data": true,
+      "has_corrected_data": true,
+      "retrained": true,
+      "total_dataset_entries": 29
+    },
+    {
+      "timestamp": "2026-02-26T16:49:53.312498+00:00",
+      "token_id": "ef3cd2a3-2e99-4a85-ac14-99232625aeb2",
+      "rating": 5,
+      "feedback_weight": 4,
+      "feedback_accuracy": 0.6,
+      "has_extracted_data": true,
+      "has_corrected_data": true,
+      "retrained": true,
+      "total_dataset_entries": 30
+    },
+    {
+      "timestamp": "2026-02-26T16:51:41.851995+00:00",
+      "token_id": "239782ac-278f-44a3-97de-238ce07544fa",
+      "rating": 5,
+      "feedback_weight": 4,
+      "feedback_accuracy": 0.6,
+      "has_extracted_data": true,
+      "has_corrected_data": true,
+      "retrained": true,
+      "total_dataset_entries": 31
     }
   ],
   "retrain_events": [
@@ -144,6 +177,30 @@
       "total_dataset_entries": 28,
       "mapping_feature_count": 366,
       "check_average_overall_score": 1.0
+    },
+    {
+      "timestamp": "2026-02-26T16:18:51.007485+00:00",
+      "source": "feedback_endpoint",
+      "added_entries": 1,
+      "total_dataset_entries": 29,
+      "mapping_feature_count": 372,
+      "check_average_overall_score": 0.7
+    },
+    {
+      "timestamp": "2026-02-26T16:49:53.312498+00:00",
+      "source": "feedback_endpoint",
+      "added_entries": 1,
+      "total_dataset_entries": 30,
+      "mapping_feature_count": 380,
+      "check_average_overall_score": 0.6
+    },
+    {
+      "timestamp": "2026-02-26T16:51:41.851995+00:00",
+      "source": "feedback_endpoint",
+      "added_entries": 1,
+      "total_dataset_entries": 31,
+      "mapping_feature_count": 389,
+      "check_average_overall_score": 0.6
     }
   ]
 }

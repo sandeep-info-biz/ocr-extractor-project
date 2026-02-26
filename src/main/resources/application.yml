@@ -1,0 +1,20 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+  thymeleaf:
+    cache: false
+
+python:
+  service:
+    base-url: ${PYTHON_SERVICE_BASE_URL:http://127.0.0.1:8000}
+    timeout-seconds: ${PYTHON_SERVICE_TIMEOUT_SECONDS:180}
+    auth-token: ${PYTHON_SERVICE_AUTH_TOKEN:}
+    default-parser-id: ${PYTHON_SERVICE_DEFAULT_PARSER_ID:f92700}
+    default-environment: ${PYTHON_SERVICE_DEFAULT_ENVIRONMENT:dev}
+
+app:
+  login:
+    username: ${APP_LOGIN_USERNAME:admin}
+    password: ${APP_LOGIN_PASSWORD:admin123}

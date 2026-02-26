@@ -6,12 +6,12 @@ import re
 import math
 import time
 import os
+import signal
 import base64
 import hmac
 import mimetypes
-import atexit
-from concurrent.futures import ThreadPoolExecutor
-from threading import Lock
+from threading import Lock, Thread
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 from uuid import uuid4
@@ -23,7 +23,7 @@ from fastapi.responses import FileResponse, Response
 from app.evaluation import evaluate
 from app.llm_extractor import empty_llm_schema, run_lora_qlora_extraction
 from app.mapping_model import save_mapping_model, train_mapping_model_from_dataset
-from app.ocr import extract_raw_text
+from app.ocr import detect_pdf_kind, extract_raw_text
 from app.parser import parse_resume_text
 from app.pretrained_resume_model import MODEL_REGISTRY
 from app.schemas import (
@@ -35,6 +35,11 @@ from app.schemas import (
     RetrainMappingResponse,
     ResumeExtractedResponse,
 )
+
+try:
+    import fcntl
+except Exception:  # pragma: no cover - non-posix fallback
+    fcntl = None
 
 app = FastAPI(
     title="Resume OCR Extractor API",
@@ -57,23 +62,31 @@ FEEDBACK_FIELD_CHANGES_PATH = Path("data/feedback_field_changes.json")
 TRAINING_EVENTS_PATH = Path("data/training_events.json")
 FEEDBACK_MEMORY_PATH = Path("data/feedback_memory.json")
 ASYNC_DOCUMENTS_PATH = Path("data/async_documents.json")
+ASYNC_JOB_QUEUE_PATH = Path("data/async_job_queue.json")
+WORKER_HEARTBEAT_PATH = Path("data/worker_heartbeats.json")
 UPLOADS_DIR = Path("data/uploads")
 ASYNC_DOC_LOCK = Lock()
+ASYNC_QUEUE_LOCK = Lock()
+ASYNC_WORKER_LOCK = Lock()
+SUPPORTED_UPLOAD_SUFFIXES = {".pdf", ".png", ".jpg", ".jpeg", ".tiff", ".tif", ".bmp", ".webp", ".gif", ".docx", ".txt"}
+
+
+@contextmanager
+def _file_guard(lock_path: Path):
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    with lock_path.open("a+", encoding="utf-8") as fh:
+        if fcntl is not None:
+            fcntl.flock(fh.fileno(), fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            if fcntl is not None:
+                fcntl.flock(fh.fileno(), fcntl.LOCK_UN)
 
 
 def _async_worker_count() -> int:
-    try:
-        configured = int(os.getenv("ASYNC_OCR_WORKERS", "0"))
-    except Exception:
-        configured = 0
-    if configured > 0:
-        return configured
-    cpu = os.cpu_count() or 2
-    return max(1, min(1, cpu))
-
-
-ASYNC_OCR_EXECUTOR = ThreadPoolExecutor(max_workers=_async_worker_count(), thread_name_prefix="ocr-worker")
-atexit.register(lambda: ASYNC_OCR_EXECUTOR.shutdown(wait=False, cancel_futures=True))
+    # Forced single-worker mode: process one queued job at a time.
+    return 1
 
 
 def _format_dd_mm_yyyy(day: int, month: int, year: int) -> str:
@@ -190,12 +203,147 @@ def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def _iso_to_epoch(ts: str) -> float:
+    try:
+        return datetime.fromisoformat(str(ts).replace("Z", "+00:00")).timestamp()
+    except Exception:
+        return 0.0
+
+
 def _load_async_documents() -> list:
     return _load_json_list(ASYNC_DOCUMENTS_PATH)
 
 
 def _save_async_documents(rows: list) -> None:
     _save_json_list(ASYNC_DOCUMENTS_PATH, rows)
+
+
+def _load_async_jobs() -> list:
+    return _load_json_list(ASYNC_JOB_QUEUE_PATH)
+
+
+def _save_async_jobs(rows: list) -> None:
+    _save_json_list(ASYNC_JOB_QUEUE_PATH, rows)
+
+
+def _find_async_job(queue_id: str) -> dict | None:
+    if not queue_id:
+        return None
+    with ASYNC_QUEUE_LOCK, _file_guard(Path("data/.async_jobs.lock")):
+        queue = _load_async_jobs()
+    for row in queue:
+        if str(row.get("id", "")) == str(queue_id):
+            return row
+    return None
+
+
+def _load_worker_heartbeats() -> list:
+    return _load_json_list(WORKER_HEARTBEAT_PATH)
+
+
+def _save_worker_heartbeats(rows: list) -> None:
+    _save_json_list(WORKER_HEARTBEAT_PATH, rows)
+
+
+def _heartbeat_stale_seconds() -> int:
+    try:
+        # OCR on large/scanned PDFs can run for minutes; keep heartbeat window wide
+        # to avoid false "worker not running" while a long job is in progress.
+        return max(30, int(os.getenv("ASYNC_WORKER_HEARTBEAT_STALE_SECONDS", "600")))
+    except Exception:
+        return 600
+
+
+def _update_worker_heartbeat(worker_id: str, state: str, current_job_id: str = "") -> None:
+    now = _now_iso()
+    with ASYNC_WORKER_LOCK, _file_guard(Path("data/.worker_heartbeats.lock")):
+        rows = _load_worker_heartbeats()
+        kept = [row for row in rows if str(row.get("worker_id", "")) != str(worker_id)]
+        kept.append(
+            {
+                "worker_id": worker_id,
+                "state": str(state or "idle"),
+                "current_job_id": str(current_job_id or ""),
+                "last_seen": now,
+            }
+        )
+        _save_worker_heartbeats(kept)
+
+
+def _active_worker_rows() -> list:
+    now_ts = time.time()
+    stale_seconds = _heartbeat_stale_seconds()
+    with ASYNC_WORKER_LOCK, _file_guard(Path("data/.worker_heartbeats.lock")):
+        rows = _load_worker_heartbeats()
+    active = []
+    for row in rows:
+        ts = _iso_to_epoch(str(row.get("last_seen", "")))
+        if ts > 0 and (now_ts - ts) <= stale_seconds:
+            active.append(row)
+    return active
+
+
+def _active_worker_ids() -> set[str]:
+    return {str(row.get("worker_id", "")) for row in _active_worker_rows() if str(row.get("worker_id", ""))}
+
+
+def _pid_from_worker_id(worker_id: str) -> int | None:
+    # worker_id format: worker-<pid>-t<thread>
+    m = re.match(r"^worker-(\d+)-t\d+$", str(worker_id or ""))
+    if not m:
+        return None
+    try:
+        return int(m.group(1))
+    except Exception:
+        return None
+
+
+def _known_worker_pids() -> set[int]:
+    pids: set[int] = set()
+    for row in _active_worker_rows():
+        pid = _pid_from_worker_id(str(row.get("worker_id", "")))
+        if pid:
+            pids.add(pid)
+    with ASYNC_QUEUE_LOCK, _file_guard(Path("data/.async_jobs.lock")):
+        queue = _load_async_jobs()
+    for row in queue:
+        pid = _pid_from_worker_id(str(row.get("worker_id", "")))
+        if pid:
+            pids.add(pid)
+    return pids
+
+
+def _requeue_processing_jobs() -> int:
+    changed_count = 0
+    with ASYNC_QUEUE_LOCK, _file_guard(Path("data/.async_jobs.lock")):
+        queue = _load_async_jobs()
+        changed = False
+        for row in queue:
+            if str(row.get("status", "")) != "processing":
+                continue
+            row["status"] = "queued"
+            row["updated_at"] = _now_iso()
+            changed = True
+            changed_count += 1
+        if changed:
+            _save_async_jobs(queue)
+    return changed_count
+
+
+def _clear_all_jobs() -> int:
+    with ASYNC_QUEUE_LOCK, _file_guard(Path("data/.async_jobs.lock")):
+        queue = _load_async_jobs()
+        count = len(queue)
+        _save_async_jobs([])
+    return count
+
+
+def _clear_worker_heartbeats() -> int:
+    with ASYNC_WORKER_LOCK, _file_guard(Path("data/.worker_heartbeats.lock")):
+        rows = _load_worker_heartbeats()
+        count = len(rows)
+        _save_worker_heartbeats([])
+    return count
 
 
 def _get_page_count(path: Path, suffix: str) -> int:
@@ -219,6 +367,13 @@ def _estimate_cost_inr(page_count: int) -> float:
     # Keeps behavior close to sample payloads: 2 pages -> 10.44, 24 pages -> 20.88.
     buckets = max(1, math.ceil(max(1, page_count) / 12))
     return round(10.44 * buckets, 2)
+
+
+def _inline_text_pdf_max_pages() -> int:
+    try:
+        return max(1, int(os.getenv("INLINE_TEXT_PDF_MAX_PAGES", "50")))
+    except Exception:
+        return 50
 
 
 def _convert_skills_for_api(skills: object) -> list:
@@ -268,8 +423,34 @@ def _find_document(document_id: str) -> dict | None:
     return None
 
 
+def _queue_info_from_document(doc: dict) -> dict | None:
+    queue_id = str(doc.get("queue", {}).get("queue_id", "") or "")
+    queue_row = _find_async_job(queue_id)
+    if not queue_row:
+        return None
+    return {
+        "id": str(queue_row.get("id", "")),
+        "status": str(queue_row.get("status", "")),
+        "attempts": int(queue_row.get("attempts", 0) or 0),
+        "last_error": str(queue_row.get("last_error", "") or ""),
+        "updated_at": str(queue_row.get("updated_at", "") or ""),
+    }
+
+
+def _document_data_payload(doc: dict, include_entries: bool) -> dict:
+    entries = doc.get("entries", []) if isinstance(doc.get("entries"), list) else []
+    return {
+        "document_id": str(doc.get("document_id", "")),
+        "status": str(doc.get("status", "processing") or "processing"),
+        "url": doc.get("url", ""),
+        "metadata": doc.get("metadata", {}),
+        "entries": entries if include_entries else [],
+        "queue": _queue_info_from_document(doc),
+    }
+
+
 def _upsert_document(updated: dict) -> None:
-    with ASYNC_DOC_LOCK:
+    with ASYNC_DOC_LOCK, _file_guard(Path("data/.async_documents.lock")):
         docs = _load_async_documents()
         found = False
         for idx, row in enumerate(docs):
@@ -283,7 +464,7 @@ def _upsert_document(updated: dict) -> None:
 
 
 def _mutate_document(document_id: str, mutator) -> bool:
-    with ASYNC_DOC_LOCK:
+    with ASYNC_DOC_LOCK, _file_guard(Path("data/.async_documents.lock")):
         docs = _load_async_documents()
         changed = False
         found = False
@@ -300,8 +481,155 @@ def _mutate_document(document_id: str, mutator) -> bool:
         return found
 
 
-def _queue_async_document(**kwargs) -> None:
-    ASYNC_OCR_EXECUTOR.submit(_process_async_document, **kwargs)
+def _queue_async_document(**kwargs) -> str:
+    queue_id = str(uuid4())
+    now = _now_iso()
+    payload = {
+        "id": queue_id,
+        "status": "queued",
+        "attempts": 0,
+        "last_error": "",
+        "created_at": now,
+        "updated_at": now,
+        "payload": kwargs,
+    }
+    with ASYNC_QUEUE_LOCK, _file_guard(Path("data/.async_jobs.lock")):
+        queue = _load_async_jobs()
+        queue.append(payload)
+        _save_async_jobs(queue)
+    return queue_id
+
+
+def claim_next_async_job(worker_id: str, max_attempts: int = 3) -> dict | None:
+    max_attempts = max(1, int(max_attempts))
+    try:
+        stale_seconds = max(60, int(os.getenv("ASYNC_JOB_STALE_SECONDS", "1800")))
+    except Exception:
+        stale_seconds = 1800
+    now_ts = time.time()
+    with ASYNC_QUEUE_LOCK, _file_guard(Path("data/.async_jobs.lock")):
+        queue = _load_async_jobs()
+        active_ids = _active_worker_ids()
+        queue_changed = False
+        for row in queue:
+            status = str(row.get("status", "") or "")
+            if status != "processing":
+                continue
+            row_worker_id = str(row.get("worker_id", "") or "")
+            # Recover jobs that were claimed by dead workers after restart/crash.
+            if row_worker_id and row_worker_id not in active_ids:
+                row["status"] = "queued"
+                row["updated_at"] = _now_iso()
+                queue_changed = True
+                continue
+            updated_ts = _iso_to_epoch(str(row.get("updated_at", "")))
+            if updated_ts <= 0:
+                continue
+            if (now_ts - updated_ts) >= stale_seconds:
+                row["status"] = "queued"
+                row["updated_at"] = _now_iso()
+                queue_changed = True
+        if queue_changed:
+            _save_async_jobs(queue)
+
+        for row in queue:
+            status = str(row.get("status", "") or "")
+            attempts = int(row.get("attempts", 0) or 0)
+            if status == "queued" and attempts < max_attempts:
+                row["status"] = "processing"
+                row["attempts"] = attempts + 1
+                row["worker_id"] = worker_id
+                row["updated_at"] = _now_iso()
+                _save_async_jobs(queue)
+                return row
+            if status == "failed":
+                continue
+        return None
+
+
+def complete_async_job(queue_id: str) -> None:
+    with ASYNC_QUEUE_LOCK, _file_guard(Path("data/.async_jobs.lock")):
+        queue = _load_async_jobs()
+        kept = [row for row in queue if str(row.get("id", "")) != str(queue_id)]
+        _save_async_jobs(kept)
+
+
+def fail_async_job(queue_id: str, error_message: str, max_attempts: int = 3) -> None:
+    max_attempts = max(1, int(max_attempts))
+    with ASYNC_QUEUE_LOCK, _file_guard(Path("data/.async_jobs.lock")):
+        queue = _load_async_jobs()
+        changed = False
+        for row in queue:
+            if str(row.get("id", "")) != str(queue_id):
+                continue
+            attempts = int(row.get("attempts", 0) or 0)
+            row["last_error"] = str(error_message or "")
+            row["updated_at"] = _now_iso()
+            if attempts >= max_attempts:
+                row["status"] = "failed"
+            else:
+                row["status"] = "queued"
+            changed = True
+            break
+        if changed:
+            _save_async_jobs(queue)
+
+
+def _mark_document_failed_if_exists(document_id: str, error_message: str) -> None:
+    def _mut(row: dict) -> bool:
+        row["status"] = "failed"
+        row["entries"] = [
+            {
+                "id": str(uuid4()),
+                "status": "failed",
+                "cost": 0.0,
+                "cost_currency": "INR",
+                "processing_time_seconds": 0.01,
+                "created_at": _now_iso(),
+                "updated_at": _now_iso(),
+                "is_deduplicated": False,
+                "is_valid": False,
+                "parsed_data": {},
+                "validation_errors": [],
+                "error_message": str(error_message or "processing failed"),
+            }
+        ]
+        return True
+
+    _mutate_document(document_id, _mut)
+
+
+def _run_single_worker(worker_id: str, poll_seconds: float, max_attempts: int) -> None:
+    _update_worker_heartbeat(worker_id, "idle", "")
+    while True:
+        _update_worker_heartbeat(worker_id, "idle", "")
+        job = claim_next_async_job(worker_id=worker_id, max_attempts=max_attempts)
+        if not job:
+            time.sleep(max(0.1, float(poll_seconds)))
+            continue
+
+        queue_id = str(job.get("id", ""))
+        _update_worker_heartbeat(worker_id, "processing", queue_id)
+        payload = job.get("payload", {})
+        document_id = str(payload.get("document_id", ""))
+        try:
+            _process_async_document(**payload, raise_on_error=True)
+            complete_async_job(queue_id)
+            _update_worker_heartbeat(worker_id, "idle", "")
+        except Exception as exc:
+            fail_async_job(queue_id, str(exc), max_attempts=max_attempts)
+            attempts = int(job.get("attempts", 1) or 1)
+            if attempts >= max(1, int(max_attempts)):
+                _mark_document_failed_if_exists(document_id, str(exc))
+            _update_worker_heartbeat(worker_id, "idle", "")
+
+
+def run_async_worker_loop(poll_seconds: float = 0.8, max_attempts: int = 3) -> None:
+    _run_single_worker(
+        worker_id=f"worker-{os.getpid()}-t1",
+        poll_seconds=poll_seconds,
+        max_attempts=max_attempts,
+    )
 
 
 def _process_async_document(
@@ -315,6 +643,7 @@ def _process_async_document(
     file_size: int,
     page_count: int,
     file_hash: str,
+    raise_on_error: bool = False,
 ) -> None:
     started = time.perf_counter()
     created_at = _now_iso()
@@ -401,6 +730,8 @@ def _process_async_document(
     except Exception as exc:
         doc = _find_document(document_id)
         if doc is None:
+            if raise_on_error:
+                raise
             return
         failed_entry = {
             "id": str(uuid4()),
@@ -420,6 +751,99 @@ def _process_async_document(
         doc["entries"] = [failed_entry]
         doc["updated_at"] = _now_iso()
         _upsert_document(doc)
+        if raise_on_error:
+            raise
+
+
+def _try_process_inline_text_document(
+    *,
+    document_id: str,
+    parser_id: str,
+    environment: str,
+    stored_path: Path,
+    public_url_path: str,
+    content_type: str,
+    file_size: int,
+    page_count: int,
+    file_hash: str,
+) -> bool:
+    suffix = stored_path.suffix.lower()
+
+    if suffix in {".txt", ".docx"}:
+        _process_async_document(
+            document_id=document_id,
+            parser_id=parser_id,
+            environment=environment,
+            source_path=str(stored_path),
+            public_url_path=public_url_path,
+            suffix=suffix,
+            content_type=content_type,
+            file_size=file_size,
+            page_count=page_count,
+            file_hash=file_hash,
+            raise_on_error=True,
+        )
+        return True
+
+    if suffix != ".pdf":
+        return False
+    if page_count > _inline_text_pdf_max_pages():
+        return False
+    try:
+        # Text-based PDFs can skip queue + OCR and go directly to ML parsing.
+        if detect_pdf_kind(stored_path) != "text":
+            return False
+    except Exception:
+        return False
+
+    _process_async_document(
+        document_id=document_id,
+        parser_id=parser_id,
+        environment=environment,
+        source_path=str(stored_path),
+        public_url_path=public_url_path,
+        suffix=".pdf",
+        content_type=content_type,
+        file_size=file_size,
+        page_count=page_count,
+        file_hash=file_hash,
+        raise_on_error=True,
+    )
+    return True
+
+
+def _mark_active_documents_failed(error_message: str) -> int:
+    changed = 0
+    with ASYNC_DOC_LOCK, _file_guard(Path("data/.async_documents.lock")):
+        docs = _load_async_documents()
+        doc_changed = False
+        for row in docs:
+            status = str(row.get("status", "") or "")
+            if status in {"completed", "failed"}:
+                continue
+            row["status"] = "failed"
+            row["entries"] = [
+                {
+                    "id": str(uuid4()),
+                    "status": "failed",
+                    "cost": 0.0,
+                    "cost_currency": "INR",
+                    "processing_time_seconds": 0.01,
+                    "created_at": _now_iso(),
+                    "updated_at": _now_iso(),
+                    "is_deduplicated": False,
+                    "is_valid": False,
+                    "parsed_data": {},
+                    "validation_errors": [],
+                    "error_message": str(error_message or "processing stopped by admin"),
+                }
+            ]
+            row["updated_at"] = _now_iso()
+            changed += 1
+            doc_changed = True
+        if doc_changed:
+            _save_async_documents(docs)
+    return changed
 
 
 def _validate_auth_token(authorization: str | None) -> None:
@@ -696,7 +1120,7 @@ async def parse_async_endpoint(
 ) -> dict:
     _validate_authorization(authorization)
     suffix = Path(file.filename or "").suffix.lower()
-    if suffix not in {".pdf", ".png", ".jpg", ".jpeg", ".tiff", ".tif", ".bmp", ".webp", ".gif", ".docx", ".txt"}:
+    if suffix not in SUPPORTED_UPLOAD_SUFFIXES:
         raise HTTPException(status_code=400, detail=f"Unsupported file type: {suffix}")
 
     raw = await file.read()
@@ -737,23 +1161,142 @@ async def parse_async_endpoint(
     }
     _upsert_document(doc)
 
-    _queue_async_document(
-        document_id=document_id,
-        parser_id=parser_id,
-        environment=environment,
-        source_path=str(stored_path),
-        public_url_path=public_url_path,
-        suffix=suffix,
-        content_type=file.content_type or "application/octet-stream",
-        file_size=len(raw),
-        page_count=page_count,
-        file_hash=file_hash,
-    )
+    inline_done = False
+    try:
+        inline_done = _try_process_inline_text_document(
+            document_id=document_id,
+            parser_id=parser_id,
+            environment=environment,
+            stored_path=stored_path,
+            public_url_path=public_url_path,
+            content_type=file.content_type or "application/octet-stream",
+            file_size=len(raw),
+            page_count=page_count,
+            file_hash=file_hash,
+        )
+    except Exception:
+        inline_done = False
+
+    if not inline_done:
+        queue_id = _queue_async_document(
+            document_id=document_id,
+            parser_id=parser_id,
+            environment=environment,
+            source_path=str(stored_path),
+            public_url_path=public_url_path,
+            suffix=suffix,
+            content_type=file.content_type or "application/octet-stream",
+            file_size=len(raw),
+            page_count=page_count,
+            file_hash=file_hash,
+        )
+        _mutate_document(document_id, lambda row: row.setdefault("queue", {}).update({"queue_id": queue_id}) or True)
+    return {
+        "status": "success",
+        "code": "document_processed" if inline_done else "document_queued",
+        "message": "Document processed without OCR queue" if inline_done else "Document queued for processing",
+        "data": {"document_id": document_id, "job_id": job_id, "inline_processed": inline_done},
+    }
+
+
+@app.post("/dapi/v1/parser/{parser_id}/parse/sync-smart")
+async def parse_sync_smart_endpoint(
+    parser_id: str,
+    file: UploadFile = File(...),
+    environment: str = Form("dev"),
+    authorization: str | None = Header(default=None),
+) -> dict:
+    _validate_authorization(authorization)
+    suffix = Path(file.filename or "").suffix.lower()
+    if suffix not in SUPPORTED_UPLOAD_SUFFIXES:
+        raise HTTPException(status_code=400, detail=f"Unsupported file type: {suffix}")
+
+    raw = await file.read()
+    if not raw:
+        raise HTTPException(status_code=400, detail="Uploaded file is empty")
+
+    document_id = str(uuid4())
+    job_id = str(uuid4())
+    file_hash = hashlib.sha256(raw).hexdigest()
+    UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
+    stored_path = UPLOADS_DIR / f"{document_id}{suffix}"
+    stored_path.write_bytes(raw)
+    page_count = _get_page_count(stored_path, suffix)
+    public_url_path = f"/dapi/v1/document-file/{document_id}"
+
+    doc = {
+        "document_id": document_id,
+        "job_id": job_id,
+        "parser_id": parser_id,
+        "environment": environment,
+        "status": "processing",
+        "url": public_url_path,
+        "file_hash": file_hash,
+        "metadata": {
+            "etag": None,
+            "filename": file.filename or stored_path.name,
+            "page_count": page_count,
+            "processed_pages": 0,
+            "total_pages": page_count,
+            "progress_percent": 0,
+            "processing_stage": "queued",
+            "size_bytes": len(raw),
+            "content_type": file.content_type or "application/octet-stream",
+        },
+        "entries": [],
+        "created_at": _now_iso(),
+        "updated_at": _now_iso(),
+    }
+    _upsert_document(doc)
+
+    inline_done = False
+    try:
+        inline_done = _try_process_inline_text_document(
+            document_id=document_id,
+            parser_id=parser_id,
+            environment=environment,
+            stored_path=stored_path,
+            public_url_path=public_url_path,
+            content_type=file.content_type or "application/octet-stream",
+            file_size=len(raw),
+            page_count=page_count,
+            file_hash=file_hash,
+        )
+    except Exception:
+        inline_done = False
+
+    if not inline_done:
+        queue_id = _queue_async_document(
+            document_id=document_id,
+            parser_id=parser_id,
+            environment=environment,
+            source_path=str(stored_path),
+            public_url_path=public_url_path,
+            suffix=suffix,
+            content_type=file.content_type or "application/octet-stream",
+            file_size=len(raw),
+            page_count=page_count,
+            file_hash=file_hash,
+        )
+        _mutate_document(document_id, lambda row: row.setdefault("queue", {}).update({"queue_id": queue_id}) or True)
+
+    final_doc = _find_document(document_id)
+    if final_doc is None:
+        raise HTTPException(status_code=500, detail="document state not found after submission")
+
+    if inline_done:
+        return {
+            "status": "success",
+            "code": "document_completed",
+            "message": "Document processed inline without OCR queue",
+            "data": _document_data_payload(final_doc, include_entries=True),
+        }
+
     return {
         "status": "success",
         "code": "document_queued",
-        "message": "Document queued for processing",
-        "data": {"document_id": document_id, "job_id": job_id},
+        "message": "OCR-required document queued for worker processing",
+        "data": _document_data_payload(final_doc, include_entries=False),
     }
 
 
@@ -771,7 +1314,7 @@ async def parse_async_batch_endpoint(
     queued = []
     for file in files:
         suffix = Path(file.filename or "").suffix.lower()
-        if suffix not in {".pdf", ".png", ".jpg", ".jpeg", ".tiff", ".tif", ".bmp", ".webp", ".gif", ".docx", ".txt"}:
+        if suffix not in SUPPORTED_UPLOAD_SUFFIXES:
             continue
         raw = await file.read()
         if not raw:
@@ -808,24 +1351,51 @@ async def parse_async_batch_endpoint(
             "updated_at": _now_iso(),
         }
         _upsert_document(doc)
-        _queue_async_document(
-            document_id=document_id,
-            parser_id=parser_id,
-            environment=environment,
-            source_path=str(stored_path),
-            public_url_path=public_url_path,
-            suffix=suffix,
-            content_type=file.content_type or "application/octet-stream",
-            file_size=len(raw),
-            page_count=page_count,
-            file_hash=file_hash,
-        )
-        queued.append({"document_id": document_id, "job_id": job_id, "filename": file.filename})
+        inline_done = False
+        try:
+            inline_done = _try_process_inline_text_document(
+                document_id=document_id,
+                parser_id=parser_id,
+                environment=environment,
+                stored_path=stored_path,
+                public_url_path=public_url_path,
+                content_type=file.content_type or "application/octet-stream",
+                file_size=len(raw),
+                page_count=page_count,
+                file_hash=file_hash,
+            )
+        except Exception:
+            inline_done = False
 
+        if not inline_done:
+            queue_id = _queue_async_document(
+                document_id=document_id,
+                parser_id=parser_id,
+                environment=environment,
+                source_path=str(stored_path),
+                public_url_path=public_url_path,
+                suffix=suffix,
+                content_type=file.content_type or "application/octet-stream",
+                file_size=len(raw),
+                page_count=page_count,
+                file_hash=file_hash,
+            )
+            _mutate_document(document_id, lambda row: row.setdefault("queue", {}).update({"queue_id": queue_id}) or True)
+        queued.append(
+            {
+                "document_id": document_id,
+                "job_id": job_id,
+                "filename": file.filename,
+                "inline_processed": inline_done,
+            }
+        )
+
+    inline_count = sum(1 for row in queued if bool(row.get("inline_processed")))
+    queued_count = len(queued) - inline_count
     return {
         "status": "success",
-        "code": "documents_queued",
-        "message": "Documents queued for processing",
+        "code": "documents_accepted",
+        "message": f"Accepted {len(queued)} documents: {inline_count} inline processed, {queued_count} queued",
         "data": {"parser_id": parser_id, "count": len(queued), "items": queued},
     }
 
@@ -843,6 +1413,7 @@ def get_document_endpoint(
 
     entries = doc.get("entries", []) if isinstance(doc.get("entries"), list) else []
     status = str(doc.get("status", "processing") or "processing")
+    queue_info = _queue_info_from_document(doc)
     if status == "failed":
         return {
             "status": "success",
@@ -854,19 +1425,28 @@ def get_document_endpoint(
                 "url": doc.get("url", ""),
                 "metadata": doc.get("metadata", {}),
                 "entries": entries,
+                "queue": queue_info,
             },
         }
     if status != "completed" or not entries:
+        message = "No parsed data found for the document"
+        if queue_info and queue_info.get("status") == "queued":
+            message = "Document is queued for processing"
+        elif queue_info and queue_info.get("status") == "processing":
+            message = "Document is currently processing"
+        elif queue_info and queue_info.get("status") == "failed":
+            message = "Queue processing failed; retry or inspect worker logs"
         return {
             "status": "success",
             "code": "no_parsed_data",
-            "message": "No parsed data found for the document",
+            "message": message,
             "data": {
                 "document_id": doc.get("document_id", document_id),
                 "status": status,
                 "url": doc.get("url", ""),
                 "metadata": doc.get("metadata", {}),
                 "entries": [],
+                "queue": queue_info,
             },
         }
 
@@ -880,6 +1460,140 @@ def get_document_endpoint(
             "url": doc.get("url", ""),
             "metadata": doc.get("metadata", {}),
             "entries": entries,
+            "queue": queue_info,
+        },
+    }
+
+
+@app.get("/dapi/v1/queue/stats")
+def async_queue_stats(authorization: str | None = Header(default=None)) -> dict:
+    _validate_authorization(authorization)
+    with ASYNC_QUEUE_LOCK, _file_guard(Path("data/.async_jobs.lock")):
+        queue = _load_async_jobs()
+    active_workers = _active_worker_rows()
+    processing_workers = [row for row in active_workers if str(row.get("state", "")) == "processing"]
+    queued = 0
+    processing = 0
+    failed = 0
+    for row in queue:
+        status = str(row.get("status", "") or "")
+        if status == "queued":
+            queued += 1
+        elif status == "processing":
+            processing += 1
+        elif status == "failed":
+            failed += 1
+    return {
+        "status": "success",
+        "data": {
+            "queued": queued,
+            "processing": processing,
+            "failed": failed,
+            "total": len(queue),
+            "active_workers": len(active_workers),
+            "busy_workers": len(processing_workers),
+            "workers": active_workers,
+            "worker_threads_recommended": _async_worker_count(),
+        },
+    }
+
+
+@app.post("/admin/kill-all-processes")
+def admin_kill_all_processes(
+    stop_api: bool = Query(True),
+    clear_state: bool = Query(True),
+    authorization: str | None = Header(default=None),
+) -> dict:
+    _validate_authorization(authorization)
+
+    requeued = 0
+    cleared_jobs = 0
+    if clear_state:
+        cleared_jobs = _clear_all_jobs()
+    else:
+        requeued = _requeue_processing_jobs()
+    api_pid = os.getpid()
+    worker_pids = sorted(pid for pid in _known_worker_pids() if pid != api_pid)
+    killed: list[int] = []
+    errors: list[dict] = []
+
+    for pid in worker_pids:
+        try:
+            os.kill(pid, signal.SIGTERM)
+            killed.append(pid)
+        except ProcessLookupError:
+            continue
+        except Exception as exc:
+            errors.append({"pid": pid, "error": str(exc)})
+
+    cleared_heartbeats = _clear_worker_heartbeats()
+
+    if stop_api:
+        def _shutdown_self() -> None:
+            time.sleep(0.8)
+            os._exit(0)
+
+        Thread(target=_shutdown_self, daemon=True).start()
+
+    return {
+        "status": "success",
+        "message": "Kill request submitted",
+        "data": {
+            "requeued_jobs": requeued,
+            "cleared_jobs": cleared_jobs,
+            "cleared_heartbeats": cleared_heartbeats,
+            "killed_worker_pids": killed,
+            "worker_kill_errors": errors,
+            "api_pid": api_pid,
+            "api_shutdown_requested": bool(stop_api),
+            "clear_state": bool(clear_state),
+        },
+    }
+
+
+@app.post("/admin/worker/stop-and-clear")
+def admin_stop_worker_and_clear_queue(
+    stop_api: bool = Query(False),
+    authorization: str | None = Header(default=None),
+) -> dict:
+    _validate_authorization(authorization)
+
+    api_pid = os.getpid()
+    worker_pids = sorted(pid for pid in _known_worker_pids() if pid != api_pid)
+    killed: list[int] = []
+    errors: list[dict] = []
+
+    for pid in worker_pids:
+        try:
+            os.kill(pid, signal.SIGTERM)
+            killed.append(pid)
+        except ProcessLookupError:
+            continue
+        except Exception as exc:
+            errors.append({"pid": pid, "error": str(exc)})
+
+    cleared_jobs = _clear_all_jobs()
+    cleared_heartbeats = _clear_worker_heartbeats()
+    failed_active_documents = _mark_active_documents_failed("processing stopped by admin stop-and-clear")
+
+    if stop_api:
+        def _shutdown_self() -> None:
+            time.sleep(0.8)
+            os._exit(0)
+
+        Thread(target=_shutdown_self, daemon=True).start()
+
+    return {
+        "status": "success",
+        "message": "Workers stopped and queue state cleared",
+        "data": {
+            "killed_worker_pids": killed,
+            "worker_kill_errors": errors,
+            "cleared_jobs": cleared_jobs,
+            "cleared_heartbeats": cleared_heartbeats,
+            "failed_active_documents": failed_active_documents,
+            "api_pid": api_pid,
+            "api_shutdown_requested": bool(stop_api),
         },
     }
 
@@ -1211,7 +1925,7 @@ async def test_endpoint(
     pdf_dpi: int = Form(220),
 ) -> ExtractionWithTokenResponse:
     suffix = Path(resume_file.filename or "").suffix.lower()
-    if suffix not in {".pdf", ".png", ".jpg", ".jpeg", ".tiff", ".tif", ".bmp", ".webp", ".gif", ".docx", ".txt"}:
+    if suffix not in SUPPORTED_UPLOAD_SUFFIXES:
         raise HTTPException(status_code=400, detail=f"Unsupported file type: {suffix}")
     if mode not in {"fast", "balanced", "resume_bert"}:
         raise HTTPException(status_code=400, detail=f"Unsupported mode: {mode}")
@@ -1255,8 +1969,7 @@ async def auto_test_llm_colab_endpoint(
     auto_train: bool = Form(True),
 ) -> AutoTrainLLMResponse:
     suffix = Path(resume_file.filename or "").suffix.lower()
-    supported_types = {".pdf", ".png", ".jpg", ".jpeg", ".tiff", ".tif", ".bmp", ".webp", ".gif", ".docx", ".txt"}
-    if suffix not in supported_types:
+    if suffix not in SUPPORTED_UPLOAD_SUFFIXES:
         raise HTTPException(status_code=400, detail=f"Unsupported file type: {suffix}")
     if mode not in {"fast", "balanced", "resume_bert"}:
         raise HTTPException(status_code=400, detail=f"Unsupported mode: {mode}")

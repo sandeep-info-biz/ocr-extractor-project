@@ -340,6 +340,11 @@ def _detect_pdf_kind(path: Path) -> str:
     return "image"
 
 
+def detect_pdf_kind(path: Path) -> str:
+    # Public helper for API routing decisions.
+    return _detect_pdf_kind(path)
+
+
 def _ocr_pdf_pymupdf(
     path: Path,
     preprocess: bool = True,

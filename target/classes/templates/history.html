@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR Extractor History</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<main class="page">
+    <section class="card header">
+        <div>
+            <h1>History</h1>
+            <p>Completed and in-progress fetch history.</p>
+        </div>
+        <div class="top-actions">
+            <a class="btn-secondary" th:href="@{/}">Back To Submit</a>
+            <div class="theme-switch">
+                <button type="button" class="theme-btn" data-theme="system">System</button>
+                <button type="button" class="theme-btn" data-theme="light">Light</button>
+                <button type="button" class="theme-btn" data-theme="dark">Dark</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="card">
+        <div class="section-head">
+            <h2>History List</h2>
+            <form th:action="@{/history/clear}" method="post">
+                <button type="submit" class="btn-secondary">Clear History</button>
+            </form>
+        </div>
+        <p th:if="${historyMessage}" th:text="${historyMessage}"></p>
+        <div th:if="${#lists.isEmpty(historyItems)}">
+            <p>No history yet.</p>
+        </div>
+        <div class="history-list" th:if="${!#lists.isEmpty(historyItems)}">
+            <article class="history-item" th:each="item : ${historyItems}">
+                <div class="history-head">
+                    <strong th:text="${item.filename}"></strong>
+                    <span class="status-pill" th:text="${item.status}"></span>
+                </div>
+                <p><strong>Document:</strong> <span th:text="${item.documentId}"></span></p>
+                <p><strong>Parser:</strong> <span th:text="${item.parserId}"></span></p>
+                <p><strong>Updated:</strong> <span th:text="${item.updatedAt}"></span></p>
+                <p th:if="${item.message}"><strong>Message:</strong> <span th:text="${item.message}"></span></p>
+                <div class="result-grid" th:if="${not #strings.isEmpty(item.rawJson) or not #strings.isEmpty(item.feedbackJson)}">
+                    <div class="json-pane">
+                        <h3>Raw JSON</h3>
+                        <pre th:text="${item.rawJson}"></pre>
+                    </div>
+                    <div class="json-pane">
+                        <h3>Feedback JSON</h3>
+                        <pre th:text="${item.feedbackJson}"></pre>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+</main>
+
+<script>
+    (function () {
+        const html = document.documentElement;
+        const buttons = Array.from(document.querySelectorAll(".theme-btn"));
+        const media = window.matchMedia("(prefers-color-scheme: dark)");
+
+        function resolvedTheme(mode) {
+            if (mode === "dark") return "dark";
+            if (mode === "light") return "light";
+            return media.matches ? "dark" : "light";
+        }
+
+        function setTheme(mode) {
+            const actual = resolvedTheme(mode);
+            html.setAttribute("data-theme", actual);
+            localStorage.setItem("ocr-ui-theme", mode);
+            buttons.forEach((btn) => btn.classList.toggle("active", btn.dataset.theme === mode));
+        }
+
+        const initial = localStorage.getItem("ocr-ui-theme") || "system";
+        setTheme(initial);
+        buttons.forEach((btn) => btn.addEventListener("click", () => setTheme(btn.dataset.theme)));
+        media.addEventListener("change", () => {
+            const saved = localStorage.getItem("ocr-ui-theme") || "system";
+            if (saved === "system") setTheme("system");
+        });
+    })();
+</script>
+</body>
+</html>

@@ -44,6 +44,12 @@ def run_api(args: argparse.Namespace) -> None:
     uvicorn.run("app.api:app", host=args.host, port=args.port, reload=args.reload)
 
 
+def run_worker(args: argparse.Namespace) -> None:
+    from app.api import run_async_worker_loop
+
+    run_async_worker_loop(poll_seconds=args.poll_seconds, max_attempts=args.max_attempts)
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Resume OCR + spaCy extractor")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -63,6 +69,11 @@ def build_parser() -> argparse.ArgumentParser:
     api.add_argument("--reload", action="store_true", help="Enable auto-reload")
     api.set_defaults(func=run_api)
 
+    worker = subparsers.add_parser("worker", help="Run async OCR queue worker")
+    worker.add_argument("--poll-seconds", type=float, default=0.8, help="Queue poll interval")
+    worker.add_argument("--max-attempts", type=int, default=3, help="Max attempts per queued job")
+    worker.set_defaults(func=run_worker)
+
     return parser
 
 
@@ -74,4 +85,3 @@ def run_cli() -> None:
 
 if __name__ == "__main__":
     run_cli()
-
