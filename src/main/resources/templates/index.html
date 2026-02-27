@@ -34,11 +34,11 @@
         <form th:if="${!isLoggedIn}" th:action="@{/login}" method="post" class="form-grid">
             <label class="field">
                 <span>Username</span>
-                <input type="text" name="username" value="admin" required autocomplete="username">
+                <input type="text" name="username" required autocomplete="username">
             </label>
             <label class="field">
                 <span>Password</span>
-                <input type="password" name="password" value="admin123" required autocomplete="current-password">
+                <input type="password" name="password" required autocomplete="current-password">
             </label>
             <button type="submit" class="btn-primary">Login</button>
         </form>
@@ -67,14 +67,32 @@
         </form>
         <p th:if="${!isLoggedIn}">Login is required before extraction.</p>
         <p th:if="${queueMessage}" th:text="${queueMessage}"></p>
-        <div th:if="${latestQueueItem != null}" class="inline-form">
-            <p><strong>Queued File:</strong> <span th:text="${latestQueueItem.filename}"></span></p>
-            <p><strong>Status:</strong> <span class="status-pill" th:text="${latestQueueItem.status}"></span></p>
-            <form th:action="@{/fetch}" method="post" class="inline-form">
-                <input type="hidden" name="documentId" th:value="${latestQueueItem.documentId}">
-                <input type="hidden" name="parserId" th:value="${latestQueueItem.parserId}">
-                <button type="submit" class="btn-primary">Fetch Data</button>
-            </form>
+        <div th:if="${!#lists.isEmpty(queueItems)}" class="inline-form">
+            <h3>Queue List</h3>
+            <table>
+                <thead>
+                <tr>
+                    <th>File</th>
+                    <th>Document ID</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="q : ${queueItems}">
+                    <td th:text="${q.filename}"></td>
+                    <td th:text="${q.documentId}"></td>
+                    <td><span class="status-pill" th:text="${q.status}"></span></td>
+                    <td>
+                        <form th:action="@{/fetch}" method="post" class="inline-form">
+                            <input type="hidden" name="documentId" th:value="${q.documentId}">
+                            <input type="hidden" name="parserId" th:value="${q.parserId}">
+                            <button type="submit" class="btn-primary">Fetch Data</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </section>
 

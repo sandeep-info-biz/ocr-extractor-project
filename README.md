@@ -29,14 +29,68 @@ python main.py api --host 127.0.0.1 --port 8000
 mvn spring-boot:run
 ```
 
+Or use helper scripts:
+
+```bash
+./start.sh
+./restart.sh
+./stop_all.sh
+```
+
+Terminal behavior:
+- `./start.sh` / `./start_all.sh` default to inline mode (single terminal with background processes).
+- For separate macOS Terminal windows: `LAUNCH_MODE=separate ./start.sh`
+- In VS Code integrated terminals, use Task: `Start Full Stack (3 terminals)` and `Restart Full Stack`.
+- Dev credentials/tokens are auto-generated once and stored in `.run/dev.env`.
+
 3. Open:
 
 - `http://127.0.0.1:8080`
+- Swagger UI: `http://127.0.0.1:8000/swagger`
+- OpenAPI JSON: `http://127.0.0.1:8000/openapi.json`
 
 Environment variables for Java:
 
 - `PYTHON_SERVICE_BASE_URL` (default `http://127.0.0.1:8000`)
 - `PYTHON_SERVICE_TIMEOUT_SECONDS` (default `180`)
+- `APP_LOGIN_USERNAME` (required)
+- `APP_LOGIN_PASSWORD` (required)
+
+Environment variables for Python API security:
+
+- `CORS_ALLOW_ORIGINS` (comma-separated origins, default `http://127.0.0.1:8080,http://localhost:8080`)
+- Choose at least one auth mode:
+  - Static token mode: `SIMPLYPARSE_API_TOKEN`
+  - Bearer login mode: `API_AUTH_SECRET`, `API_LOGIN_USER`, `API_LOGIN_PASSWORD`
+
+Notes:
+- Protected endpoints now require `Authorization`.
+- Weak defaults such as `admin/admin123` and `change-me-secret` are rejected.
+
+## Public REST API (for other apps/websites)
+
+Versioned endpoints are available under `/api/v1` and documented in Swagger.
+
+Core endpoints:
+- `POST /api/v1/auth/login`
+- `GET /api/v1/health`
+- `GET /api/v1/models`
+- `POST /api/v1/parsers/{parser_id}/documents`
+- `GET /api/v1/parsers/{parser_id}/documents/{document_id}`
+- `GET /api/v1/documents/{document_id}/file`
+- `GET /api/v1/queue/stats`
+- `POST /api/v1/extract`
+- `POST /api/v1/feedback`
+- `POST /api/v1/retrain-mapping`
+- `GET /api/v1/analytics/training-feedback`
+- `GET /api/v1/analytics/training-feedback/plot`
+
+Auth header format:
+- `Authorization: Bearer <token>` (from `/api/v1/auth/login`)
+- or `Authorization: Token <token>` (if using `SIMPLYPARSE_API_TOKEN`)
+
+Postman:
+- Collection file: `postman/ocr-extractor-api.postman_collection.json`
 
 ## Run on Laptop (optimized)
 

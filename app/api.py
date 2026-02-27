@@ -16,7 +16,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from uuid import uuid4
 
-from fastapi import FastAPI, File, Form, Header, HTTPException, Query, UploadFile
+from fastapi import APIRouter, Depends, FastAPI, File, Form, Header, HTTPException, Query, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, Response
 
@@ -41,14 +41,29 @@ try:
 except Exception:  # pragma: no cover - non-posix fallback
     fcntl = None
 
+
+def _parse_cors_allow_origins() -> list[str]:
+    raw = str(os.environ.get("CORS_ALLOW_ORIGINS", "http://127.0.0.1:8080,http://localhost:8080")).strip()
+    origins = [item.strip() for item in raw.split(",") if item.strip()]
+    if not origins:
+        return ["http://127.0.0.1:8080", "http://localhost:8080"]
+    if "*" in origins:
+        raise RuntimeError("CORS_ALLOW_ORIGINS must not include '*' when credentials are enabled.")
+    return origins
+
+
 app = FastAPI(
     title="Resume OCR Extractor API",
     version="1.0.0",
     description="FastAPI service for OCR resume extraction.",
+    docs_url="/swagger",
+    redoc_url="/redoc",
+    openapi_url="/openapi.json",
+    swagger_ui_parameters={"persistAuthorization": True},
 )
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=_parse_cors_allow_origins(),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -69,6 +84,7 @@ ASYNC_DOC_LOCK = Lock()
 ASYNC_QUEUE_LOCK = Lock()
 ASYNC_WORKER_LOCK = Lock()
 SUPPORTED_UPLOAD_SUFFIXES = {".pdf", ".png", ".jpg", ".jpeg", ".tiff", ".tif", ".bmp", ".webp", ".gif", ".docx", ".txt"}
+api_router = APIRouter(prefix="/api/v1", tags=["Public REST API"])
 
 
 @contextmanager
@@ -846,11 +862,26 @@ def _mark_active_documents_failed(error_message: str) -> int:
     return changed
 
 
+def _configured_api_token() -> str:
+    configured = Path("data/.api_token")
+    if configured.exists():
+        return configured.read_text(encoding="utf-8").strip()
+    return str(os.environ.get("SIMPLYPARSE_API_TOKEN", "")).strip()
+
+
+def _is_bearer_auth_configured() -> bool:
+    secret = str(os.environ.get("API_AUTH_SECRET", "")).strip()
+    username = str(os.environ.get("API_LOGIN_USER", "")).strip()
+    password = str(os.environ.get("API_LOGIN_PASSWORD", "")).strip()
+    if not secret or not username or not password:
+        return False
+    return secret != "change-me-secret" and username != "admin" and password != "admin123"
+
+
 def _validate_auth_token(authorization: str | None) -> None:
-    configured = (Path("data/.api_token").read_text(encoding="utf-8").strip() if Path("data/.api_token").exists() else "")
-    env_token = configured or str(os.environ.get("SIMPLYPARSE_API_TOKEN", "")).strip()
+    env_token = _configured_api_token()
     if not env_token:
-        return
+        raise HTTPException(status_code=503, detail="Token authentication is not configured")
     incoming = str(authorization or "").strip()
     if incoming.startswith("Token "):
         incoming = incoming[6:].strip()
@@ -868,7 +899,10 @@ def _b64url_decode(text: str) -> bytes:
 
 
 def _auth_secret() -> str:
-    return str(os.environ.get("API_AUTH_SECRET", "change-me-secret")).strip()
+    secret = str(os.environ.get("API_AUTH_SECRET", "")).strip()
+    if not secret or secret == "change-me-secret":
+        raise HTTPException(status_code=503, detail="API_AUTH_SECRET must be configured with a strong value")
+    return secret
 
 
 def _token_ttl_seconds() -> int:
@@ -879,11 +913,17 @@ def _token_ttl_seconds() -> int:
 
 
 def _login_user() -> str:
-    return str(os.environ.get("API_LOGIN_USER", "admin")).strip()
+    user = str(os.environ.get("API_LOGIN_USER", "")).strip()
+    if not user or user == "admin":
+        raise HTTPException(status_code=503, detail="API_LOGIN_USER must be configured and not use default credentials")
+    return user
 
 
 def _login_password() -> str:
-    return str(os.environ.get("API_LOGIN_PASSWORD", "admin123")).strip()
+    password = str(os.environ.get("API_LOGIN_PASSWORD", "")).strip()
+    if not password or password == "admin123":
+        raise HTTPException(status_code=503, detail="API_LOGIN_PASSWORD must be configured and not use default credentials")
+    return password
 
 
 def _create_access_token(username: str) -> str:
@@ -916,11 +956,29 @@ def _verify_access_token(token: str) -> dict:
 
 def _validate_authorization(authorization: str | None) -> dict | None:
     incoming = str(authorization or "").strip()
+    if not incoming:
+        raise HTTPException(status_code=401, detail="Missing Authorization header")
     if incoming.startswith("Bearer "):
         token = incoming[7:].strip()
         return _verify_access_token(token)
-    _validate_auth_token(authorization)
-    return None
+    _validate_auth_token(incoming)
+    return {"sub": "api_token_user"}
+
+
+def _validate_security_bootstrap() -> None:
+    token_ok = bool(_configured_api_token())
+    bearer_ok = _is_bearer_auth_configured()
+    if token_ok or bearer_ok:
+        return
+    raise RuntimeError(
+        "No authentication is configured. Set SIMPLYPARSE_API_TOKEN "
+        "or configure API_AUTH_SECRET + API_LOGIN_USER + API_LOGIN_PASSWORD."
+    )
+
+
+def _require_authorization(authorization: str = Header(..., description="Bearer <token> or Token <token>")) -> str:
+    _validate_authorization(authorization)
+    return authorization
 
 
 def _normalize_text_for_fingerprint(text: str) -> str:
@@ -1041,6 +1099,11 @@ def _json_value_changed(old_value: object, new_value: object) -> bool:
         return str(old_value) != str(new_value)
 
 
+@app.on_event("startup")
+def _startup_security_check() -> None:
+    _validate_security_bootstrap()
+
+
 @app.get("/health")
 def health() -> dict:
     return {"status": "ok"}
@@ -1076,7 +1139,10 @@ def get_document_file(
     auth: str | None = Query(default=None),
 ):
     if auth:
-        _verify_access_token(auth)
+        try:
+            _verify_access_token(auth)
+        except HTTPException:
+            _validate_auth_token(auth)
     else:
         _validate_authorization(authorization)
     doc = _find_document(document_id)
@@ -1599,7 +1665,11 @@ def admin_stop_worker_and_clear_queue(
 
 
 @app.post("/retrain-mapping", response_model=RetrainMappingResponse)
-def retrain_mapping_endpoint(payload: RetrainMappingRequest) -> RetrainMappingResponse:
+def retrain_mapping_endpoint(
+    payload: RetrainMappingRequest,
+    authorization: str | None = Header(default=None),
+) -> RetrainMappingResponse:
+    _validate_authorization(authorization)
     try:
         existing = []
         if DATASET_PATH.exists():
@@ -1799,7 +1869,8 @@ def feedback_endpoint(
 
 
 @app.get("/analytics/training-feedback")
-def training_feedback_analytics() -> dict:
+def training_feedback_analytics(authorization: str | None = Header(default=None)) -> dict:
+    _validate_authorization(authorization)
     events = _load_training_events()
     feedback_events = sorted(events.get("feedback_events", []), key=lambda x: str(x.get("timestamp", "")))
     retrain_events = sorted(events.get("retrain_events", []), key=lambda x: str(x.get("timestamp", "")))
@@ -1857,7 +1928,8 @@ def training_feedback_analytics() -> dict:
 
 
 @app.get("/analytics/training-feedback/plot")
-def training_feedback_plot() -> Response:
+def training_feedback_plot(authorization: str | None = Header(default=None)) -> Response:
+    _validate_authorization(authorization)
     try:
         import matplotlib
 
@@ -1869,7 +1941,7 @@ def training_feedback_plot() -> Response:
             detail="matplotlib is required for graph rendering. Install requirements and restart API.",
         ) from exc
 
-    analytics = training_feedback_analytics()
+    analytics = training_feedback_analytics(authorization=authorization)
     graphs = analytics.get("graphs", {})
 
     fig, axes = plt.subplots(3, 2, figsize=(14, 12))
@@ -1923,7 +1995,9 @@ async def test_endpoint(
     preprocess: bool = Form(True),
     mode: str = Form("balanced"),
     pdf_dpi: int = Form(220),
+    authorization: str | None = Header(default=None),
 ) -> ExtractionWithTokenResponse:
+    _validate_authorization(authorization)
     suffix = Path(resume_file.filename or "").suffix.lower()
     if suffix not in SUPPORTED_UPLOAD_SUFFIXES:
         raise HTTPException(status_code=400, detail=f"Unsupported file type: {suffix}")
@@ -1967,7 +2041,9 @@ async def auto_test_llm_colab_endpoint(
     llm_adapter_path: str = Form("models/lora_adapter"),
     llm_max_new_tokens: int = Form(768),
     auto_train: bool = Form(True),
+    authorization: str | None = Header(default=None),
 ) -> AutoTrainLLMResponse:
+    _validate_authorization(authorization)
     suffix = Path(resume_file.filename or "").suffix.lower()
     if suffix not in SUPPORTED_UPLOAD_SUFFIXES:
         raise HTTPException(status_code=400, detail=f"Unsupported file type: {suffix}")
@@ -2067,3 +2143,90 @@ async def auto_test_llm_colab_endpoint(
         llm_error=llm_error,
         llm_debug=llm_debug,
     )
+
+
+@api_router.get("/health", summary="Health check")
+def rest_health() -> dict:
+    return health()
+
+
+@api_router.post("/auth/login", summary="Login and get bearer token")
+def rest_auth_login(username: str = Form(...), password: str = Form(...)) -> dict:
+    return auth_login(username=username, password=password)
+
+
+@api_router.get("/models", summary="List supported extraction models")
+def rest_models(authorization: str = Depends(_require_authorization)) -> dict:
+    return list_models()
+
+
+@api_router.post("/parsers/{parser_id}/documents", summary="Submit document for async parsing")
+async def rest_parse_async(
+    parser_id: str,
+    file: UploadFile = File(...),
+    environment: str = Form("dev"),
+    authorization: str = Depends(_require_authorization),
+) -> dict:
+    return await parse_async_endpoint(parser_id=parser_id, file=file, environment=environment, authorization=authorization)
+
+
+@api_router.get("/parsers/{parser_id}/documents/{document_id}", summary="Get parsed document status/result")
+def rest_get_document(
+    parser_id: str,
+    document_id: str,
+    authorization: str = Depends(_require_authorization),
+) -> dict:
+    return get_document_endpoint(parser_id=parser_id, document_id=document_id, authorization=authorization)
+
+
+@api_router.get("/documents/{document_id}/file", summary="Fetch original uploaded file")
+def rest_get_document_file(
+    document_id: str,
+    authorization: str = Depends(_require_authorization),
+):
+    return get_document_file(document_id=document_id, authorization=authorization, auth=None)
+
+
+@api_router.get("/queue/stats", summary="Get async queue and worker stats")
+def rest_queue_stats(authorization: str = Depends(_require_authorization)) -> dict:
+    return async_queue_stats(authorization=authorization)
+
+
+@api_router.post("/extract", response_model=ExtractionWithTokenResponse, summary="Run direct extraction (sync)")
+async def rest_extract(
+    resume_file: UploadFile = File(...),
+    preprocess: bool = Form(True),
+    mode: str = Form("balanced"),
+    pdf_dpi: int = Form(220),
+    authorization: str = Depends(_require_authorization),
+) -> ExtractionWithTokenResponse:
+    return await test_endpoint(
+        resume_file=resume_file,
+        preprocess=preprocess,
+        mode=mode,
+        pdf_dpi=pdf_dpi,
+        authorization=authorization,
+    )
+
+
+@api_router.post("/feedback", response_model=FeedbackResponse, summary="Submit feedback for a token")
+def rest_feedback(payload: FeedbackRequest, authorization: str = Depends(_require_authorization)) -> FeedbackResponse:
+    return feedback_endpoint(payload=payload, authorization=authorization)
+
+
+@api_router.post("/retrain-mapping", response_model=RetrainMappingResponse, summary="Retrain mapping model")
+def rest_retrain_mapping(payload: RetrainMappingRequest, authorization: str = Depends(_require_authorization)) -> RetrainMappingResponse:
+    return retrain_mapping_endpoint(payload=payload, authorization=authorization)
+
+
+@api_router.get("/analytics/training-feedback", summary="Get training/feedback analytics")
+def rest_training_feedback_analytics(authorization: str = Depends(_require_authorization)) -> dict:
+    return training_feedback_analytics(authorization=authorization)
+
+
+@api_router.get("/analytics/training-feedback/plot", summary="Get analytics plot PNG")
+def rest_training_feedback_plot(authorization: str = Depends(_require_authorization)) -> Response:
+    return training_feedback_plot(authorization=authorization)
+
+
+app.include_router(api_router)

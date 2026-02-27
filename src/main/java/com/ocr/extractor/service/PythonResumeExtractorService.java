@@ -20,6 +20,8 @@ import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -98,7 +100,7 @@ public class PythonResumeExtractorService {
             String message = asString(payload.get("message"));
             Map<String, Object> data = readMap(payload.get("data"));
             String status = asString(data.getOrDefault("status", "processing"));
-            String documentUrl = absoluteUrl(asString(data.get("url")));
+            String documentUrl = previewUrl(absoluteUrl(asString(data.get("url"))));
             Map<String, Object> metadata = readMap(data.get("metadata"));
             String filename = asString(metadata.get("filename"));
             Map<String, Object> queue = readMap(data.get("queue"));
@@ -383,5 +385,17 @@ public class PythonResumeExtractorService {
             return base + "/" + trimmed;
         }
         return base + trimmed;
+    }
+
+    private String previewUrl(String baseUrl) {
+        if (!StringUtils.hasText(baseUrl)) {
+            return "";
+        }
+        String token = pythonServiceProperties.authToken();
+        if (!StringUtils.hasText(token)) {
+            return baseUrl;
+        }
+        String encoded = URLEncoder.encode(token.trim(), StandardCharsets.UTF_8);
+        return baseUrl + (baseUrl.contains("?") ? "&" : "?") + "auth=" + encoded;
     }
 }

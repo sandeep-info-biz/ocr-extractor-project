@@ -16,5 +16,5 @@ python:
 
 app:
   login:
-    username: ${APP_LOGIN_USERNAME:admin}
-    password: ${APP_LOGIN_PASSWORD:admin123}
+    username: ${APP_LOGIN_USERNAME:}
+    password: ${APP_LOGIN_PASSWORD:}

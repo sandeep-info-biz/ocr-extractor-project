@@ -18,6 +18,7 @@ env/
 *.swo
 
 # Data files (exclude large/sensitive data)
+data/uploads/
 data/feedback_sessions.json
 data/feedback_log.json
 data/training_events.json
@@ -41,6 +42,7 @@ models/*.pth
 models/resume_ner/
 
 # Temp files
+target/
 *.tmp
 *.log
 .DS_Store

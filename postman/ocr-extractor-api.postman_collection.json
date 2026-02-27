@@ -1,0 +1,439 @@
+{
+  "info": {
+    "name": "OCR Extractor Public API",
+    "description": "Postman collection for OCR Extractor /api/v1 endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth - Login",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "username",
+              "value": "{{api_login_user}}",
+              "type": "text"
+            },
+            {
+              "key": "password",
+              "value": "{{api_login_password}}",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/auth/login",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Login status is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "var jsonData = pm.response.json();",
+              "if (jsonData && jsonData.access_token) {",
+              "  pm.collectionVariables.set('bearer_token', jsonData.access_token);",
+              "}",
+              "",
+              "pm.test('Access token is returned', function () {",
+              "  pm.expect(pm.collectionVariables.get('bearer_token')).to.not.eql('');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/health",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "health"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Models",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{bearer_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/v1/models",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "models"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Async - Submit Document",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{bearer_token}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": ""
+            },
+            {
+              "key": "environment",
+              "value": "dev",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/parsers/{{parser_id}}/documents",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "parsers",
+            "{{parser_id}}",
+            "documents"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "if (jsonData && jsonData.data && jsonData.data.document_id) {",
+              "  pm.collectionVariables.set('document_id', jsonData.data.document_id);",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Async - Get Document",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{bearer_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/v1/parsers/{{parser_id}}/documents/{{document_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "parsers",
+            "{{parser_id}}",
+            "documents",
+            "{{document_id}}"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "var entries = (((jsonData || {}).data || {}).entries) || [];",
+              "if (entries.length > 0 && entries[0].token_id) {",
+              "  pm.collectionVariables.set('token_id', entries[0].token_id);",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Queue - Stats",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{bearer_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/v1/queue/stats",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "queue",
+            "stats"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Sync - Extract",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{bearer_token}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "resume_file",
+              "type": "file",
+              "src": ""
+            },
+            {
+              "key": "preprocess",
+              "value": "true",
+              "type": "text"
+            },
+            {
+              "key": "mode",
+              "value": "balanced",
+              "type": "text"
+            },
+            {
+              "key": "pdf_dpi",
+              "value": "220",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/extract",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "extract"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "if (jsonData && jsonData.token_id) {",
+              "  pm.collectionVariables.set('token_id', jsonData.token_id);",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Feedback - Submit",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{bearer_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"token_id\": \"{{token_id}}\",\n  \"rating\": 5,\n  \"retrain_on_submit\": true,\n  \"corrected_data\": {\n    \"first_name\": \"Sample\",\n    \"last_name\": \"User\",\n    \"email\": \"sample@example.com\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/feedback",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "feedback"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Mapping - Retrain",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{bearer_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"append_to_existing\": true,\n  \"run_check\": false,\n  \"new_entries\": [\n    {\n      \"first_name\": \"Sample\",\n      \"last_name\": \"User\",\n      \"email\": \"sample@example.com\",\n      \"skills\": [\"Python\"],\n      \"languages\": [\"English\"],\n      \"education\": []\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/retrain-mapping",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "retrain-mapping"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Analytics - JSON",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{bearer_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/v1/analytics/training-feedback",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "analytics",
+            "training-feedback"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Analytics - Plot",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{bearer_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/v1/analytics/training-feedback/plot",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "analytics",
+            "training-feedback",
+            "plot"
+          ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000"
+    },
+    {
+      "key": "api_login_user",
+      "value": "replace-with-api-login-user"
+    },
+    {
+      "key": "api_login_password",
+      "value": "replace-with-api-login-password"
+    },
+    {
+      "key": "bearer_token",
+      "value": ""
+    },
+    {
+      "key": "parser_id",
+      "value": "f92700"
+    },
+    {
+      "key": "document_id",
+      "value": ""
+    },
+    {
+      "key": "token_id",
+      "value": ""
+    }
+  ]
+}

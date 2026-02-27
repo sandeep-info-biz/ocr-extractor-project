@@ -42,11 +42,14 @@ public class WebController {
     public WebController(
         PythonResumeExtractorService pythonResumeExtractorService,
         ObjectMapper objectMapper,
-        @Value("${app.login.username:admin}") String uiLoginUser,
-        @Value("${app.login.password:admin123}") String uiLoginPassword
+        @Value("${app.login.username:}") String uiLoginUser,
+        @Value("${app.login.password:}") String uiLoginPassword
     ) {
         this.pythonResumeExtractorService = pythonResumeExtractorService;
         this.objectMapper = objectMapper;
+        if (uiLoginUser == null || uiLoginUser.isBlank() || uiLoginPassword == null || uiLoginPassword.isBlank()) {
+            throw new IllegalStateException("APP_LOGIN_USERNAME and APP_LOGIN_PASSWORD must be configured.");
+        }
         this.uiLoginUser = uiLoginUser;
         this.uiLoginPassword = uiLoginPassword;
     }
