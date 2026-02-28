@@ -1,10 +1,43 @@
 spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/ecvms_db}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:root}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 20000
+      idle-timeout: 300000
+      max-lifetime: 1200000
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: false
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          batch_size: 20
+        order_inserts: true
+        order_updates: true
   servlet:
     multipart:
       max-file-size: 20MB
       max-request-size: 20MB
   thymeleaf:
-    cache: false
+    cache: true
+  jackson:
+    serialization:
+      indent_output: false
+
+server:
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+    min-response-size: 1024
+  http2:
+    enabled: true
 
 python:
   service:
@@ -13,8 +46,3 @@ python:
     auth-token: ${PYTHON_SERVICE_AUTH_TOKEN:}
     default-parser-id: ${PYTHON_SERVICE_DEFAULT_PARSER_ID:f92700}
     default-environment: ${PYTHON_SERVICE_DEFAULT_ENVIRONMENT:dev}
-
-app:
-  login:
-    username: ${APP_LOGIN_USERNAME:}
-    password: ${APP_LOGIN_PASSWORD:}

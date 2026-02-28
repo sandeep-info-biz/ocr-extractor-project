@@ -53,8 +53,9 @@ Environment variables for Java:
 
 - `PYTHON_SERVICE_BASE_URL` (default `http://127.0.0.1:8000`)
 - `PYTHON_SERVICE_TIMEOUT_SECONDS` (default `180`)
-- `APP_LOGIN_USERNAME` (required)
-- `APP_LOGIN_PASSWORD` (required)
+- `SPRING_DATASOURCE_URL` (default `jdbc:postgresql://127.0.0.1:5432/ocr_extractor`)
+- `SPRING_DATASOURCE_USERNAME` (default `postgres`)
+- `SPRING_DATASOURCE_PASSWORD` (default `postgres`)
 
 Environment variables for Python API security:
 
@@ -66,6 +67,7 @@ Environment variables for Python API security:
 Notes:
 - Protected endpoints now require `Authorization`.
 - Weak defaults such as `admin/admin123` and `change-me-secret` are rejected.
+- UI login/register uses PostgreSQL users (`app_users` table). New users can self-register using email + password.
 
 ## Public REST API (for other apps/websites)
 

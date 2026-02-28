@@ -51,6 +51,7 @@ body {
     border-radius: 18px;
     padding: 18px;
     box-shadow: 0 12px 26px -20px rgba(15, 23, 42, 0.45);
+    contain: layout style;
 }
 
 .header {
@@ -297,9 +298,10 @@ select {
     border-radius: 12px;
     overflow: hidden;
     background: #fff;
+    contain: layout style paint;
+    will-change: auto;
 }
 
-.preview-box object,
 .preview-box iframe {
     width: 100%;
     min-height: var(--result-pane-height);
@@ -333,6 +335,7 @@ pre {
     color: #dbeafe;
     font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 0.82rem;
+    contain: layout style paint;
 }
 
 @media (max-width: 640px) {
@@ -348,7 +351,6 @@ pre {
         grid-template-columns: 1fr;
     }
 
-    .preview-box object,
     .preview-box iframe,
     .json-pane pre,
     .json-edit {

@@ -275,6 +275,7 @@ public class PythonResumeExtractorService {
 
         out.put("skills", normalizeStringList(out.get("skills"), "skill_name"));
         out.put("languages", normalizeStringList(out.get("languages"), "language"));
+        out.put("projects", normalizeStringList(out.get("projects"), "project_name"));
         out.put("education", normalizeEducation(out.get("education")));
 
         if (out.get("education_degree") == null && out.get("education") instanceof String s && !s.isBlank()) {

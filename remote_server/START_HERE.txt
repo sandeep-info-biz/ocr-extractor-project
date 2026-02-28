@@ -1,0 +1,115 @@
+╔══════════════════════════════════════════════════════════════╗
+║                                                              ║
+║   🚀 OCR REMOTE SERVER - READY TO DEPLOY                    ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝
+
+📦 WHAT'S IN THIS FOLDER?
+
+This folder contains everything you need to run your Python OCR 
+service on a different device/server. Just copy this entire 
+folder to your server and run the setup script!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 SUPER QUICK START (3 Steps)
+
+1️⃣  COPY TO SERVER
+   
+   Option A - Automated:
+   ./deploy_to_remote.sh user@192.168.1.100
+   
+   Option B - Manual:
+   tar -czf ocr-server.tar.gz remote_server/
+   scp ocr-server.tar.gz user@192.168.1.100:/home/user/
+
+2️⃣  ON SERVER, RUN SETUP
+   
+   ssh user@192.168.1.100
+   cd remote_server  # or extract tar.gz first
+   chmod +x *.sh
+   ./setup.sh
+   ./start_server.sh
+
+3️⃣  UPDATE YOUR JAVA APP
+   
+   export PYTHON_SERVICE_BASE_URL=http://192.168.1.100:8000
+   mvn spring-boot:run
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📚 DOCUMENTATION FILES
+
+├─ QUICKSTART.md           ← Copy-paste commands
+├─ README.md               ← Full documentation
+├─ DEPLOYMENT_CHECKLIST.md ← Step-by-step checklist
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🛠️  MANAGEMENT SCRIPTS
+
+├─ setup.sh              ← Install dependencies (run once)
+├─ start_server.sh       ← Start the server
+├─ stop_server.sh        ← Stop the server
+├─ restart_server.sh     ← Restart the server
+├─ status.sh             ← Check if running
+├─ test_connection.sh    ← Test from local machine
+└─ deploy_to_remote.sh   ← Auto-deploy to server
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚙️  CONFIGURATION
+
+Edit .env file to customize:
+- PORT (default: 8000)
+- HOST (default: 0.0.0.0 - accessible from network)
+- CORS_ALLOW_ORIGINS
+- SIMPLYPARSE_API_TOKEN
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🧪 TEST CONNECTION
+
+From your local machine:
+
+./test_connection.sh 192.168.1.100
+
+Or manually:
+
+curl http://192.168.1.100:8000/health
+
+Should return: {"status":"ok"}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📁 FOLDER STRUCTURE
+
+remote_server/
+├── app/                 ← Python application code
+├── data/                ← Uploads and data files
+├── models/              ← ML models
+├── logs/                ← Server logs
+├── main.py              ← Entry point
+├── requirements.txt     ← Python dependencies
+├── .env.example         ← Configuration template
+└── *.sh                 ← Management scripts
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❓ NEED HELP?
+
+1. Read QUICKSTART.md for copy-paste commands
+2. Check DEPLOYMENT_CHECKLIST.md for troubleshooting
+3. View logs: tail -f logs/server.log
+4. Check status: ./status.sh
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ READY TO GO!
+
+This folder is 100% self-contained and ready to copy to any 
+Linux/macOS server. No additional files needed!
+
+Start with: ./deploy_to_remote.sh user@your-server-ip
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

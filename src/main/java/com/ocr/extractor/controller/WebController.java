@@ -3,20 +3,23 @@ package com.ocr.extractor.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ocr.extractor.auth.UserAuthService;
 import com.ocr.extractor.model.ExtractionViewModel;
 import com.ocr.extractor.model.FeedbackResultViewModel;
 import com.ocr.extractor.model.FetchDocumentViewModel;
 import com.ocr.extractor.model.HistoryItemViewModel;
 import com.ocr.extractor.model.KillAllResultViewModel;
 import com.ocr.extractor.model.QueueSubmissionViewModel;
-import com.ocr.extractor.service.PythonResumeExtractorService;
+import com.ocr.extractor.service.JavaWorkflowService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.OffsetDateTime;
@@ -26,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
+@Tag(name = "Web Controller", description = "Java-side web and queue endpoints")
 public class WebController {
     private static final String SESSION_LOGIN_TOKEN = "pythonAccessToken";
     private static final String SESSION_LOGIN_USER = "loggedInUser";
@@ -33,77 +37,95 @@ public class WebController {
     private static final String SESSION_HISTORY = "historyItems";
     private static final String SESSION_RESULTS = "resultItems";
     private static final String SESSION_EXPANDED_RESULT_ID = "expandedResultDocumentId";
+    private static final String SESSION_HEARTBEAT_LAST_AT = "queueHeartbeatLastAtMs";
 
-    private final PythonResumeExtractorService pythonResumeExtractorService;
+    private final JavaWorkflowService javaWorkflowService;
     private final ObjectMapper objectMapper;
-    private final String uiLoginUser;
-    private final String uiLoginPassword;
+    private final UserAuthService userAuthService;
 
     public WebController(
-        PythonResumeExtractorService pythonResumeExtractorService,
+        JavaWorkflowService javaWorkflowService,
         ObjectMapper objectMapper,
-        @Value("${app.login.username:}") String uiLoginUser,
-        @Value("${app.login.password:}") String uiLoginPassword
+        UserAuthService userAuthService
     ) {
-        this.pythonResumeExtractorService = pythonResumeExtractorService;
+        this.javaWorkflowService = javaWorkflowService;
         this.objectMapper = objectMapper;
-        if (uiLoginUser == null || uiLoginUser.isBlank() || uiLoginPassword == null || uiLoginPassword.isBlank()) {
-            throw new IllegalStateException("APP_LOGIN_USERNAME and APP_LOGIN_PASSWORD must be configured.");
-        }
-        this.uiLoginUser = uiLoginUser;
-        this.uiLoginPassword = uiLoginPassword;
+        this.userAuthService = userAuthService;
     }
 
     @GetMapping("/")
+    @Operation(summary = "Index page")
     public String index(Model model, HttpSession session) {
-        applySharedModel(model, session, pythonResumeExtractorService.defaultParserId(), pythonResumeExtractorService.defaultEnvironment());
+        applySharedModel(model, session, javaWorkflowService.defaultParserId(), javaWorkflowService.defaultEnvironment());
         return "index";
     }
 
     @GetMapping("/history")
+    @Operation(summary = "History page")
     public String history(Model model, HttpSession session) {
         if (session.getAttribute(SESSION_LOGIN_TOKEN) == null) {
-            applySharedModel(model, session, pythonResumeExtractorService.defaultParserId(), pythonResumeExtractorService.defaultEnvironment());
+            applySharedModel(model, session, javaWorkflowService.defaultParserId(), javaWorkflowService.defaultEnvironment());
             model.addAttribute("error", "Session expired. Please login again.");
             return "index";
         }
-        applySharedModel(model, session, pythonResumeExtractorService.defaultParserId(), pythonResumeExtractorService.defaultEnvironment());
+        applySharedModel(model, session, javaWorkflowService.defaultParserId(), javaWorkflowService.defaultEnvironment());
         return "history";
     }
 
     @PostMapping("/login")
+    @Operation(summary = "Login")
     public String login(
-        @RequestParam("username") String username,
+        @RequestParam("email") String email,
         @RequestParam("password") String password,
         Model model,
         HttpSession session
     ) {
         try {
-            if (!uiLoginUser.equals(username) || !uiLoginPassword.equals(password)) {
-                throw new IllegalStateException("Invalid username or password.");
-            }
+            String userEmail = userAuthService.login(email, password);
             session.setAttribute(SESSION_LOGIN_TOKEN, "local-session");
-            session.setAttribute(SESSION_LOGIN_USER, username);
+            session.setAttribute(SESSION_LOGIN_USER, userEmail);
             model.addAttribute("loginMessage", "Logged in successfully.");
         } catch (Exception ex) {
             model.addAttribute("error", ex.getMessage());
         }
-        applySharedModel(model, session, pythonResumeExtractorService.defaultParserId(), pythonResumeExtractorService.defaultEnvironment());
+        applySharedModel(model, session, javaWorkflowService.defaultParserId(), javaWorkflowService.defaultEnvironment());
+        return "index";
+    }
+
+    @PostMapping("/register")
+    @Operation(summary = "Register")
+    public String register(
+        @RequestParam("email") String email,
+        @RequestParam("password") String password,
+        Model model,
+        HttpSession session
+    ) {
+        try {
+            String userEmail = userAuthService.register(email, password);
+            session.setAttribute(SESSION_LOGIN_TOKEN, "local-session");
+            session.setAttribute(SESSION_LOGIN_USER, userEmail);
+            model.addAttribute("loginMessage", "Account created and logged in.");
+        } catch (Exception ex) {
+            model.addAttribute("error", ex.getMessage());
+        }
+        applySharedModel(model, session, javaWorkflowService.defaultParserId(), javaWorkflowService.defaultEnvironment());
         return "index";
     }
 
     @PostMapping("/logout")
+    @Operation(summary = "Logout")
     public String logout(Model model, HttpSession session) {
         session.removeAttribute(SESSION_LOGIN_TOKEN);
         session.removeAttribute(SESSION_LOGIN_USER);
         session.removeAttribute(SESSION_QUEUE_ITEMS);
         session.removeAttribute(SESSION_RESULTS);
         model.addAttribute("loginMessage", "Logged out.");
-        applySharedModel(model, session, pythonResumeExtractorService.defaultParserId(), pythonResumeExtractorService.defaultEnvironment());
+        applySharedModel(model, session, javaWorkflowService.defaultParserId(), javaWorkflowService.defaultEnvironment());
         return "index";
     }
 
     @PostMapping("/extract")
+    @Operation(summary = "Submit resume to queue")
     public String submitToQueue(
         @RequestParam("resumeFile") MultipartFile resumeFile,
         @RequestParam(name = "parserId", required = false) String parserId,
@@ -113,7 +135,7 @@ public class WebController {
     ) {
         try {
             requireLogin(session);
-            QueueSubmissionViewModel queued = pythonResumeExtractorService.submitToQueue(resumeFile, parserId, environment);
+            QueueSubmissionViewModel queued = javaWorkflowService.submitToQueue(resumeFile, parserId, environment);
             upsertQueueItem(session, queued);
             model.addAttribute("queueMessage", queued.getMessage());
         } catch (Exception ex) {
@@ -122,13 +144,14 @@ public class WebController {
         applySharedModel(
             model,
             session,
-            parserId == null || parserId.isBlank() ? pythonResumeExtractorService.defaultParserId() : parserId,
-            environment == null || environment.isBlank() ? pythonResumeExtractorService.defaultEnvironment() : environment
+            parserId == null || parserId.isBlank() ? javaWorkflowService.defaultParserId() : parserId,
+            environment == null || environment.isBlank() ? javaWorkflowService.defaultEnvironment() : environment
         );
         return "index";
     }
 
     @PostMapping("/fetch")
+    @Operation(summary = "Fetch queued document result")
     public String fetchQueuedResult(
         @RequestParam("documentId") String documentId,
         @RequestParam("parserId") String parserId,
@@ -137,12 +160,12 @@ public class WebController {
     ) {
         try {
             requireLogin(session);
-            FetchDocumentViewModel fetched = pythonResumeExtractorService.fetchDocument(parserId, documentId);
+            FetchDocumentViewModel fetched = javaWorkflowService.fetchDocument(parserId, documentId);
             model.addAttribute("queueMessage", fetched.getMessage());
             if (fetched.isCompleted()) {
                 removeQueueItem(session, documentId);
             } else {
-                touchQueueItem(session, documentId, parserId, fetched.getStatus(), fetched.getMessage(), fetched.getFilename());
+                touchQueueItem(session, documentId, parserId, queueDisplayStatus(fetched), fetched.getMessage(), fetched.getFilename());
             }
             if (fetched.isCompleted()) {
                 upsertResultItem(
@@ -162,11 +185,12 @@ public class WebController {
         } catch (Exception ex) {
             model.addAttribute("error", ex.getMessage());
         }
-        applySharedModel(model, session, parserId, pythonResumeExtractorService.defaultEnvironment());
+        applySharedModel(model, session, parserId, javaWorkflowService.defaultEnvironment());
         return "index";
     }
 
     @PostMapping("/feedback")
+    @Operation(summary = "Submit feedback and optional retrain")
     public String submitFeedback(
         @RequestParam("documentId") String documentId,
         @RequestParam("parserId") String parserId,
@@ -183,13 +207,13 @@ public class WebController {
                 throw new IllegalStateException("token_id is missing. Fetch completed data first.");
             }
             Map<String, Object> correctedData = parseJsonMap(correctedJson);
-            FeedbackResultViewModel feedback = pythonResumeExtractorService.submitFeedback(tokenId, correctedData, rating, retrainOnSubmit);
+            FeedbackResultViewModel feedback = javaWorkflowService.submitFeedback(tokenId, correctedData, rating, retrainOnSubmit);
             model.addAttribute(
                 "queueMessage",
                 "Feedback saved. Rating: " + feedback.rating() + ", retrained: " + feedback.retrained() + ", dataset entries: " + feedback.totalDatasetEntries()
             );
 
-            FetchDocumentViewModel fetched = pythonResumeExtractorService.fetchDocument(parserId, documentId);
+            FetchDocumentViewModel fetched = javaWorkflowService.fetchDocument(parserId, documentId);
             touchQueueItem(session, documentId, parserId, fetched.getStatus(), fetched.getMessage(), fetched.getFilename());
             upsertResultItem(
                 session,
@@ -217,23 +241,25 @@ public class WebController {
         } catch (Exception ex) {
             model.addAttribute("error", ex.getMessage());
         }
-        applySharedModel(model, session, parserId, pythonResumeExtractorService.defaultEnvironment());
+        applySharedModel(model, session, parserId, javaWorkflowService.defaultEnvironment());
         return "index";
     }
 
     @PostMapping("/history/clear")
+    @Operation(summary = "Clear history")
     public String clearHistory(Model model, HttpSession session) {
         session.removeAttribute(SESSION_HISTORY);
         model.addAttribute("historyMessage", "History cleared.");
-        applySharedModel(model, session, pythonResumeExtractorService.defaultParserId(), pythonResumeExtractorService.defaultEnvironment());
+        applySharedModel(model, session, javaWorkflowService.defaultParserId(), javaWorkflowService.defaultEnvironment());
         return "history";
     }
 
     @PostMapping("/queue/kill-all")
+    @Operation(summary = "Kill queue workers and clear queue")
     public String killAllQueue(Model model, HttpSession session) {
         try {
             requireLogin(session);
-            KillAllResultViewModel result = pythonResumeExtractorService.killAllAndClearQueue();
+            KillAllResultViewModel result = javaWorkflowService.killAllAndClearQueue();
             session.removeAttribute(SESSION_QUEUE_ITEMS);
             model.addAttribute(
                 "queueMessage",
@@ -245,8 +271,118 @@ public class WebController {
         } catch (Exception ex) {
             model.addAttribute("error", ex.getMessage());
         }
-        applySharedModel(model, session, pythonResumeExtractorService.defaultParserId(), pythonResumeExtractorService.defaultEnvironment());
+        applySharedModel(model, session, javaWorkflowService.defaultParserId(), javaWorkflowService.defaultEnvironment());
         return "index";
+    }
+
+    @GetMapping("/queue/heartbeat")
+    @ResponseBody
+    @Operation(summary = "Queue heartbeat status for UI polling")
+    public Map<String, Object> queueHeartbeat(
+        @RequestParam(name = "documentId", required = false) String documentId,
+        @RequestParam(name = "parserId", required = false) String parserId,
+        HttpSession session
+    ) {
+        Map<String, Object> out = new LinkedHashMap<>();
+        try {
+            requireLogin(session);
+            long nowMs = System.currentTimeMillis();
+            Object rawLast = session.getAttribute(SESSION_HEARTBEAT_LAST_AT);
+            long lastAt = (rawLast instanceof Number n) ? n.longValue() : 0L;
+            long cooldownMs = 3500L;
+            long elapsed = nowMs - lastAt;
+            if (elapsed < cooldownMs) {
+                out.put("status", "success");
+                out.put("changed", false);
+                out.put("readyToView", 0);
+                out.put("queueSize", getQueueItems(session).size());
+                out.put("cooldownMs", cooldownMs - Math.max(0L, elapsed));
+                out.put("message", "cooldown");
+                return out;
+            }
+            session.setAttribute(SESSION_HEARTBEAT_LAST_AT, nowMs);
+
+            List<QueueSubmissionViewModel> queue = new ArrayList<>(getQueueItems(session));
+            if (queue.isEmpty()) {
+                out.put("status", "success");
+                out.put("changed", false);
+                out.put("readyToView", 0);
+                out.put("queueSize", 0);
+                out.put("cooldownMs", 0);
+                out.put("message", "");
+                return out;
+            }
+
+            QueueSubmissionViewModel item = null;
+            if (documentId != null && !documentId.isBlank()) {
+                for (QueueSubmissionViewModel row : queue) {
+                    if (!documentId.equals(row.getDocumentId())) {
+                        continue;
+                    }
+                    if (parserId == null || parserId.isBlank() || parserId.equals(row.getParserId())) {
+                        item = row;
+                        break;
+                    }
+                }
+            }
+            if (item == null) {
+                item = queue.get(0);
+            }
+
+            FetchDocumentViewModel fetched = javaWorkflowService.fetchDocument(item.getParserId(), item.getDocumentId());
+            boolean changed = false;
+            int readyCount = 0;
+            String rowStatus = queueDisplayStatus(fetched);
+
+            if (fetched.isCompleted()) {
+                readyCount = 1;
+                changed = true;
+                rowStatus = "ready_to_view";
+                removeQueueItem(session, fetched.getDocumentId());
+                upsertResultItem(
+                    session,
+                    fetched.getDocumentId(),
+                    item.getParserId(),
+                    fetched.getFilename(),
+                    prettyJson(fetched.getParsedData()),
+                    "",
+                    fetched.getTokenId(),
+                    fetched.getDocumentUrl()
+                );
+                upsertHistoryItem(
+                    session,
+                    fetched.getDocumentId(),
+                    item.getParserId(),
+                    fetched.getFilename(),
+                    "completed",
+                    "ready_to_view",
+                    prettyJson(fetched.getParsedData()),
+                    "",
+                    fetched.getTokenId(),
+                    fetched.getDocumentUrl()
+                );
+                session.setAttribute(SESSION_EXPANDED_RESULT_ID, fetched.getDocumentId());
+            } else {
+                if (!rowStatus.equalsIgnoreCase(item.getStatus())) {
+                    changed = true;
+                }
+                touchQueueItem(session, fetched.getDocumentId(), item.getParserId(), rowStatus, fetched.getMessage(), fetched.getFilename());
+            }
+
+            out.put("status", "success");
+            out.put("changed", changed);
+            out.put("readyToView", readyCount);
+            out.put("documentId", item.getDocumentId());
+            out.put("rowStatus", rowStatus);
+            out.put("queueSize", getQueueItems(session).size());
+            out.put("cooldownMs", 0);
+            out.put("message", readyCount > 0 ? "Ready to view" : fetched.getMessage());
+            return out;
+        } catch (Exception ex) {
+            out.put("status", "error");
+            out.put("message", ex.getMessage());
+            return out;
+        }
     }
 
     private void requireLogin(HttpSession session) {
@@ -301,7 +437,7 @@ public class WebController {
             queue.remove(foundIdx);
         }
         queue.add(0, item);
-        while (queue.size() > 40) {
+        while (queue.size() > 20) {
             queue.remove(queue.size() - 1);
         }
     }
@@ -326,7 +462,7 @@ public class WebController {
             documentId,
             current == null ? "" : current.getJobId(),
             parserId,
-            current == null ? pythonResumeExtractorService.defaultEnvironment() : current.getEnvironment(),
+            current == null ? javaWorkflowService.defaultEnvironment() : current.getEnvironment(),
             (filename == null || filename.isBlank()) ? (current == null ? "" : current.getFilename()) : filename,
             status,
             message
@@ -337,6 +473,14 @@ public class WebController {
     private void removeQueueItem(HttpSession session, String documentId) {
         List<QueueSubmissionViewModel> queue = getQueueItems(session);
         queue.removeIf(item -> documentId.equals(item.getDocumentId()));
+    }
+
+    private String queueDisplayStatus(FetchDocumentViewModel fetched) {
+        String queueStatus = fetched.getQueueStatus() == null ? "" : fetched.getQueueStatus().trim();
+        if (!queueStatus.isBlank()) {
+            return queueStatus;
+        }
+        return fetched.getStatus();
     }
 
     private void upsertResultItem(
@@ -378,7 +522,7 @@ public class WebController {
             target.setDocumentUrl(documentUrl);
         }
         target.setUpdatedAt(OffsetDateTime.now().toString());
-        while (results.size() > 60) {
+        while (results.size() > 30) {
             results.remove(results.size() - 1);
         }
     }
@@ -425,7 +569,7 @@ public class WebController {
         if (documentUrl != null && !documentUrl.isBlank()) {
             target.setDocumentUrl(documentUrl);
         }
-        while (history.size() > 40) {
+        while (history.size() > 20) {
             history.remove(history.size() - 1);
         }
     }
@@ -435,8 +579,8 @@ public class WebController {
         List<QueueSubmissionViewModel> queueItems = getQueueItems(session);
         model.addAttribute("isLoggedIn", user != null);
         model.addAttribute("loggedInUser", user == null ? "" : String.valueOf(user));
-        model.addAttribute("selectedParserId", parserId == null || parserId.isBlank() ? pythonResumeExtractorService.defaultParserId() : parserId);
-        model.addAttribute("selectedEnvironment", environment == null || environment.isBlank() ? pythonResumeExtractorService.defaultEnvironment() : environment);
+        model.addAttribute("selectedParserId", parserId == null || parserId.isBlank() ? javaWorkflowService.defaultParserId() : parserId);
+        model.addAttribute("selectedEnvironment", environment == null || environment.isBlank() ? javaWorkflowService.defaultEnvironment() : environment);
         model.addAttribute("queueItems", queueItems);
         model.addAttribute("latestQueueItem", queueItems.isEmpty() ? null : queueItems.get(0));
         List<HistoryItemViewModel> historyItems = getHistory(session);
@@ -447,8 +591,9 @@ public class WebController {
     }
 
     private String prettyJson(Object value) {
+        if (value == null) return "";
         try {
-            return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(value);
+            return objectMapper.writeValueAsString(value);
         } catch (JsonProcessingException e) {
             return String.valueOf(value);
         }

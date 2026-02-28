@@ -119,6 +119,237 @@
       "has_corrected_data": true,
       "retrained": true,
       "total_dataset_entries": 31
+    },
+    {
+      "timestamp": "2026-02-27T04:55:59.944404+00:00",
+      "token_id": "b964cc99-9f4d-4946-93b4-54efe9e213ed",
+      "rating": 5,
+      "feedback_weight": 4,
+      "feedback_accuracy": 0.7622,
+      "has_extracted_data": false,
+      "has_corrected_data": true,
+      "retrained": true,
+      "total_dataset_entries": 32
+    },
+    {
+      "timestamp": "2026-02-27T04:56:00.026683+00:00",
+      "token_id": "5023a83a-cad5-4617-b22f-0c0c29be1546",
+      "rating": 5,
+      "feedback_weight": 4,
+      "feedback_accuracy": 0.7118,
+      "has_extracted_data": false,
+      "has_corrected_data": true,
+      "retrained": true,
+      "total_dataset_entries": 33
+    },
+    {
+      "timestamp": "2026-02-27T04:56:00.099010+00:00",
+      "token_id": "9139221d-a111-4bf1-8eef-0441761c98e3",
+      "rating": 5,
+      "feedback_weight": 4,
+      "feedback_accuracy": 0.6639,
+      "has_extracted_data": false,
+      "has_corrected_data": true,
+      "retrained": true,
+      "total_dataset_entries": 34
+    },
+    {
+      "timestamp": "2026-02-27T04:56:00.171059+00:00",
+      "token_id": "258f7e74-772c-40c8-8fc0-4d2b63e6ff47",
+      "rating": 5,
+      "feedback_weight": 4,
+      "feedback_accuracy": 0.6867,
+      "has_extracted_data": false,
+      "has_corrected_data": true,
+      "retrained": true,
+      "total_dataset_entries": 35
+    },
+    {
+      "timestamp": "2026-02-27T04:56:00.243773+00:00",
+      "token_id": "821cdac9-d1a8-40f8-a19c-154c97a3f06d",
+      "rating": 5,
+      "feedback_weight": 4,
+      "feedback_accuracy": 0.7236,
+      "has_extracted_data": false,
+      "has_corrected_data": true,
+      "retrained": true,
+      "total_dataset_entries": 36
+    },
+    {
+      "timestamp": "2026-02-27T04:56:00.320216+00:00",
+      "token_id": "44f41a0b-05bc-4958-bcba-97046d82c7ec",
+      "rating": 5,
+      "feedback_weight": 4,
+      "feedback_accuracy": 0.666,
+      "has_extracted_data": false,
+      "has_corrected_data": true,
+      "retrained": true,
+      "total_dataset_entries": 37
+    },
+    {
+      "timestamp": "2026-02-27T04:56:00.394884+00:00",
+      "token_id": "d8e8f07d-f198-4037-bccf-3460b2eca8cc",
+      "rating": 5,
+      "feedback_weight": 4,
+      "feedback_accuracy": 0.6166,
+      "has_extracted_data": false,
+      "has_corrected_data": true,
+      "retrained": true,
+      "total_dataset_entries": 38
+    },
+    {
+      "timestamp": "2026-02-27T04:56:00.471041+00:00",
+      "token_id": "6c504503-10f6-42a3-8c62-ec76639e0fcb",
+      "rating": 5,
+      "feedback_weight": 4,
+      "feedback_accuracy": 0.7168,
+      "has_extracted_data": false,
+      "has_corrected_data": true,
+      "retrained": true,
+      "total_dataset_entries": 39
+    },
+    {
+      "timestamp": "2026-02-27T04:56:00.545903+00:00",
+      "token_id": "a147b173-f7a7-4bce-b0e6-69171274440b",
+      "rating": 5,
+      "feedback_weight": 4,
+      "feedback_accuracy": 0.7952,
+      "has_extracted_data": false,
+      "has_corrected_data": true,
+      "retrained": true,
+      "total_dataset_entries": 40
+    },
+    {
+      "timestamp": "2026-02-27T04:56:00.621534+00:00",
+      "token_id": "5846397c-b7ea-4b08-8c68-e88430aa7efa",
+      "rating": 5,
+      "feedback_weight": 4,
+      "feedback_accuracy": 0.623,
+      "has_extracted_data": false,
+      "has_corrected_data": true,
+      "retrained": true,
+      "total_dataset_entries": 41
+    },
+    {
+      "timestamp": "2026-02-27T04:56:00.698790+00:00",
+      "token_id": "01925b60-0f35-4f26-a849-708518f40f8f",
+      "rating": 5,
+      "feedback_weight": 4,
+      "feedback_accuracy": 0.7205,
+      "has_extracted_data": false,
+      "has_corrected_data": true,
+      "retrained": true,
+      "total_dataset_entries": 42
+    },
+    {
+      "timestamp": "2026-02-27T04:56:00.777625+00:00",
+      "token_id": "f14652ea-dcde-4cab-b472-dcd72e717521",
+      "rating": 5,
+      "feedback_weight": 4,
+      "feedback_accuracy": 0.7908,
+      "has_extracted_data": false,
+      "has_corrected_data": true,
+      "retrained": true,
+      "total_dataset_entries": 43
+    },
+    {
+      "timestamp": "2026-02-27T04:56:00.854500+00:00",
+      "token_id": "6c2c5019-d92f-40a5-bf8e-8f6ac95e2cd6",
+      "rating": 5,
+      "feedback_weight": 4,
+      "feedback_accuracy": 0.6233,
+      "has_extracted_data": false,
+      "has_corrected_data": true,
+      "retrained": true,
+      "total_dataset_entries": 44
+    },
+    {
+      "timestamp": "2026-02-27T04:56:00.957792+00:00",
+      "token_id": "2c92177d-b790-4022-b06f-6da3783efaeb",
+      "rating": 5,
+      "feedback_weight": 4,
+      "feedback_accuracy": 0.5703,
+      "has_extracted_data": false,
+      "has_corrected_data": true,
+      "retrained": true,
+      "total_dataset_entries": 45
+    },
+    {
+      "timestamp": "2026-02-27T04:56:01.036437+00:00",
+      "token_id": "161d80f2-84cc-4406-9c62-1f6f8d80ad68",
+      "rating": 5,
+      "feedback_weight": 4,
+      "feedback_accuracy": 0.6655,
+      "has_extracted_data": false,
+      "has_corrected_data": true,
+      "retrained": true,
+      "total_dataset_entries": 46
+    },
+    {
+      "timestamp": "2026-02-27T04:56:01.115772+00:00",
+      "token_id": "7c255a9f-4f68-4090-ada7-afb1546e085a",
+      "rating": 5,
+      "feedback_weight": 4,
+      "feedback_accuracy": 0.7518,
+      "has_extracted_data": false,
+      "has_corrected_data": true,
+      "retrained": true,
+      "total_dataset_entries": 47
+    },
+    {
+      "timestamp": "2026-02-27T04:56:01.197138+00:00",
+      "token_id": "2b14b86f-2709-46b7-be65-473754940ad4",
+      "rating": 5,
+      "feedback_weight": 4,
+      "feedback_accuracy": 0.7118,
+      "has_extracted_data": false,
+      "has_corrected_data": true,
+      "retrained": true,
+      "total_dataset_entries": 48
+    },
+    {
+      "timestamp": "2026-02-27T04:56:01.279560+00:00",
+      "token_id": "4f2bd4a2-6e2d-413f-8d74-4814de62c10c",
+      "rating": 5,
+      "feedback_weight": 4,
+      "feedback_accuracy": 0.7932,
+      "has_extracted_data": false,
+      "has_corrected_data": true,
+      "retrained": true,
+      "total_dataset_entries": 49
+    },
+    {
+      "timestamp": "2026-02-27T04:56:01.360688+00:00",
+      "token_id": "e0f90fa1-5e14-49a8-ae5d-06ab8190cff4",
+      "rating": 5,
+      "feedback_weight": 4,
+      "feedback_accuracy": 0.6169,
+      "has_extracted_data": false,
+      "has_corrected_data": true,
+      "retrained": true,
+      "total_dataset_entries": 50
+    },
+    {
+      "timestamp": "2026-02-27T04:56:01.445961+00:00",
+      "token_id": "9bab813d-f0b1-4f7f-ab15-c258ecf6f569",
+      "rating": 5,
+      "feedback_weight": 4,
+      "feedback_accuracy": 0.5916,
+      "has_extracted_data": false,
+      "has_corrected_data": true,
+      "retrained": true,
+      "total_dataset_entries": 51
+    },
+    {
+      "timestamp": "2026-02-27T05:25:13.119179+00:00",
+      "token_id": "2c3ad574-0aa6-44f8-b881-bbf45432330e",
+      "rating": 3,
+      "feedback_weight": 2,
+      "feedback_accuracy": 0.8,
+      "has_extracted_data": true,
+      "has_corrected_data": true,
+      "retrained": true,
+      "total_dataset_entries": 52
     }
   ],
   "retrain_events": [
@@ -201,6 +432,174 @@
       "total_dataset_entries": 31,
       "mapping_feature_count": 389,
       "check_average_overall_score": 0.6
+    },
+    {
+      "timestamp": "2026-02-27T04:55:59.944404+00:00",
+      "source": "feedback_endpoint",
+      "added_entries": 1,
+      "total_dataset_entries": 32,
+      "mapping_feature_count": 396,
+      "check_average_overall_score": 0.7622
+    },
+    {
+      "timestamp": "2026-02-27T04:56:00.026683+00:00",
+      "source": "feedback_endpoint",
+      "added_entries": 1,
+      "total_dataset_entries": 33,
+      "mapping_feature_count": 404,
+      "check_average_overall_score": 0.7118
+    },
+    {
+      "timestamp": "2026-02-27T04:56:00.099010+00:00",
+      "source": "feedback_endpoint",
+      "added_entries": 1,
+      "total_dataset_entries": 34,
+      "mapping_feature_count": 414,
+      "check_average_overall_score": 0.6639
+    },
+    {
+      "timestamp": "2026-02-27T04:56:00.171059+00:00",
+      "source": "feedback_endpoint",
+      "added_entries": 1,
+      "total_dataset_entries": 35,
+      "mapping_feature_count": 425,
+      "check_average_overall_score": 0.6867
+    },
+    {
+      "timestamp": "2026-02-27T04:56:00.243773+00:00",
+      "source": "feedback_endpoint",
+      "added_entries": 1,
+      "total_dataset_entries": 36,
+      "mapping_feature_count": 434,
+      "check_average_overall_score": 0.7236
+    },
+    {
+      "timestamp": "2026-02-27T04:56:00.320216+00:00",
+      "source": "feedback_endpoint",
+      "added_entries": 1,
+      "total_dataset_entries": 37,
+      "mapping_feature_count": 440,
+      "check_average_overall_score": 0.666
+    },
+    {
+      "timestamp": "2026-02-27T04:56:00.394884+00:00",
+      "source": "feedback_endpoint",
+      "added_entries": 1,
+      "total_dataset_entries": 38,
+      "mapping_feature_count": 446,
+      "check_average_overall_score": 0.6166
+    },
+    {
+      "timestamp": "2026-02-27T04:56:00.471041+00:00",
+      "source": "feedback_endpoint",
+      "added_entries": 1,
+      "total_dataset_entries": 39,
+      "mapping_feature_count": 451,
+      "check_average_overall_score": 0.7168
+    },
+    {
+      "timestamp": "2026-02-27T04:56:00.545903+00:00",
+      "source": "feedback_endpoint",
+      "added_entries": 1,
+      "total_dataset_entries": 40,
+      "mapping_feature_count": 458,
+      "check_average_overall_score": 0.7952
+    },
+    {
+      "timestamp": "2026-02-27T04:56:00.621534+00:00",
+      "source": "feedback_endpoint",
+      "added_entries": 1,
+      "total_dataset_entries": 41,
+      "mapping_feature_count": 464,
+      "check_average_overall_score": 0.623
+    },
+    {
+      "timestamp": "2026-02-27T04:56:00.698790+00:00",
+      "source": "feedback_endpoint",
+      "added_entries": 1,
+      "total_dataset_entries": 42,
+      "mapping_feature_count": 469,
+      "check_average_overall_score": 0.7205
+    },
+    {
+      "timestamp": "2026-02-27T04:56:00.777625+00:00",
+      "source": "feedback_endpoint",
+      "added_entries": 1,
+      "total_dataset_entries": 43,
+      "mapping_feature_count": 474,
+      "check_average_overall_score": 0.7908
+    },
+    {
+      "timestamp": "2026-02-27T04:56:00.854500+00:00",
+      "source": "feedback_endpoint",
+      "added_entries": 1,
+      "total_dataset_entries": 44,
+      "mapping_feature_count": 482,
+      "check_average_overall_score": 0.6233
+    },
+    {
+      "timestamp": "2026-02-27T04:56:00.957792+00:00",
+      "source": "feedback_endpoint",
+      "added_entries": 1,
+      "total_dataset_entries": 45,
+      "mapping_feature_count": 488,
+      "check_average_overall_score": 0.5703
+    },
+    {
+      "timestamp": "2026-02-27T04:56:01.036437+00:00",
+      "source": "feedback_endpoint",
+      "added_entries": 1,
+      "total_dataset_entries": 46,
+      "mapping_feature_count": 494,
+      "check_average_overall_score": 0.6655
+    },
+    {
+      "timestamp": "2026-02-27T04:56:01.115772+00:00",
+      "source": "feedback_endpoint",
+      "added_entries": 1,
+      "total_dataset_entries": 47,
+      "mapping_feature_count": 499,
+      "check_average_overall_score": 0.7518
+    },
+    {
+      "timestamp": "2026-02-27T04:56:01.197138+00:00",
+      "source": "feedback_endpoint",
+      "added_entries": 1,
+      "total_dataset_entries": 48,
+      "mapping_feature_count": 506,
+      "check_average_overall_score": 0.7118
+    },
+    {
+      "timestamp": "2026-02-27T04:56:01.279560+00:00",
+      "source": "feedback_endpoint",
+      "added_entries": 1,
+      "total_dataset_entries": 49,
+      "mapping_feature_count": 511,
+      "check_average_overall_score": 0.7932
+    },
+    {
+      "timestamp": "2026-02-27T04:56:01.360688+00:00",
+      "source": "feedback_endpoint",
+      "added_entries": 1,
+      "total_dataset_entries": 50,
+      "mapping_feature_count": 517,
+      "check_average_overall_score": 0.6169
+    },
+    {
+      "timestamp": "2026-02-27T04:56:01.445961+00:00",
+      "source": "feedback_endpoint",
+      "added_entries": 1,
+      "total_dataset_entries": 51,
+      "mapping_feature_count": 523,
+      "check_average_overall_score": 0.5916
+    },
+    {
+      "timestamp": "2026-02-27T05:25:13.119179+00:00",
+      "source": "feedback_endpoint",
+      "added_entries": 1,
+      "total_dataset_entries": 52,
+      "mapping_feature_count": 525,
+      "check_average_overall_score": 0.8
     }
   ]
 }

@@ -31,17 +31,30 @@
                 <button type="submit" class="btn-secondary">Logout</button>
             </form>
         </div>
-        <form th:if="${!isLoggedIn}" th:action="@{/login}" method="post" class="form-grid">
-            <label class="field">
-                <span>Username</span>
-                <input type="text" name="username" required autocomplete="username">
-            </label>
-            <label class="field">
-                <span>Password</span>
-                <input type="password" name="password" required autocomplete="current-password">
-            </label>
-            <button type="submit" class="btn-primary">Login</button>
-        </form>
+        <div th:if="${!isLoggedIn}" class="result-grid">
+            <form th:action="@{/login}" method="post" class="form-grid">
+                <label class="field">
+                    <span>Email</span>
+                    <input type="email" name="email" required autocomplete="email">
+                </label>
+                <label class="field">
+                    <span>Password</span>
+                    <input type="password" name="password" required autocomplete="current-password">
+                </label>
+                <button type="submit" class="btn-primary">Login</button>
+            </form>
+            <form th:action="@{/register}" method="post" class="form-grid">
+                <label class="field">
+                    <span>New Email</span>
+                    <input type="email" name="email" required autocomplete="email">
+                </label>
+                <label class="field">
+                    <span>New Password</span>
+                    <input type="password" name="password" minlength="8" required autocomplete="new-password">
+                </label>
+                <button type="submit" class="btn-secondary">Register</button>
+            </form>
+        </div>
         <p th:if="${loginMessage}" th:text="${loginMessage}"></p>
     </section>
 
@@ -67,6 +80,7 @@
         </form>
         <p th:if="${!isLoggedIn}">Login is required before extraction.</p>
         <p th:if="${queueMessage}" th:text="${queueMessage}"></p>
+        <p id="queueHeartbeatState"></p>
         <div th:if="${!#lists.isEmpty(queueItems)}" class="inline-form">
             <h3>Queue List</h3>
             <table>
@@ -79,10 +93,10 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="q : ${queueItems}">
+                <tr th:each="q : ${queueItems}" th:attr="data-document-id=${q.documentId},data-parser-id=${q.parserId}">
                     <td th:text="${q.filename}"></td>
                     <td th:text="${q.documentId}"></td>
-                    <td><span class="status-pill" th:text="${q.status}"></span></td>
+                    <td><span class="status-pill queue-status" th:text="${q.status}"></span></td>
                     <td>
                         <form th:action="@{/fetch}" method="post" class="inline-form">
                             <input type="hidden" name="documentId" th:value="${q.documentId}">
@@ -119,9 +133,7 @@
                     <div class="preview-pane">
                         <h3>PDF Preview</h3>
                         <div class="preview-box" th:if="${not #strings.isEmpty(item.documentUrl)}">
-                            <object th:data="${item.documentUrl}" type="application/pdf">
-                                <iframe th:src="${item.documentUrl}" title="Document preview"></iframe>
-                            </object>
+                            <iframe th:src="${item.documentUrl}" title="Document preview" loading="lazy"></iframe>
                         </div>
                         <p th:if="${#strings.isEmpty(item.documentUrl)}">Preview URL not available.</p>
                     </div>
@@ -189,6 +201,79 @@
             const saved = localStorage.getItem("ocr-ui-theme") || "system";
             if (saved === "system") setTheme("system");
         });
+    })();
+
+    (function () {
+        const heartbeatEl = document.getElementById("queueHeartbeatState");
+        if (!document.querySelector("tr[data-document-id]")) return;
+        let inFlight = false;
+        let nextIndex = 0;
+        const cooldownMs = 3500;
+        let consecutiveErrors = 0;
+        let backoffMs = cooldownMs;
+
+        function listRows() {
+            return Array.from(document.querySelectorAll("tr[data-document-id]"));
+        }
+
+        function setRowStatus(documentId, status) {
+            if (!documentId) return;
+            const row = document.querySelector(`tr[data-document-id="${documentId}"]`);
+            if (!row) return;
+            const pill = row.querySelector(".queue-status");
+            if (pill && status) {
+                pill.textContent = String(status);
+            }
+        }
+
+        async function tickHeartbeat() {
+            if (inFlight) return;
+            const rows = listRows();
+            if (!rows.length) {
+                setTimeout(tickHeartbeat, backoffMs * 2);
+                return;
+            }
+            const current = rows[nextIndex % rows.length];
+            nextIndex += 1;
+            const documentId = current.getAttribute("data-document-id") || "";
+            const parserId = current.getAttribute("data-parser-id") || "";
+            inFlight = true;
+            try {
+                const url = `/queue/heartbeat?documentId=${encodeURIComponent(documentId)}&parserId=${encodeURIComponent(parserId)}`;
+                const res = await fetch(url, { method: "GET", headers: { "Accept": "application/json" } });
+                if (!res.ok) {
+                    consecutiveErrors++;
+                    backoffMs = Math.min(cooldownMs * Math.pow(2, consecutiveErrors), 15000);
+                    return;
+                }
+                const data = await res.json();
+                consecutiveErrors = 0;
+                backoffMs = cooldownMs;
+                if (data.message === "cooldown") {
+                    return;
+                }
+                if (data.documentId && data.rowStatus) {
+                    setRowStatus(String(data.documentId), String(data.rowStatus));
+                }
+                if (data.readyToView && Number(data.readyToView) > 0) {
+                    if (heartbeatEl) heartbeatEl.textContent = "✓ Ready to view - Click Fetch Data";
+                    setRowStatus(String(data.documentId), "ready_to_view");
+                    return;
+                }
+                if (heartbeatEl && data.rowStatus) {
+                    heartbeatEl.textContent = `Checking: ${data.rowStatus}`;
+                }
+            } catch (e) {
+                consecutiveErrors++;
+                backoffMs = Math.min(cooldownMs * Math.pow(2, consecutiveErrors), 15000);
+                if (heartbeatEl) heartbeatEl.textContent = "Queue check paused";
+            } finally {
+                inFlight = false;
+                setTimeout(tickHeartbeat, backoffMs);
+            }
+        }
+
+        setTimeout(tickHeartbeat, cooldownMs);
     })();
 </script>
 </body>
