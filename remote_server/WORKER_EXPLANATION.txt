@@ -1,0 +1,124 @@
+╔══════════════════════════════════════════════════════════════╗
+║                                                              ║
+║   ✅ YOUR PYTHON WORKER IS SAFE - NOTHING REMOVED!          ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📍 YOUR LOCAL SETUP (UNCHANGED)
+
+Location: /Users/wipl/Documents/pdfextractorgpt/ocr-extractor-project/
+
+Your existing scripts work EXACTLY as before:
+
+   ./start_all.sh    ← Runs ALL 3 services:
+                        1. Python API (port 8000)
+                        2. Python Worker (async jobs) ✅
+                        3. Java Spring Boot (port 8080)
+
+   ./start.sh        ← Same as start_all.sh
+
+   ./stop_all.sh     ← Stops everything
+
+   ./restart_all.sh  ← Restarts everything
+
+✅ NOTHING WAS CHANGED OR REMOVED!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📦 NEW: REMOTE SERVER PACKAGE
+
+Location: /Users/wipl/Documents/pdfextractorgpt/ocr-extractor-project/remote_server/
+
+This is a NEW, SEPARATE folder for deploying Python to a different device.
+
+Two deployment options:
+
+Option 1: API Only (Simple)
+   ./start_server.sh
+   - Runs Python API only
+   - Good for basic remote setup
+
+Option 2: API + Worker (Recommended)
+   ./start_with_worker.sh
+   - Runs Python API + Worker
+   - Same as your local setup
+   - Better for production
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 COMPARISON
+
+┌─────────────────────────────────────────────────────────────┐
+│ LOCAL SETUP (Your Current Setup)                           │
+├─────────────────────────────────────────────────────────────┤
+│ Location: Main project folder                              │
+│ Command:  ./start_all.sh                                    │
+│ Runs:     Python API + Worker + Java                       │
+│ Purpose:  Full stack development on your laptop            │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│ REMOTE SERVER (New Package)                                │
+├─────────────────────────────────────────────────────────────┤
+│ Location: remote_server/ folder                            │
+│ Command:  ./start_with_worker.sh                           │
+│ Runs:     Python API + Worker (no Java)                    │
+│ Purpose:  Deploy Python to different device/server         │
+└─────────────────────────────────────────────────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💡 USE CASES
+
+Scenario 1: Everything on Your Laptop (Current)
+   cd /Users/wipl/Documents/pdfextractorgpt/ocr-extractor-project
+   ./start_all.sh
+   ✅ Python API + Worker + Java all running locally
+
+Scenario 2: Python on Remote Server, Java on Laptop
+   
+   On Remote Server:
+   cd remote_server
+   ./start_with_worker.sh
+   ✅ Python API + Worker running on server
+   
+   On Your Laptop:
+   export PYTHON_SERVICE_BASE_URL=http://SERVER_IP:8000
+   mvn spring-boot:run
+   ✅ Java connects to remote Python
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 QUICK REFERENCE
+
+Your Local Commands (Nothing Changed):
+   ./start_all.sh       ← Start everything locally
+   ./stop_all.sh        ← Stop everything
+   ./restart_all.sh     ← Restart everything
+
+Remote Server Commands (New):
+   ./start_server.sh         ← Start API only
+   ./start_with_worker.sh    ← Start API + Worker ⭐
+   ./stop_server.sh          ← Stop services
+   ./restart_server.sh       ← Restart services
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ SUMMARY
+
+1. Your local setup is UNTOUCHED
+2. ./start_all.sh still runs Python Worker ✅
+3. remote_server/ is a NEW package for deployment
+4. You can run worker on remote server too with ./start_with_worker.sh
+5. Both setups work independently
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎉 YOU'RE ALL SET!
+
+Continue using ./start_all.sh for local development.
+Use remote_server/ folder when you want to deploy to another device.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

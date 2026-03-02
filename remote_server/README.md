@@ -48,8 +48,11 @@ Replace `YOUR_SERVER_IP` with your actual server IP address.
 ## Management Commands
 
 ```bash
-# Start server
+# Start server only (API)
 ./start_server.sh
+
+# Start server + worker (recommended for production)
+./start_with_worker.sh
 
 # Stop server
 ./stop_server.sh
@@ -61,7 +64,9 @@ Replace `YOUR_SERVER_IP` with your actual server IP address.
 ./status.sh
 
 # View logs
-tail -f logs/server.log
+tail -f logs/server.log      # API logs
+tail -f logs/api.log         # API logs (when using worker)
+tail -f logs/worker.log      # Worker logs
 ```
 
 ## Configuration
